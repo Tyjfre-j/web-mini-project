@@ -1,9 +1,9 @@
 <?php
 // get best sellers
-$best_sellers = get_best_sellers();
+$best_sellers = getBestSellers();
 
 // Get categories
-$categories = get_categories();
+$categories = getCategories();
 ?>
 
 <!-- SIDEBAR -->

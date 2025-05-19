@@ -4,10 +4,8 @@
 	require_once 'functions/functions.php';
 
 	//run whenever this file is used no need of isset or any condition to get website image footer etc
-	$sql5 ="SELECT * FROM  settings;";
-
-	$result5 = $conn->query($sql5);
-	$row5 = $result5->fetch_assoc();
+	$settings = getSettings();
+	$row5 = mysqli_fetch_assoc($settings);
 	$_SESSION['web-name'] = $row5['website_name'];
 	$_SESSION['web-img'] = $row5['website_logo'];
 	$_SESSION['web-footer'] = $row5['website_footer'];
@@ -47,6 +45,7 @@
 	
 	<link rel="stylesheet" type="text/css" href="./css/style-prefix.css?<?php echo time(); ?>" />
 	<!-- <link rel="stylesheet" href="./css/style-prefix.css" /> -->
+	<link rel="stylesheet" type="text/css" href="./css/product-display.css?<?php echo time(); ?>" />
 	<link rel="stylesheet" type="text/css" href="./css/view-details.css?<?php echo time(); ?>" />
 	<link rel="stylesheet" type="text/css" href="./css/cart-card-design.css?<?php echo time(); ?>" />
 	<link rel="stylesheet" type="text/css" href="./css/aboutus.css?<?php echo time(); ?>" />

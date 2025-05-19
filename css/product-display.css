@@ -1,0 +1,294 @@
+/* Product Display Styling for Homepage */
+
+/* Product section container */
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 15px;
+  display: block !important;
+  width: 100% !important;
+  clear: both !important;
+}
+
+/* Main heading */
+.main-heading {
+  color: var(--eerie-black);
+  font-size: 2.2rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+
+.main-heading-desc {
+  color: var(--sonic-silver);
+  font-size: 1rem;
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+/* Product section layout */
+#laptops-section,
+#desktops-section,
+#custom-builds-section,
+#display-screens-section,
+#graphics-cards-section,
+#processors-section,
+#keyboards-section {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* Title container */
+.title-container {
+  width: 100%;
+  display: block;
+  margin-bottom: 20px;
+}
+
+/* Title with button container */
+.title-with-button {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+/* View All button next to title */
+.view-all-btn {
+  margin-left: auto;
+  font-size: 0.9rem;
+}
+
+/* Product section title - updated for flex layout */
+.product-section-title {
+  color: var(--eerie-black);
+  font-size: 1.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-bottom: 10px !important;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--main-maroon);
+  display: inline-block !important;
+  width: auto !important;
+  text-align: left !important;
+  float: none !important;
+  margin-right: 20px;
+}
+
+/* Product main container */
+.product-main {
+  width: 100%;
+  clear: both;
+  display: block;
+  float: none;
+}
+
+/* Product grid layout improvements */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  float: none;
+  clear: both;
+  width: 100%;
+}
+
+/* Product card styling */
+.product-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  transition: transform 0.3s ease;
+  width: 100%;
+}
+
+.product-link:hover {
+  transform: translateY(-5px);
+}
+
+.showcase {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+  height: 380px !important;
+  display: flex;
+  flex-direction: column;
+}
+
+.showcase:hover {
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* Product image container */
+.showcase-banner {
+  height: 180px !important;
+  min-height: 180px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8f8f8;
+  flex-shrink: 0;
+}
+
+.product-img {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  transition: transform 0.5s ease;
+}
+
+.showcase:hover .product-img {
+  transform: scale(1.05);
+}
+
+/* Product content */
+.showcase-content {
+  padding: 15px;
+  height: 200px !important;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+.showcase-category {
+  font-size: 0.8rem;
+  color: var(--main-maroon);
+  text-transform: uppercase;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.product-grid .showcase .showcase-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--eerie-black);
+  margin-bottom: 6px;
+  line-height: 1.25;
+  max-height: 2.5em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  margin-top: 0;
+}
+
+.showcase-small-desc {
+  font-size: 0.85rem;
+  color: var(--sonic-silver);
+  margin-bottom: 10px;
+  max-height: 4.2em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  line-height: 1.4;
+}
+
+.showcase-rating {
+  color: #ffd700;
+  font-size: 1rem;
+  position: absolute;
+  bottom: 50px;
+  left: 15px;
+}
+
+.price-box {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  bottom: 15px;
+  left: 15px;
+  right: 15px;
+}
+
+.price {
+  color: var(--main-maroon);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+/* View All button */
+.btn-primary {
+  background-color: var(--main-maroon);
+  color: white;
+  padding: 8px 20px;
+  border-radius: 4px;
+  font-weight: 500;
+  text-decoration: none;
+  display: inline-block;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #900020;
+}
+
+/* Empty product slot for maintaining grid layout */
+.empty-product-slot {
+  width: 100%;
+  height: 380px !important;
+  visibility: hidden;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .product-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+
+  .showcase-title {
+    font-size: 1rem;
+  }
+
+  .showcase-small-desc {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .product-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .showcase {
+    height: auto !important;
+  }
+
+  .showcase-banner {
+    height: 140px !important;
+  }
+}
+
+/* Section container */
+.section-container {
+  display: block;
+  width: 100%;
+  margin-bottom: 30px;
+}
+
+/* Title-only container */
+.title-only-container {
+  display: block;
+  width: 100%;
+  margin-bottom: 15px;
+}

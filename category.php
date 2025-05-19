@@ -11,7 +11,7 @@ if (isset($_GET['category'])) {
 }
 
 
-$items = get_items_by_category_items($category_ID);
+$items = getItemsByCategoryItems($category_ID);
 
 ?>
 
