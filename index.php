@@ -4,6 +4,14 @@ include_once('./includes/headerNav.php');
 $banner_products = get_banners();
 // Get categories
 $categories = get_categories();
+// Get products using new functions
+$laptops = get_laptops();
+$desktops = get_desktops();
+$custombuilds = get_custombuilds();
+$displayscreens = get_displayscreens();
+$gpus = get_gpus();
+$cpus = get_cpus();
+$keyboards = get_keyboards();
 // 
 ?>
 
@@ -42,7 +50,7 @@ $categories = get_categories();
           $banner_count++;
         ?>
           <div class="slider-item" data-banner="<?php echo $banner_count; ?>" style="display: none;">
-            <img src="images/carousel/<?php echo $row['banner_image']; ?>" class="banner-img" />
+            <img src="<?php echo htmlspecialchars($row['banner_image_path']); ?>" class="banner-img" />
 
             <div class="banner-content">
               <h2 class="banner-title">
@@ -69,15 +77,13 @@ $categories = get_categories();
         <h2 class="title">Laptops</h2>
         <div class="product-grid laptop-grid">
           <?php
-          $query = "SELECT * FROM laptop";
-          $result = mysqli_query($conn, $query);
-          if ($result && $result->num_rows > 0) {
-            while ($row = mysqli_fetch_assoc($result)) {
+          if ($laptops && $laptops->num_rows > 0) {
+            while ($row = mysqli_fetch_assoc($laptops)) {
           ?>
-              <a href="product.php?id=<?php echo $row['id']; ?>&type=laptop" class="product-link">
+              <a href="product.php?id=<?php echo $row['laptop_id']; ?>&type=laptop" class="product-link">
                 <div class="showcase">
                   <div class="showcase-banner">
-                    <img src="<?php echo htmlspecialchars($row['laptop_img']); ?>" alt="<?php echo htmlspecialchars($row['laptop_name']); ?>" class="product-img" />
+                    <img src="<?php echo htmlspecialchars($row['laptop_image_path']); ?>" alt="<?php echo htmlspecialchars($row['laptop_name']); ?>" class="product-img" />
                   </div>
                   <div class="showcase-content">
                     <div class="showcase-category"><?php echo htmlspecialchars($row['laptop_category_name']); ?></div>
@@ -111,15 +117,13 @@ $categories = get_categories();
         <h2 class="title">Desktops</h2>
         <div class="product-grid">
           <?php
-          $query = "SELECT * FROM desktop";
-          $result = mysqli_query($conn, $query);
-          if ($result && $result->num_rows > 0) {
-            while ($row = mysqli_fetch_assoc($result)) {
+          if ($desktops && $desktops->num_rows > 0) {
+            while ($row = mysqli_fetch_assoc($desktops)) {
           ?>
-              <a href="product.php?id=<?php echo $row['id']; ?>&type=desktop" class="product-link">
+              <a href="product.php?id=<?php echo $row['desktop_id']; ?>&type=desktop" class="product-link">
                 <div class="showcase">
                   <div class="showcase-banner">
-                    <img src="<?php echo htmlspecialchars($row['table_img']); ?>" alt="<?php echo htmlspecialchars($row['desktop_name']); ?>" class="product-img" />
+                    <img src="<?php echo htmlspecialchars($row['desktop_image_path']); ?>" alt="<?php echo htmlspecialchars($row['desktop_name']); ?>" class="product-img" />
                   </div>
                   <div class="showcase-content">
                     <div class="showcase-category"><?php echo htmlspecialchars($row['desktop_category_name']); ?></div>
@@ -153,20 +157,18 @@ $categories = get_categories();
         <h2 class="title">Custom Builds</h2>
         <div class="product-grid">
           <?php
-          $query = "SELECT * FROM customeBuild";
-          $result = mysqli_query($conn, $query);
-          if ($result && $result->num_rows > 0) {
-            while ($row = mysqli_fetch_assoc($result)) {
+          if ($custombuilds && $custombuilds->num_rows > 0) {
+            while ($row = mysqli_fetch_assoc($custombuilds)) {
           ?>
-              <a href="product.php?id=<?php echo $row['id']; ?>&type=customebuild" class="product-link">
+              <a href="product.php?id=<?php echo $row['custombuild_id']; ?>&type=custombuild" class="product-link">
                 <div class="showcase">
                   <div class="showcase-banner">
-                    <img src="<?php echo htmlspecialchars($row['table_img']); ?>" alt="<?php echo htmlspecialchars($row['customeBuild_name']); ?>" class="product-img" />
+                    <img src="<?php echo htmlspecialchars($row['custombuild_image_path']); ?>" alt="<?php echo htmlspecialchars($row['custombuild_name']); ?>" class="product-img" />
                   </div>
                   <div class="showcase-content">
-                    <div class="showcase-category"><?php echo htmlspecialchars($row['customeBuild_category_name']); ?></div>
-                    <h3 class="showcase-title"><?php echo htmlspecialchars($row['customeBuild_name']); ?></h3>
-                    <div class="showcase-small-desc"><?php echo htmlspecialchars($row['customeBuild_small_description']); ?></div>
+                    <div class="showcase-category"><?php echo htmlspecialchars($row['custombuild_category_name']); ?></div>
+                    <h3 class="showcase-title"><?php echo htmlspecialchars($row['custombuild_name']); ?></h3>
+                    <div class="showcase-small-desc"><?php echo htmlspecialchars($row['custombuild_small_description']); ?></div>
                     <div class="showcase-rating">
                       <ion-icon name="star"></ion-icon>
                       <ion-icon name="star"></ion-icon>
@@ -175,7 +177,7 @@ $categories = get_categories();
                       <ion-icon name="star"></ion-icon>
                     </div>
                     <div class="price-box">
-                      <p class="price">Price: $<?php echo htmlspecialchars($row['customeBuild_price']); ?></p>
+                      <p class="price">Price: $<?php echo htmlspecialchars($row['custombuild_price']); ?></p>
                     </div>
                   </div>
                 </div>
@@ -189,26 +191,24 @@ $categories = get_categories();
         </div>
       </div>
     </div>
-    <!-- DISPLAYS -->
+    <!-- DISPLAYSCREENS -->
     <div class="container" style="margin-bottom: 1.2rem;" id="displays-section">
       <div class="product-main">
-        <h2 class="title">Displays</h2>
+        <h2 class="title">Displayscreens</h2>
         <div class="product-grid">
           <?php
-          $query = "SELECT * FROM display";
-          $result = mysqli_query($conn, $query);
-          if ($result && $result->num_rows > 0) {
-            while ($row = mysqli_fetch_assoc($result)) {
+          if ($displayscreens && $displayscreens->num_rows > 0) {
+            while ($row = mysqli_fetch_assoc($displayscreens)) {
           ?>
-              <a href="product.php?id=<?php echo $row['id']; ?>&type=display" class="product-link">
+              <a href="product.php?id=<?php echo $row['displayscreen_id']; ?>&type=display" class="product-link">
                 <div class="showcase">
                   <div class="showcase-banner">
-                    <img src="<?php echo htmlspecialchars($row['table_img']); ?>" alt="<?php echo htmlspecialchars($row['display_name']); ?>" class="product-img" />
+                    <img src="<?php echo htmlspecialchars($row['displayscreen_image_path']); ?>" alt="<?php echo htmlspecialchars($row['displayscreen_name']); ?>" class="product-img" />
                   </div>
                   <div class="showcase-content">
-                    <div class="showcase-category"><?php echo htmlspecialchars($row['display_category_name']); ?></div>
-                    <h3 class="showcase-title"><?php echo htmlspecialchars($row['display_name']); ?></h3>
-                    <div class="showcase-small-desc"><?php echo htmlspecialchars($row['display_small_description']); ?></div>
+                    <div class="showcase-category"><?php echo htmlspecialchars($row['displayscreen_category_name']); ?></div>
+                    <h3 class="showcase-title"><?php echo htmlspecialchars($row['displayscreen_name']); ?></h3>
+                    <div class="showcase-small-desc"><?php echo htmlspecialchars($row['displayscreen_small_description']); ?></div>
                     <div class="showcase-rating">
                       <ion-icon name="star"></ion-icon>
                       <ion-icon name="star"></ion-icon>
@@ -217,7 +217,7 @@ $categories = get_categories();
                       <ion-icon name="star"></ion-icon>
                     </div>
                     <div class="price-box">
-                      <p class="price">Price: $<?php echo htmlspecialchars($row['display_price']); ?></p>
+                      <p class="price">Price: $<?php echo htmlspecialchars($row['displayscreen_price']); ?></p>
                     </div>
                   </div>
                 </div>
@@ -231,8 +231,170 @@ $categories = get_categories();
         </div>
       </div>
     </div>
+    <!-- GPUS -->
+    <div class="container" style="margin-bottom: 1.2rem;" id="gpus-section">
+      <div class="product-main">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <h2 class="title">GPUs</h2>
+          <button class="show-toggle-btn" data-target="gpu">Show all</button>
+        </div>
+        <div class="product-grid gpu-grid">
+          <?php
+          $gpu_count = 0;
+          if ($gpus && $gpus->num_rows > 0) {
+            while ($row = mysqli_fetch_assoc($gpus)) {
+              $gpu_count++;
+          ?>
+            <a href="product.php?id=<?php echo $row['gpu_id']; ?>&type=gpu" class="product-link gpu-card" style="<?php echo $gpu_count > 4 ? 'display:none;' : '' ?>">
+              <div class="showcase">
+                <div class="showcase-banner">
+                  <img src="<?php echo htmlspecialchars($row['gpu_image_path']); ?>" alt="<?php echo htmlspecialchars($row['gpu_name']); ?>" class="product-img" />
+                </div>
+                <div class="showcase-content">
+                  <div class="showcase-category"><?php echo htmlspecialchars($row['gpu_category_name']); ?></div>
+                  <h3 class="showcase-title"><?php echo htmlspecialchars($row['gpu_name']); ?></h3>
+                  <div class="showcase-small-desc"><?php echo htmlspecialchars($row['gpu_small_description']); ?></div>
+                  <div class="showcase-rating">
+                    <ion-icon name="star"></ion-icon>
+                    <ion-icon name="star"></ion-icon>
+                    <ion-icon name="star"></ion-icon>
+                    <ion-icon name="star"></ion-icon>
+                    <ion-icon name="star"></ion-icon>
+                  </div>
+                  <div class="price-box">
+                    <p class="price">Price: $<?php echo htmlspecialchars($row['gpu_price']); ?></p>
+                  </div>
+                </div>
+              </div>
+            </a>
+          <?php
+            }
+          } else {
+            echo "No GPUs Found";
+          }
+          ?>
+        </div>
+      </div>
+    </div>
+    <!-- CPUS -->
+    <div class="container" style="margin-bottom: 1.2rem;" id="cpus-section">
+      <div class="product-main">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <h2 class="title">CPUs</h2>
+          <button class="show-toggle-btn" data-target="cpu">Show all</button>
+        </div>
+        <div class="product-grid cpu-grid">
+          <?php
+          $cpu_count = 0;
+          if ($cpus && $cpus->num_rows > 0) {
+            while ($row = mysqli_fetch_assoc($cpus)) {
+              $cpu_count++;
+          ?>
+            <a href="product.php?id=<?php echo $row['cpu_id']; ?>&type=cpu" class="product-link cpu-card" style="<?php echo $cpu_count > 4 ? 'display:none;' : '' ?>">
+              <div class="showcase">
+                <div class="showcase-banner">
+                  <img src="<?php echo htmlspecialchars($row['cpu_image_path']); ?>" alt="<?php echo htmlspecialchars($row['cpu_name']); ?>" class="product-img" />
+                </div>
+                <div class="showcase-content">
+                  <div class="showcase-category"><?php echo htmlspecialchars($row['cpu_category_name']); ?></div>
+                  <h3 class="showcase-title"><?php echo htmlspecialchars($row['cpu_name']); ?></h3>
+                  <div class="showcase-small-desc"><?php echo htmlspecialchars($row['cpu_small_description']); ?></div>
+                  <div class="showcase-rating">
+                    <ion-icon name="star"></ion-icon>
+                    <ion-icon name="star"></ion-icon>
+                    <ion-icon name="star"></ion-icon>
+                    <ion-icon name="star"></ion-icon>
+                    <ion-icon name="star"></ion-icon>
+                  </div>
+                  <div class="price-box">
+                    <p class="price">Price: $<?php echo htmlspecialchars($row['cpu_price']); ?></p>
+                  </div>
+                </div>
+              </div>
+            </a>
+          <?php
+            }
+          } else {
+            echo "No CPUs Found";
+          }
+          ?>
+        </div>
+      </div>
+    </div>
+    <!-- KEYBOARDS -->
+    <div class="container" style="margin-bottom: 1.2rem;" id="keyboards-section">
+      <div class="product-main">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <h2 class="title">Keyboards</h2>
+          <button class="show-toggle-btn" data-target="keyboard">Show all</button>
+        </div>
+        <div class="product-grid keyboard-grid">
+          <?php
+          $keyboard_count = 0;
+          if ($keyboards && $keyboards->num_rows > 0) {
+            while ($row = mysqli_fetch_assoc($keyboards)) {
+              $keyboard_count++;
+          ?>
+            <a href="product.php?id=<?php echo $row['keyboard_id']; ?>&type=keyboard" class="product-link keyboard-card" style="<?php echo $keyboard_count > 4 ? 'display:none;' : '' ?>">
+              <div class="showcase">
+                <div class="showcase-banner">
+                  <img src="<?php echo htmlspecialchars($row['keyboard_image_path']); ?>" alt="<?php echo htmlspecialchars($row['keyboard_name']); ?>" class="product-img" />
+                </div>
+                <div class="showcase-content">
+                  <div class="showcase-category"><?php echo htmlspecialchars($row['keyboard_category_name']); ?></div>
+                  <h3 class="showcase-title"><?php echo htmlspecialchars($row['keyboard_name']); ?></h3>
+                  <div class="showcase-small-desc"><?php echo htmlspecialchars($row['keyboard_small_description']); ?></div>
+                  <div class="showcase-rating">
+                    <ion-icon name="star"></ion-icon>
+                    <ion-icon name="star"></ion-icon>
+                    <ion-icon name="star"></ion-icon>
+                    <ion-icon name="star"></ion-icon>
+                    <ion-icon name="star"></ion-icon>
+                  </div>
+                  <div class="price-box">
+                    <p class="price">Price: $<?php echo htmlspecialchars($row['keyboard_price']); ?></p>
+                  </div>
+                </div>
+              </div>
+            </a>
+          <?php
+            }
+          } else {
+            echo "No Keyboards Found";
+          }
+          ?>
+        </div>
+      </div>
+    </div>
   </div>
 </main>
+
+<script>
+// Toggle show all/show less for each product type
+const toggleButtons = document.querySelectorAll('.show-toggle-btn');
+toggleButtons.forEach(btn => {
+  btn.addEventListener('click', function() {
+    const type = btn.getAttribute('data-target');
+    const cards = document.querySelectorAll('.' + type + '-card');
+    const isShowingAll = btn.textContent === 'Show less';
+    cards.forEach((card, idx) => {
+      if (isShowingAll) {
+        card.style.display = idx < 4 ? '' : 'none';
+      } else {
+        card.style.display = '';
+      }
+    });
+    btn.textContent = isShowingAll ? 'Show all' : 'Show less';
+  });
+});
+</script>
+<style>
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.2rem;
+}
+</style>
 
 <?php require_once './includes/footer.php'; ?>
 

@@ -5,7 +5,7 @@ SET time_zone = "+00:00";
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_COLLATION */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
 --
@@ -16,8 +16,7 @@ SET time_zone = "+00:00";
 -- NOTE: if u want to rerun the script just uncomment the lines below (it will all tables data) :)              |
 -- --------------------------------------------------------------------------------------------------------------
 
-/*
-DROP TABLE IF EXISTS `laptop`;
+DROP TABLE IF EXISTS `laptop`; 
 DROP TABLE IF EXISTS `desktop`;
 DROP TABLE IF EXISTS `custombuild`;
 DROP TABLE IF EXISTS `cpu`;
@@ -26,8 +25,9 @@ DROP TABLE IF EXISTS `keyboard`;
 DROP TABLE IF EXISTS `displayscreen`;
 DROP TABLE IF EXISTS `banner`;
 DROP TABLE IF EXISTS `customer`;
-DROP TABLE IF EXISTS `category`;
-*/
+DROP TABLE IF EXISTS `settings`;
+DROP TABLE IF EXISTS `category`; 
+
 
 -- --------------------------------------------------------------------------------------------------------------
 -- Tables Structure                                                                                             |
@@ -46,7 +46,7 @@ CREATE TABLE `category` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------------------------------------------------------------
--- Structure for table `Customer`                                                                               |
+-- Structure for table `customer`                                                                               |
 -- --------------------------------------------------------------------------------------------------------------
 
 CREATE TABLE `customer` (
@@ -178,6 +178,7 @@ FOREIGN KEY (`keyboard_category_id`) REFERENCES `category`(`category_id`) ON DEL
 -- --------------------------------------------------------------------------------------------------------------
 -- Structure for table `DisplayScreen`                                                                          |
 -- --------------------------------------------------------------------------------------------------------------
+
 CREATE TABLE `displayscreen` (
 `displayscreen_id` INT AUTO_INCREMENT PRIMARY KEY,
 `displayscreen_name` VARCHAR(50) NOT NULL,
@@ -207,10 +208,28 @@ CREATE TABLE `banner` (
 `banner_updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------------------------------------------------------------
+-- Structure for table `settings`                                                                               |
+-- --------------------------------------------------------------------------------------------------------------
 
--- -------------------------------------------------------------------
--- Data insertion for tables
--- -------------------------------------------------------------------
+CREATE TABLE `settings` (
+  `website_name` varchar(60) NOT NULL,
+  `website_logo` varchar(50) NOT NULL,
+  `website_footer` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------------------------------------------------------------
+-- Data insertion for tables                                                                                    |
+-- --------------------------------------------------------------------------------------------------------------
+
+-- --------------------------------------------------------------------------------------------------------------
+-- insert table `Category` data                                                                                 |
+-- --------------------------------------------------------------------------------------------------------------
+
+INSERT INTO `category` (`category_id`, `category_name`, `category_status`) VALUES
+(1, 'business', TRUE),
+(2, 'student', TRUE),
+(3, 'gaming', TRUE);
 
 -- --------------------------------------------------------------------------------------------------------------
 -- insert table `Customer` data                                                                                 |
@@ -251,7 +270,7 @@ INSERT INTO `desktop` (`desktop_id`, `desktop_name`, `desktop_small_description`
 (1, 'Dell OptiPlex 3080', 'Reliable business desktop.', 'Dell OptiPlex 3080 offers robust performance and security for business environments.', 900.00, './images/products_images/desktops/desktop1.jpg', 1, 8, TRUE),
 (2, 'HP Pavilion', 'Versatile desktop for students.', 'HP Pavilion desktop is perfect for students, offering a balance of performance and value.', 700.00, './images/products_images/desktops/desktop2.jpg', 2, 5, TRUE),
 (3, 'Lenovo ThinkCentre', 'Powerful gaming desktop.', 'Lenovo ThinkCentre is equipped with high-end components for gaming and multitasking.', 1100.00, './images/products_images/desktops/desktop3.jpg', 3, 12, TRUE),
-(4, 'Acer Aspire TC', 'Affordable student desktop.', 'Acer Aspire TC is a budget-friendly desktop for everyday student tasks.', 650.00, './images/products_images/desktops/desktop4.jpg', 2, 7, FALSE),
+(4, 'Acer Aspire TC', 'Affordable student desktop.', 'Acer Aspire TC is a budget-friendly desktop for everyday student tasks.', 650.00, './images/products_images/desktops/desktop4.jpg', 2, 7, TRUE),
 (5, 'Apple iMac', 'All-in-one desktop solution.', 'Apple iMac features a stunning 4.5K Retina display and M1 chip for creative professionals.', 1500.00, './images/products_images/desktops/desktop5.jpg', 1, 6, TRUE),
 (6, 'MSI MEG Aegis', 'Premium gaming desktop.', 'MSI MEG Aegis offers top-tier gaming performance with RGB lighting and liquid cooling.', 2000.00, './images/products_images/desktops/desktop6.jpg', 3, 4, TRUE);
 
@@ -326,13 +345,20 @@ INSERT INTO `displayscreen` (`displayscreen_id`, `displayscreen_name`, `displays
 (6, 'ASUS ProArt', 'Professional Display', 'ASUS ProArt professional monitor with factory calibration for content creation', 800.00, './images/products_images/displayscreens/display6.jpg', 1, 2, TRUE);
 
 -- --------------------------------------------------------------------------------------------------------------
--- insert table `Banner` data                                                                                  |
+-- insert table `Banner` data                                                                                   |
 -- --------------------------------------------------------------------------------------------------------------
 
 INSERT INTO `banner` (`banner_id`, `banner_title`, `banner_text`, `banner_image_path`, `banner_status`) VALUES
-(1, 'LIMITED DEALS','check out our latest deals', 'banner-1.jpg', TRUE),
-(2, 'NEXT-GEN GAMING LAPTOPS', 'check out our collection of gaming laptops', 'banner-2.jpg', TRUE),
-(3, 'GET YOUR CUSTOM PC', 'get professional assembly and 3-year warranty', 'banner-3.jpg', TRUE);
+(1, 'LIMITED DEALS','check out our latest deals', './images/banners/banner-1.jpg', TRUE),
+(2, 'NEXT-GEN GAMING LAPTOPS', 'check out our collection of gaming laptops', './images/banners/banner-2.jpg', TRUE),
+(3, 'GET YOUR CUSTOM PC', 'get professional assembly and 3-year warranty', './images/banners/banner-3.jpg', TRUE);
+
+-- --------------------------------------------------------------------------------------------------------------
+-- insert table `settings` data                                                                                 |
+-- --------------------------------------------------------------------------------------------------------------
+
+INSERT INTO `settings` (`website_name`, `website_logo`, `website_footer`) VALUES
+('HCA E-Commerce', 'HCA-E-COMMERCE.png', 'HCA E-Commerce');
 
 -- --------------------------------------------------------------------------------------------------------------
 -- End of File                                                                                                  |

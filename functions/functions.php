@@ -4,7 +4,7 @@
     // get banner products and details
     function get_banners(){
         global $conn;
-        $query = "SELECT * FROM banner WHERE banner.banner_status = 1";
+        $query = "SELECT * FROM banner WHERE banner.banner_status = true";
 
         return $result = mysqli_query($conn, $query);
     }
@@ -12,165 +12,65 @@
     // get categories 
     function get_categories(){
         global $conn;
-        $query = "SELECT * FROM category WHERE category.status = 1";
+        $query = "SELECT * FROM category WHERE category.category_status = true";
 
         return $result = mysqli_query($conn, $query);
     }
 
-  
-            
-      
-   
-
-  
-
-    function get_new_products($offset, $limit){
+    // get settings
+    function get_settings(){
         global $conn;
-        // Use UNION to get data from all product tables
-        $query = "
-        (SELECT 
-            'laptop' as type,
-            id,
-            laptop_name as name,
-            laptop_img as img_path,
-            laptop_price as price,
-            laptop_category_name as category,
-            laptop_small_description as description
-        FROM 
-            laptop)
-        
-        UNION
-        
-        (SELECT 
-            'desktop' as type,
-            id,
-            desktop_name as name,
-            table_img as img_path,
-            desktop_price as price,
-            desktop_category_name as category,
-            desktop_small_description as description
-        FROM 
-            desktop)
-            
-        UNION
-        
-        (SELECT 
-            'customebuild' as type,
-            id,
-            customeBuild_name as name,
-            table_img as img_path,
-            customeBuild_price as price,
-            customeBuild_category_name as category,
-            customeBuild_small_description as description
-        FROM 
-            customeBuild)
-            
-        UNION
-        
-        (SELECT 
-            'display' as type,
-            id,
-            display_name as name,
-            table_img as img_path,
-            display_price as price,
-            display_category_name as category,
-            display_small_description as description
-        FROM 
-            display)
-        
-        LIMIT {$offset}, {$limit}";
-        
+        $query = "SELECT * FROM settings";
         return $result = mysqli_query($conn, $query);
     }
 
-    // get product through id from product tables 
-    function get_product($id, $type = 'laptop'){
+    // get laptops with category name
+    function get_laptops(){
         global $conn;
-        
-        // Based on product type, query the appropriate table
-        switch($type) {
-            case 'laptop':
-                $query = "SELECT *, 'laptop' as type FROM laptop WHERE id = $id";
-                break;
-            case 'desktop':
-                $query = "SELECT *, 'desktop' as type FROM desktop WHERE id = $id";
-                break;
-            case 'customebuild':
-                $query = "SELECT *, 'customebuild' as type FROM customeBuild WHERE id = $id";
-                break;
-            case 'display':
-                $query = "SELECT *, 'display' as type FROM display WHERE id = $id";
-                break;
-            default:
-                $query = "SELECT *, 'laptop' as type FROM laptop WHERE id = $id";
-        }
-        
-        return $result = mysqli_query($conn, $query);
+        $query = "SELECT laptop.*, category.category_name AS laptop_category_name FROM laptop JOIN category ON laptop.laptop_category_id = category.category_id WHERE laptop.laptop_status = true AND category.category_status = true";
+        return mysqli_query($conn, $query);
     }
 
-    // get items by category
-    function get_items_by_category_items($category){
+    // get desktops with category name
+    function get_desktops(){
         global $conn;
-        // Use UNION to search across all product tables
-        $query = "
-        (SELECT 
-            'laptop' as type,
-            id,
-            laptop_name as name,
-            laptop_img as img_path,
-            laptop_price as price,
-            laptop_category_name as category,
-            laptop_small_description as description
-        FROM 
-            laptop
-        WHERE 
-            laptop_category_name LIKE '%$category%')
-        
-        UNION
-        
-        (SELECT 
-            'desktop' as type,
-            id,
-            desktop_name as name,
-            table_img as img_path,
-            desktop_price as price,
-            desktop_category_name as category,
-            desktop_small_description as description
-        FROM 
-            desktop
-        WHERE 
-            desktop_category_name LIKE '%$category%')
-            
-        UNION
-        
-        (SELECT 
-            'customebuild' as type,
-            id,
-            customeBuild_name as name,
-            table_img as img_path,
-            customeBuild_price as price,
-            customeBuild_category_name as category,
-            customeBuild_small_description as description
-        FROM 
-            customeBuild
-        WHERE 
-            customeBuild_category_name LIKE '%$category%')
-            
-        UNION
-        
-        (SELECT 
-            'display' as type,
-            id,
-            display_name as name,
-            table_img as img_path,
-            display_price as price,
-            display_category_name as category,
-            display_small_description as description
-        FROM 
-            display
-        WHERE 
-            display_category_name LIKE '%$category%')";
-        
-        return $result = mysqli_query($conn, $query);
+        $query = "SELECT desktop.*, category.category_name AS desktop_category_name FROM desktop JOIN category ON desktop.desktop_category_id = category.category_id WHERE desktop.desktop_status = true AND category.category_status = true";
+        return mysqli_query($conn, $query);
     }
-?>
+
+    // get custom builds with category name
+    function get_custombuilds(){
+        global $conn;
+        $query = "SELECT custombuild.*, category.category_name AS custombuild_category_name FROM custombuild JOIN category ON custombuild.custombuild_category_id = category.category_id WHERE custombuild.custombuild_status = true AND category.category_status = true";
+        return mysqli_query($conn, $query);
+    }
+
+    // get displays with category name
+    function get_displayscreens(){
+        global $conn;
+        $query = "SELECT displayscreen.*, category.category_name AS displayscreen_category_name FROM displayscreen JOIN category ON displayscreen.displayscreen_category_id = category.category_id WHERE displayscreen.displayscreen_status = true AND category.category_status = true";
+        return mysqli_query($conn, $query);
+    }
+
+    // get gpus with category name
+    function get_gpus(){
+        global $conn;
+        $query = "SELECT gpu.*, category.category_name AS gpu_category_name FROM gpu JOIN category ON gpu.gpu_category_id = category.category_id WHERE gpu.gpu_status = true AND category.category_status = true";
+        return mysqli_query($conn, $query);
+    }
+
+    // get cpus with category name
+    function get_cpus(){
+        global $conn;
+        $query = "SELECT cpu.*, category.category_name AS cpu_category_name FROM cpu JOIN category ON cpu.cpu_category_id = category.category_id WHERE cpu.cpu_status = true AND category.category_status = true";
+        return mysqli_query($conn, $query);
+    }
+
+    // get keyboards with category name
+    function get_keyboards(){
+        global $conn;
+        $query = "SELECT keyboard.*, category.category_name AS keyboard_category_name FROM keyboard JOIN category ON keyboard.keyboard_category_id = category.category_id WHERE keyboard.keyboard_status = true AND category.category_status = true";
+        return mysqli_query($conn, $query);
+    }
+    
+    ?>
