@@ -4,7 +4,6 @@
 .container {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 0 15px;
   display: block !important;
   width: 100% !important;
   clear: both !important;
@@ -16,7 +15,6 @@
   font-size: 2.2rem;
   font-weight: 700;
   text-align: center;
-  margin-bottom: 0.5rem;
   text-transform: uppercase;
 }
 
@@ -24,7 +22,6 @@
   color: var(--sonic-silver);
   font-size: 1rem;
   text-align: center;
-  margin-bottom: 2.5rem;
 }
 
 /* Product section layout */
@@ -50,32 +47,40 @@
 /* Title with button container */
 .title-with-button {
   display: flex;
-  flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
+  margin-bottom: 15px;
+  border-bottom: 2px solid var(--main-maroon);
+  padding-bottom: 10px;
 }
 
 /* View All button next to title */
 .view-all-btn {
-  margin-left: auto;
   font-size: 0.9rem;
+  padding: 5px 15px;
+  background-color: var(--main-maroon);
+  color: #fff;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: background-color 0.3s;
+  width: 150px;
+  text-align: center;
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* Product section title - updated for flex layout */
+.view-all-btn:hover {
+  background-color: var(--deep-maroon);
+}
+
+/* Product section title - updated for better visibility */
 .product-section-title {
+  font-size: 1.5rem;
+  font-weight: 700;
   color: var(--eerie-black);
-  font-size: 1.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  margin-bottom: 10px !important;
-  padding-bottom: 10px;
-  border-bottom: 2px solid var(--main-maroon);
-  display: inline-block !important;
-  width: auto !important;
-  text-align: left !important;
-  float: none !important;
-  margin-right: 20px;
+  margin: 0;
 }
 
 /* Product main container */
@@ -84,6 +89,7 @@
   clear: both;
   display: block;
   float: none;
+  margin-bottom: -10px;
 }
 
 /* Product grid layout improvements */
@@ -94,6 +100,19 @@
   float: none;
   clear: both;
   width: 100%;
+  margin-bottom: 20px;
+  margin-top: 0;
+}
+
+/* Ensure all sections have the same spacing regardless of their position */
+#laptops-section .product-grid,
+#desktops-section .product-grid,
+#custom-builds-section .product-grid,
+#display-screens-section .product-grid,
+#graphics-cards-section .product-grid,
+#processors-section .product-grid,
+#keyboards-section .product-grid {
+  margin-top: 0;
 }
 
 /* Product card styling */
@@ -283,12 +302,105 @@
 .section-container {
   display: block;
   width: 100%;
-  margin-bottom: 30px;
+  margin-top: -20px;
+  margin-bottom: 0;
 }
 
 /* Title-only container */
 .title-only-container {
   display: block;
   width: 100%;
+  padding-top: 10px;
   margin-bottom: 15px;
+  padding-bottom: 0;
+}
+
+/* Specific override for the laptops title to ensure consistent spacing */
+#laptops-title {
+  margin-bottom: 15px !important;
+}
+
+/* Smooth scrolling and scroll padding for fixed header */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 180px; /* Increased to provide more space below nav bar */
+}
+
+/* Add some spacing before section headings for better visibility when scrolled to */
+.section-container {
+  margin-top: -20px;
+}
+
+.title-only-container {
+  margin-bottom: 15px;
+}
+
+/* Removing highlight effects as requested */
+.product-section-title:target,
+h2:target {
+  /* No visual effects */
+}
+
+/* JavaScript controlled highlighting - removing all effects */
+.highlight-target {
+  /* No visual effects */
+}
+
+/* Removing animation */
+@keyframes pulse {
+  0%,
+  50%,
+  100% {
+    /* No visual effects */
+  }
+}
+
+/* PC Parts dropdown styling for the navigation */
+.dropdown-panel {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: white;
+  width: 200px;
+  padding: 15px;
+  border-radius: 5px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.menu-category:hover .dropdown-panel {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: all;
+}
+
+.dropdown-panel-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.panel-list-item {
+  padding: 5px 0;
+}
+
+.panel-list-item a {
+  color: var(--eerie-black);
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.panel-list-item a:hover {
+  color: var(--main-maroon);
+}
+
+/* Add styles for the flattened section structure */
+.product-section {
+  margin-bottom: 30px;
 }

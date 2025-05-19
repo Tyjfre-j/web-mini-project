@@ -1,88 +1,117 @@
-'use strict';
+"use strict";
 
 // modal variables
-const modal = document.querySelector('[data-modal]');
-const modalCloseBtn = document.querySelector('[data-modal-close]');
-const modalCloseOverlay = document.querySelector('[data-modal-overlay]');
+const modal = document.querySelector("[data-modal]");
+const modalCloseBtn = document.querySelector("[data-modal-close]");
+const modalCloseOverlay = document.querySelector("[data-modal-overlay]");
 
 // modal function
-const modalCloseFunc = function () { modal.classList.add('closed') }
+const modalCloseFunc = function () {
+  modal.classList.add("closed");
+};
 
 // modal eventListener
-modalCloseOverlay.addEventListener('click', modalCloseFunc);
-modalCloseBtn.addEventListener('click', modalCloseFunc);
+modalCloseOverlay.addEventListener("click", modalCloseFunc);
+modalCloseBtn.addEventListener("click", modalCloseFunc);
 
+// Smooth scrolling for navigation links without visual effects
+document.addEventListener("DOMContentLoaded", function () {
+  // Get all links that have a hash in them
+  const navLinks = document.querySelectorAll('a[href*="#"]');
 
+  // Add event listener to each link
+  navLinks.forEach((link) => {
+    if (link.getAttribute("href").indexOf("#") !== -1) {
+      link.addEventListener("click", function (e) {
+        // Only prevent default if not an empty hash
+        if (this.getAttribute("href") !== "#") {
+          const hrefParts = this.getAttribute("href").split("#");
+          const targetId = hrefParts[1];
+          const targetElement = document.getElementById(targetId);
 
+          if (targetElement) {
+            e.preventDefault();
 
+            // Scroll smoothly to the target with offset
+            const headerOffset = 180; // Increased to match the CSS scroll-padding-top value
+            const elementPosition = targetElement.getBoundingClientRect().top;
+            const offsetPosition =
+              elementPosition + window.pageYOffset - headerOffset;
 
-// notification toast variables
-const notificationToast = document.querySelector('[data-toast]');
-const toastCloseBtn = document.querySelector('[data-toast-close]');
+            window.scrollTo({
+              top: offsetPosition,
+              behavior: "smooth",
+            });
 
-// notification toast eventListener
-toastCloseBtn.addEventListener('click', function () {
-  notificationToast.classList.add('closed');
+            // Close mobile menu if open
+            const mobileMenu = document.querySelector(
+              "[data-mobile-menu].active"
+            );
+            const overlay = document.querySelector("[data-overlay]");
+            if (mobileMenu) {
+              mobileMenu.classList.remove("active");
+              overlay.classList.remove("active");
+            }
+          }
+        }
+      });
+    }
+  });
 });
 
+// notification toast variables
+const notificationToast = document.querySelector("[data-toast]");
+const toastCloseBtn = document.querySelector("[data-toast-close]");
 
-
-
+// notification toast eventListener
+toastCloseBtn.addEventListener("click", function () {
+  notificationToast.classList.add("closed");
+});
 
 // mobile menu variables
-const mobileMenuOpenBtn = document.querySelectorAll('[data-mobile-menu-open-btn]');
-const mobileMenu = document.querySelectorAll('[data-mobile-menu]');
-const mobileMenuCloseBtn = document.querySelectorAll('[data-mobile-menu-close-btn]');
-const overlay = document.querySelector('[data-overlay]');
+const mobileMenuOpenBtn = document.querySelectorAll(
+  "[data-mobile-menu-open-btn]"
+);
+const mobileMenu = document.querySelectorAll("[data-mobile-menu]");
+const mobileMenuCloseBtn = document.querySelectorAll(
+  "[data-mobile-menu-close-btn]"
+);
+const overlay = document.querySelector("[data-overlay]");
 
 for (let i = 0; i < mobileMenuOpenBtn.length; i++) {
-
   // mobile menu function
   const mobileMenuCloseFunc = function () {
-    mobileMenu[i].classList.remove('active');
-    overlay.classList.remove('active');
-  }
+    mobileMenu[i].classList.remove("active");
+    overlay.classList.remove("active");
+  };
 
-  mobileMenuOpenBtn[i].addEventListener('click', function () {
-    mobileMenu[i].classList.add('active');
-    overlay.classList.add('active');
+  mobileMenuOpenBtn[i].addEventListener("click", function () {
+    mobileMenu[i].classList.add("active");
+    overlay.classList.add("active");
   });
 
-  mobileMenuCloseBtn[i].addEventListener('click', mobileMenuCloseFunc);
-  overlay.addEventListener('click', mobileMenuCloseFunc);
-
+  mobileMenuCloseBtn[i].addEventListener("click", mobileMenuCloseFunc);
+  overlay.addEventListener("click", mobileMenuCloseFunc);
 }
 
-
-
-
-
 // accordion variables
-const accordionBtn = document.querySelectorAll('[data-accordion-btn]');
-const accordion = document.querySelectorAll('[data-accordion]');
+const accordionBtn = document.querySelectorAll("[data-accordion-btn]");
+const accordion = document.querySelectorAll("[data-accordion]");
 
 for (let i = 0; i < accordionBtn.length; i++) {
-
-  accordionBtn[i].addEventListener('click', function () {
-
-    const clickedBtn = this.nextElementSibling.classList.contains('active');
+  accordionBtn[i].addEventListener("click", function () {
+    const clickedBtn = this.nextElementSibling.classList.contains("active");
 
     for (let i = 0; i < accordion.length; i++) {
-
       if (clickedBtn) break;
 
-      if (accordion[i].classList.contains('active')) {
-
-        accordion[i].classList.remove('active');
-        accordionBtn[i].classList.remove('active');
-
+      if (accordion[i].classList.contains("active")) {
+        accordion[i].classList.remove("active");
+        accordionBtn[i].classList.remove("active");
       }
-
     }
 
-    this.nextElementSibling.classList.toggle('active');
-    this.classList.toggle('active');
-
+    this.nextElementSibling.classList.toggle("active");
+    this.classList.toggle("active");
   });
-
 }

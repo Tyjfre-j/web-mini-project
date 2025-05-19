@@ -11,19 +11,36 @@
       </li>
 
       <li class="menu-category">
-        <a href="index.php#laptops-section" class="menu-title">Laptop</a>
+        <a href="index.php#laptops-heading" class="menu-title">Laptops</a>
       </li>
 
       <li class="menu-category">
-        <a href="index.php#desktops-section" class="menu-title">Desktop</a>
+        <a href="index.php#desktops-heading" class="menu-title">Desktops</a>
       </li>
       
       <li class="menu-category">
-        <a href="index.php#custombuilds-section" class="menu-title">Custom Build</a>
+        <a href="index.php#custom-builds-heading" class="menu-title">Custom Build</a>
       </li>
 
       <li class="menu-category">
-        <a href="index.php#displays-section" class="menu-title">Display</a>
+        <a href="#" class="menu-title">PC Parts</a>
+        
+        <div class="dropdown-panel">
+          <ul class="dropdown-panel-list">
+            <li class="panel-list-item">
+              <a href="index.php#display-screens-heading">Display Screens</a>
+            </li>
+            <li class="panel-list-item">
+              <a href="index.php#processors-heading">Processors</a>
+            </li>
+            <li class="panel-list-item">
+              <a href="index.php#graphics-cards-heading">Graphics Cards</a>
+            </li>
+            <li class="panel-list-item">
+              <a href="index.php#keyboards-heading">Keyboards</a>
+            </li>
+          </ul>
+        </div>
       </li>
 
       <li class="menu-category">

@@ -1,16 +1,16 @@
 /**
  * Index page JavaScript functionality
- * 
+ *
  * Contains:
  * 1. Banner carousel functionality
  * 2. Header scroll effects
  */
 
 // Wait for DOM content to be fully loaded
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener("DOMContentLoaded", function () {
   // Banner carousel functionality
   initBannerCarousel();
-  
+
   // Header scroll effects
   initHeaderScrollEffects();
 });
@@ -19,21 +19,23 @@ document.addEventListener('DOMContentLoaded', function() {
  * Initialize the banner carousel/slider
  */
 function initBannerCarousel() {
-  const sliderItems = document.querySelectorAll('.slider-item');
+  const sliderItems = document.querySelectorAll(".slider-item");
   const totalBanners = sliderItems.length;
   let currentBanner = 1;
 
   // Function to show a specific banner
   function showBanner(bannerNumber) {
     // Remove active class from all banners
-    sliderItems.forEach(item => {
-      item.classList.remove('active');
+    sliderItems.forEach((item) => {
+      item.classList.remove("active");
     });
-    
+
     // Add active class to current banner
-    const selectedBanner = document.querySelector(`[data-banner="${bannerNumber}"]`);
+    const selectedBanner = document.querySelector(
+      `[data-banner="${bannerNumber}"]`
+    );
     if (selectedBanner) {
-      selectedBanner.classList.add('active');
+      selectedBanner.classList.add("active");
     }
   }
 
@@ -45,7 +47,7 @@ function initBannerCarousel() {
 
   // Show first banner initially
   showBanner(1);
-  
+
   // Start automatic rotation - change banner every 5 seconds
   setInterval(nextBanner, 5000);
 }
@@ -54,20 +56,20 @@ function initBannerCarousel() {
  * Initialize the header scroll effects
  */
 function initHeaderScrollEffects() {
-  const header = document.querySelector('header');
+  const header = document.querySelector("header");
   const scrollThreshold = 100;
-  
+
   function handleScroll() {
     if (window.scrollY > scrollThreshold) {
-      header.classList.add('scroll-active');
+      header.classList.add("scroll-active");
     } else {
-      header.classList.remove('scroll-active');
+      header.classList.remove("scroll-active");
     }
   }
-  
+
   // Add initial class based on page load position
   handleScroll();
-  
+
   // Listen for scroll events
-  window.addEventListener('scroll', handleScroll);
-} 
+  window.addEventListener("scroll", handleScroll);
+}

@@ -70,19 +70,38 @@ if (isset($_SESSION['mycart'])) {
       </li>
 
       <li class="menu-category">
-        <a href="./index.php#laptops-section" class="menu-title">Laptop</a>
+        <a href="./index.php#laptops-heading" class="menu-title">Laptops</a>
       </li>
       
       <li class="menu-category">
-        <a href="./index.php#desktops-section" class="menu-title">Desktop</a>
+        <a href="./index.php#desktops-heading" class="menu-title">Desktops</a>
       </li>
       
       <li class="menu-category">
-        <a href="./index.php#custombuilds-section" class="menu-title">Custom Build</a>
+        <a href="./index.php#custom-builds-heading" class="menu-title">Custom Build</a>
       </li>
 
       <li class="menu-category">
-        <a href="./index.php#displays-section" class="menu-title">Display</a>
+        <button class="accordion-menu" data-accordion-btn>
+          <p class="menu-title">PC Parts</p>
+          <ion-icon name="add-outline" class="add-icon"></ion-icon>
+          <ion-icon name="remove-outline" class="remove-icon"></ion-icon>
+        </button>
+
+        <ul class="submenu-category-list" data-accordion>
+          <li class="submenu-category">
+            <a href="./index.php#display-screens-heading" class="submenu-title">Display Screens</a>
+          </li>
+          <li class="submenu-category">
+            <a href="./index.php#processors-heading" class="submenu-title">Processors</a>
+          </li>
+          <li class="submenu-category">
+            <a href="./index.php#graphics-cards-heading" class="submenu-title">Graphics Cards</a>
+          </li>
+          <li class="submenu-category">
+            <a href="./index.php#keyboards-heading" class="submenu-title">Keyboards</a>
+          </li>
+        </ul>
       </li>
 
       <li class="menu-category">

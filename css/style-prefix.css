@@ -161,7 +161,7 @@ body::-webkit-scrollbar-thumb:hover {
 \*-----------------------------------*/
 
 .container {
-  padding: 0 15px;
+  padding: 0 5px;
 }
 
 .has-scrollbar {
@@ -3142,7 +3142,7 @@ footer {
     -ms-flex-align: start;
     align-items: flex-start;
     gap: 30px;
-    margin-bottom: 30px;
+    margin-bottom: 10px;
   }
 
   .sidebar {
@@ -3486,4 +3486,9 @@ main {
   color: var(--main-maroon);
   transform: scale(1.05);
   transition: all 0.25s ease;
+}
+
+/* Specific override for the laptops title to ensure consistent spacing */
+#laptops-title {
+  margin-bottom: 15px !important;
 }
