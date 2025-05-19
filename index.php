@@ -1,7 +1,7 @@
 <?php
 include_once('./includes/headerNav.php');
 // Get all banner products
-$banner_products = get_banner_details();
+$banner_products = get_banners();
 // Get categories
 $categories = get_categories();
 // 
