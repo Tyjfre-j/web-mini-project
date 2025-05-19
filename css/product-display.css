@@ -404,3 +404,23 @@ h2:target {
 .product-section {
   margin-bottom: 30px;
 }
+
+/* Product form styling */
+.product-form {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
+button.product-link {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+}

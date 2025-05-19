@@ -4,18 +4,27 @@
 <?php require_once './includes/mobilenav.php'; ?>
 
 <?php
-// Get category from URL
+// Get category from URL (GET method is appropriate for navigation)
 $category = isset($_GET['category']) ? $_GET['category'] : '';
 if (empty($category)) {
     header("Location: index.php");
     exit();
 }
 
-// Get sort parameters if present
-$sort_by = isset($_GET['sort_by']) ? $_GET['sort_by'] : 'default';
-$filter_category = isset($_GET['filter_category']) ? $_GET['filter_category'] : 'all';
-$min_price = isset($_GET['min_price']) ? floatval($_GET['min_price']) : 0;
-$max_price = isset($_GET['max_price']) ? floatval($_GET['max_price']) : 10000;
+// Get sort parameters if present (from either POST for filters or GET for direct access)
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Form was submitted, get values from POST
+    $sort_by = isset($_POST['sort_by']) ? $_POST['sort_by'] : 'default';
+    $filter_category = isset($_POST['filter_category']) ? $_POST['filter_category'] : 'all';
+    $min_price = isset($_POST['min_price']) ? floatval($_POST['min_price']) : 0;
+    $max_price = isset($_POST['max_price']) ? floatval($_POST['max_price']) : 10000;
+} else {
+    // Direct access via URL, get values from GET if available
+    $sort_by = isset($_GET['sort_by']) ? $_GET['sort_by'] : 'default';
+    $filter_category = isset($_GET['filter_category']) ? $_GET['filter_category'] : 'all';
+    $min_price = isset($_GET['min_price']) ? floatval($_GET['min_price']) : 0;
+    $max_price = isset($_GET['max_price']) ? floatval($_GET['max_price']) : 10000;
+}
 
 // Get all categories for filtering
 $categories = getCategories();
@@ -80,6 +89,9 @@ if ($products && $products->num_rows > 0) {
 <!-- Use the same product display styles as index page -->
 <link rel="stylesheet" href="css/product-display.css">
 
+<!-- Include JavaScript files -->
+<script src="js/product-effects.js"></script>
+
 <div class="overlay" data-overlay></div>
 <!--
     - HEADER
@@ -119,7 +131,7 @@ if ($products && $products->num_rows > 0) {
     <!-- Filter and sort section -->
     <div class="container">
       <div class="filter-container">
-        <form action="" method="GET" class="filter-form">
+        <form action="" method="POST" class="filter-form" onchange="return false;">
           <input type="hidden" name="category" value="<?php echo htmlspecialchars($category); ?>">
           
           <div class="filter-group">

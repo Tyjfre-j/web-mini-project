@@ -1,161 +1,182 @@
-
-<head>
-
-  <!-- TODO: Work on the image sacling -->
-    <style>
-      .product_image_box{
-    /* border: 1px solid red; */
-
-      width: 50%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      }
-    
-        .pimage{
-    /* border: 6px solid red; */
-      /* width: 40%;
-  height: 100%;
-  object-fit: scale-down; */
-    width: 100%;
-  height: 100%;
-  -o-object-fit: cover;
-     object-fit: cover;
-     border-radius: 16px;
-        
-      }
-        #image-pr{
-/*             
-            height:80%;
-            width:50% */
-          /* width: 40%;
-          height: 450px; */
-        }
-        .img-magnifier-container {
-          position:absolute;
-         /*top:8%;
-         left:20%;  */
-         /* width:100%;
-         height:100%
-               /* width: 65%;
-      height: 450px; */
-       }
-
-
-       .img-magnifier-glass {
-        position: absolute;
-        left:25%;
-        opacity:0.1;
-        border-radius: 5%;
-        cursor: none;
-       /*Set the size of the magnifier glass:*/
-        width: 20px;
-        height: 20px;
-      }
-       .img-magnifier-glass:hover {
-        opacity:1;
-        border-radius: 10%;
-        cursor: none;
-       /*Set the size of the magnifier glass:*/
-        width: 130px;
-        height: 130px;
-      }
-  
-    </style>
-
-<script>
- 
-
-function magnify(imgID, zoom) {
-  var img, glass, w, h, bw;
-  img = document.getElementById(imgID);
-  /*create magnifier glass:*/
-  glass = document.createElement("DIV");
-  glass.setAttribute("class", "img-magnifier-glass");
-  /*insert magnifier glass:*/
-  img.parentElement.insertBefore(glass, img);
-  /*set background properties for the magnifier glass:*/
-  glass.style.backgroundImage = "url('" + img.src + "')";
-  glass.style.backgroundRepeat = "no-repeat";
-  glass.style.backgroundSize = (img.width * zoom) + "px " + (img.height * zoom) + "px";
-  bw = 3;
-  w = glass.offsetWidth / 2;
-  h = glass.offsetHeight / 2;
-  /*execute a function when someone moves the magnifier glass over the image:*/
-  glass.addEventListener("mousemove", moveMagnifier);
-  img.addEventListener("mousemove", moveMagnifier);
-  /*and also for touch screens:*/
-  glass.addEventListener("touchmove", moveMagnifier);
-  img.addEventListener("touchmove", moveMagnifier);
-  function moveMagnifier(e) {
-    var pos, x, y;
-    /*prevent any other actions that may occur when moving over the image*/
-    e.preventDefault();
-    /*get the cursor's x and y positions:*/
-    pos = getCursorPos(e);
-    x = pos.x;
-    y = pos.y;
-    /*prevent the magnifier glass from being positioned outside the image:*/
-    if (x > img.width - (w / zoom)) {x = img.width - (w / zoom);}
-    if (x < w / zoom) {x = w / zoom;}
-    if (y > img.height - (h / zoom)) {y = img.height - (h / zoom);}
-    if (y < h / zoom) {y = h / zoom;}
-    /*set the position of the magnifier glass:*/
-    glass.style.left = (x - w) + "px";
-    glass.style.top = (y - h) + "px";
-    /*display what the magnifier glass "sees":*/
-    glass.style.backgroundPosition = "-" + ((x * zoom) - w + bw) + "px -" + ((y * zoom) - h + bw) + "px";
-  }
-  function getCursorPos(e) {
-    var a, x = 0, y = 0;
-    e = e || window.event;
-    /*get the x and y positions of the image:*/
-    a = img.getBoundingClientRect();
-    /*calculate the cursor's x and y coordinates, relative to the image:*/
-    x = e.pageX - a.left;
-    y = e.pageY - a.top;
-    /*consider any page scrolling:*/
-    x = x - window.pageXOffset;
-    y = y - window.pageYOffset;
-    return {x : x, y : y};
-  }
-}
-</script>
-</head>
-
+<?php include_once('./includes/headerNav.php'); ?>
+<?php require_once './includes/topheadactions.php'; ?>
+<?php require_once './includes/mobilenav.php'; ?>
 
 <?php
+// Get product ID and type from URL using GET (appropriate for page navigation)
+$product_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+$product_type = isset($_GET['type']) ? $_GET['type'] : '';
 
-// $sql11 ="SELECT * FROM  products WHERE product_id='{$_GET['id']}';";
-// $sql11 ="SELECT * FROM  products WHERE product_id=10";
-// $result11 = $conn->query($sql11);
-// $row11 = $result11->fetch_assoc();
-// $conn->close();
-// $product_ID = 34;
-// $result11 = get_product($product_ID);
-// $row11 = $result11->fetch_assoc();
-// $conn->close();
+if (empty($product_id) || empty($product_type)) {
+    header("Location: index.php");
+    exit();
+}
 
+// Function to get product by ID and type
+function getProductById($id, $type) {
+    global $conn;
+    
+    // Sanitize the type to avoid SQL injection
+    $type = mysqli_real_escape_string($conn, $type);
+    
+    // In the database schema, field names include spaces from the table name
+    // E.g., table "Custom Builds" has fields like "Custom Builds_id"
+    $id_field = $type . '_id';
+    $category_id_field = $type . '_category_id';
+    $status_field = $type . '_status';
+    
+    // For the alias, we need to replace spaces with underscores
+    $type_alias = str_replace(' ', '_', $type);
+    
+    $query = "SELECT `{$type}`.*, category.category_name AS `{$type_alias}_category_name` 
+              FROM `{$type}` 
+              JOIN category ON `{$type}`.`{$category_id_field}` = category.category_id 
+              WHERE `{$type}`.`{$id_field}` = ? 
+              AND `{$type}`.`{$status_field}` = true 
+              AND category.category_status = true";
+    
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    return $result;
+}
 
+// Get the product
+$product_result = getProductById($product_id, $product_type);
+
+if (!$product_result || $product_result->num_rows === 0) {
+    header("Location: index.php");
+    exit();
+}
+
+$product = $product_result->fetch_assoc();
+
+// Define field names based on product type
+// Field names in database include spaces from table name
+// E.g., "Custom Builds_id" rather than "Custom_Builds_id"
+$id_field = $product_type . '_id';
+$name_field = $product_type . '_name';
+$image_field = $product_type . '_image_path';
+$small_desc_field = $product_type . '_small_description';
+$long_desc_field = $product_type . '_long_description';
+$price_field = $product_type . '_price';
+// For category field, we need the alias version without spaces
+$type_alias = str_replace(' ', '_', $product_type);
+$category_field = $type_alias . '_category_name';
+$quantity_field = $product_type . '_quantity';
 ?>
 
-<div class="product_image_box">
-  <!-- <div class="img-magnifier-container"> -->
-    <!-- <img class="pimage" id='image-pr' src="admin/upload/<?php echo $row['product_img'] ?>"  alt="product-img"> -->
-<div class="img-magnifier-container" style="width: 18rem;">
-  <img   class="pimage" id='image-pr' src="admin/upload/<?php echo $row['product_img'] ?>" alt="...">
-</div>
-  <!-- </div> -->
-</div>
+<link rel="stylesheet" href="css/product-detail.css">
 
+<div class="overlay" data-overlay></div>
 
+<header>
+  <?php require_once './includes/topheadactions.php'; ?>
+  <?php require_once './includes/desktopnav.php' ?>
+  <?php require_once './includes/mobilenav.php'; ?>
+</header>
 
+<main>
+  <div class="product-detail-container">
+    <div class="container">
+      <div class="breadcrumb">
+        <a href="index.php">Home</a> &gt; 
+        <a href="category.php?category=<?php echo urlencode($product_type); ?>"><?php echo htmlspecialchars($product_type); ?></a> &gt; 
+        <span><?php echo htmlspecialchars($product[$name_field]); ?></span>
+      </div>
+      
+      <div class="product-detail-main">
+        <div class="product-detail-left">
+          <div class="product-image-container">
+            <img src="<?php echo htmlspecialchars($product[$image_field]); ?>" alt="<?php echo htmlspecialchars($product[$name_field]); ?>" class="product-detail-img">
+          </div>
+        </div>
+        
+        <div class="product-detail-right">
+          <h1 class="product-detail-title"><?php echo htmlspecialchars($product[$name_field]); ?></h1>
+          
+          <div class="product-detail-category">
+            <span class="label">Category:</span>
+            <span class="value"><?php echo htmlspecialchars($product[$category_field]); ?></span>
+          </div>
+          
+          <div class="product-detail-price">
+            <span class="price-value">$<?php echo htmlspecialchars($product[$price_field]); ?></span>
+          </div>
+          
+          <div class="product-detail-rating">
+            <div class="stars">
+              <ion-icon name="star"></ion-icon>
+              <ion-icon name="star"></ion-icon>
+              <ion-icon name="star"></ion-icon>
+              <ion-icon name="star"></ion-icon>
+              <ion-icon name="star-outline"></ion-icon>
+            </div>
+            <span class="rating-count">(4.0)</span>
+          </div>
+          
+          <div class="product-detail-description">
+            <h3>Description</h3>
+            <p><?php echo htmlspecialchars($product[$long_desc_field]); ?></p>
+          </div>
+          
+          <div class="product-detail-stock">
+            <span class="label">Availability:</span>
+            <?php if ($product[$quantity_field] > 0): ?>
+              <span class="in-stock">In Stock (<?php echo $product[$quantity_field]; ?> units)</span>
+            <?php else: ?>
+              <span class="out-of-stock">Out of Stock</span>
+            <?php endif; ?>
+          </div>
+          
+          <form action="manage_cart.php" method="post" class="cart-form">
+            <input type="hidden" name="product_id" value="<?php echo $product[$id_field]; ?>">
+            <input type="hidden" name="product_name" value="<?php echo htmlspecialchars($product[$name_field]); ?>">
+            <input type="hidden" name="product_price" value="<?php echo $product[$price_field]; ?>">
+            <input type="hidden" name="product_category" value="<?php echo $product_type; ?>">
+            <input type="hidden" name="product_img" value="<?php echo htmlspecialchars($product[$image_field]); ?>">
+            
+            <div class="quantity-selector">
+              <label for="product_qty">Quantity:</label>
+              <div class="quantity-controls">
+                <button type="button" class="quantity-btn minus-btn" onclick="decrementQuantity()">-</button>
+                <input type="number" id="product_qty" name="product_qty" value="1" min="1" max="<?php echo $product[$quantity_field]; ?>">
+                <button type="button" class="quantity-btn plus-btn" onclick="incrementQuantity()">+</button>
+              </div>
+            </div>
+            
+            <button type="submit" name="add_to_cart" class="add-to-cart-btn" <?php echo ($product[$quantity_field] <= 0) ? 'disabled' : ''; ?>>
+              <ion-icon name="cart-outline"></ion-icon>
+              Add to Cart
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<?php require_once './includes/footer.php'; ?>
 
 <script>
-/* Initiate Magnify Function
-with the id of the image, and the strength of the magnifier glass:*/
-magnify("image-pr", 3);
+  function incrementQuantity() {
+    const input = document.getElementById('product_qty');
+    const max = parseInt(input.getAttribute('max'));
+    const currentValue = parseInt(input.value);
+    
+    if (currentValue < max) {
+      input.value = currentValue + 1;
+    }
+  }
+  
+  function decrementQuantity() {
+    const input = document.getElementById('product_qty');
+    const currentValue = parseInt(input.value);
+    
+    if (currentValue > 1) {
+      input.value = currentValue - 1;
+    }
+  }
 </script>
-
-<script src="./js/increament.js"></script>

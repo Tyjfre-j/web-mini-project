@@ -4,6 +4,7 @@
  * Contains:
  * 1. Banner carousel functionality
  * 2. Header scroll effects
+ * 3. Product card effects (imported from shared file)
  */
 
 // Wait for DOM content to be fully loaded
@@ -13,6 +14,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Header scroll effects
   initHeaderScrollEffects();
+
+  // Initialize product card effects (from shared file)
+  if (typeof initProductCardEffects === "function") {
+    initProductCardEffects();
+  }
 });
 
 /**
