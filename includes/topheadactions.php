@@ -5,74 +5,71 @@
   }
 ?>
 <div class="header-main">
-  <div class="container">
-    <!-- Site name on the left -->
-    <div class="site-branding">
-      <a href="./index.php" class="header-logo">
-        <div class="logo-container">
-          <img src="admin/upload/<?php echo $_SESSION['web-img']; ?>" alt="logo" class="logo-image">
-          <h1 class="site-title"><?php echo $_SESSION['web-name']; ?></h1>
-        </div>
+  <!-- Site name on the left -->
+  <div class="site-branding">
+    <a href="./index.php" class="header-logo">
+      <h1 class="site-title">PeakGear</h1>
+    </a>
+  </div>
+
+  <!-- Search input in the middle -->
+  <div class="header-search-container">
+    <form class="search-form" method="get" action="./category.php">
+      <div class="search-wrapper">
+        <input 
+          type="search" 
+          name="search_query" 
+          class="search-field" 
+          placeholder="Search products by name..." 
+          required 
+          oninvalid="this.setCustomValidity('Please enter a product name to search')" 
+          oninput="this.setCustomValidity('')" 
+        />
+        <button class="search-btn" type="submit">
+          <ion-icon name="search-outline"></ion-icon>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- User actions and cart on the right -->
+  <div class="header-user-actions desktop-menu-category-list">
+    <!-- Cart Button -->
+    <div class="menu-category">
+      <a href="./cart.php" class="menu-title" title="Shopping Cart">
+        <ion-icon name="bag-handle-outline" class="menu-icon"></ion-icon>
+        <span>Cart</span>
+        <?php if($total_cart_items > 0): ?>
+          <span class="count"><?php echo $total_cart_items; ?></span>
+        <?php endif; ?>
       </a>
     </div>
-
-    <!-- User actions and cart on the right -->
-    <div class="header-right">
-      <!-- Search input -->
-      <div class="header-search-container">
-        <form class="search-form" method="post" action="./search.php">
-          <div class="search-wrapper">
-            <input 
-              type="search" 
-              name="search" 
-              class="search-field" 
-              placeholder="Search for products..." 
-              required 
-              oninvalid="this.setCustomValidity('Please enter a search term')" 
-              oninput="this.setCustomValidity('')" 
-            />
-            <button class="search-btn" type="submit" name="submit">
-              <ion-icon name="search-outline"></ion-icon>
-            </button>
-          </div>
-        </form>
+    
+    <?php if(isset($_SESSION['id'])) { ?>
+      <!-- Profile button for logged-in users -->
+      <div class="menu-category">
+        <a href="profile.php?id=<?php echo $_SESSION['id']; ?>" class="menu-title" title="My Profile">
+          <ion-icon name="person-outline" class="menu-icon"></ion-icon>
+          <span>Profile</span>
+        </a>
       </div>
-
-      <div class="header-user-actions">
-        <!-- Cart Button -->
-        <button class="action-btn action-cart" title="Shopping Cart">
-          <a href="./cart.php">
-            <ion-icon name="bag-handle-outline"></ion-icon>
-          </a>
-          <?php if($total_cart_items > 0): ?>
-            <span class="count"><?php echo $total_cart_items; ?></span>
-          <?php endif; ?>
-        </button>
-
-        <?php if(isset($_SESSION['id'])) { ?>
-          <!-- Profile button for logged-in users -->
-          <button class="action-btn action-profile" title="My Profile">
-            <a href="profile.php?id=<?php echo $_SESSION['id']; ?>">
-              <ion-icon name="person-outline"></ion-icon>
-            </a>
-          </button>
-          
-          <!-- Logout button for logged-in users -->
-          <button class="action-btn action-logout" title="Logout">
-            <a href="logout.php">
-              <ion-icon name="log-out-outline"></ion-icon>
-            </a>
-          </button> 
-        <?php } else { ?>
-          <!-- Sign Up Button for non-logged users -->
-          <button class="action-btn action-signup" title="Sign In">
-            <a href="./login.php">
-              <ion-icon name="log-in-outline"></ion-icon>
-            </a>
-          </button>
-        <?php } ?>
+      
+      <!-- Logout button for logged-in users -->
+      <div class="menu-category">
+        <a href="logout.php" class="menu-title" title="Logout">
+          <ion-icon name="log-out-outline" class="menu-icon"></ion-icon>
+          <span>Logout</span>
+        </a>
       </div>
-    </div>
+    <?php } else { ?>
+      <!-- Sign In Button for non-logged users -->
+      <div class="menu-category">
+        <a href="./login.php" class="menu-title" title="Sign In">
+          <ion-icon name="log-in-outline" class="menu-icon"></ion-icon>
+          <span>Sign In</span>
+        </a>
+      </div>
+    <?php } ?>
   </div>
 </div>
 

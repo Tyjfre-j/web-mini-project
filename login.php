@@ -18,10 +18,12 @@ if($debug && isset($_SESSION)) {
  //run whenever this file is used no need of isset or any condition to get website image footer etc
  $sql5 ="SELECT * FROM  settings;";
  $result5 = $conn->query($sql5);
- $row5 = $result5->fetch_assoc();
- $_SESSION['web-name'] = $row5['website_name'];
- $_SESSION['web-img'] = $row5['website_logo'];
- $_SESSION['web-footer'] = $row5['website_footer'];
+ if(mysqli_num_rows($result5) > 0) {
+  $row5 = mysqli_fetch_assoc($result5);
+  $_SESSION['web-name'] = "PeakGear";
+  $_SESSION['web-img'] = $row5['website_logo'];
+  $_SESSION['web-footer'] = $row5['website_footer'];
+}
 
 // Store referrer URL if no explicit redirect parameter is provided
 if(!isset($_GET['redirect']) && isset($_SERVER['HTTP_REFERER'])) {
@@ -63,7 +65,7 @@ if(isset($_GET['redirect']) && !empty($_GET['redirect'])) {
       integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
       crossorigin="anonymous"
     />
-    <title>Login - <?php echo $_SESSION['web-name']; ?></title>
+    <title>Login - PeakGear</title>
     <style>
       * {
         box-sizing: border-box;

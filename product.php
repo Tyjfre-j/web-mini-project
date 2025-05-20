@@ -28,6 +28,7 @@
   /* Login message and button styles */
   .login-message {
     margin-top: 20px;
+    width: 100%;
   }
   
   .login-message p {
@@ -39,25 +40,28 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 12px 24px;
-    background-color: #CE5959;
+    gap: 10px;
+    background: linear-gradient(135deg, var(--main-maroon), var(--deep-maroon));
     color: white;
     border: none;
-    border-radius: 4px;
+    padding: 15px 30px;
+    font-size: 1.1rem;
     font-weight: 600;
+    border-radius: 10px;
     cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
     text-decoration: none;
-    transition: background-color 0.2s ease;
-    max-width: 250px;
   }
   
   .login-btn ion-icon {
-    margin-right: 8px;
-    font-size: 18px;
+    font-size: 1.3rem;
   }
   
   .login-btn:hover {
-    background-color: #89375F;
+    background: linear-gradient(135deg, var(--deep-maroon), var(--main-maroon));
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(13, 138, 145, 0.2);
     color: white;
   }
 </style>

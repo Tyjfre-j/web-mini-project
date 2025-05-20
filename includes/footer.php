@@ -252,9 +252,9 @@
         <div class="container">
           <img src="./images/payment.png" alt="payment method" class="payment-img" />
 
-          <p class="copyright">
-            Copyright &copy; <a href="#"><?php echo $_SESSION['web-footer']; ?></a> all rights reserved.
-          </p>
+          <div class="copyright">
+            Copyright &copy; <a href="#">PeakGear</a> all rights reserved.
+          </div>
         </div>
       </div>
     </footer>

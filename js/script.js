@@ -56,39 +56,25 @@ document.addEventListener("DOMContentLoaded", function () {
         if (targetId.endsWith("-section")) {
           let sectionElement = document.getElementById(targetId);
           if (sectionElement) {
-            // Find the previous sibling .product-section
-            let prevSection = sectionElement.previousElementSibling;
-            while (
-              prevSection &&
-              !prevSection.classList.contains("product-section")
-            ) {
-              prevSection = prevSection.previousElementSibling;
-            }
+            // Get header height for offset
             const header = document.querySelector("header");
             const headerHeight = header ? header.offsetHeight : 0;
-            if (prevSection) {
-              // Scroll to the bottom of the previous section
-              const prevRect = prevSection.getBoundingClientRect();
-              const prevBottom = prevRect.bottom + window.pageYOffset;
-              console.log(
-                "Scrolling to end of previous section:",
-                prevSection,
-                "at",
-                prevBottom - headerHeight
-              );
-              setTimeout(() => {
-                window.scrollTo({
-                  top: prevBottom - headerHeight,
-                  behavior: "smooth",
-                });
-              }, 50);
-            } else {
-              // No previous section, scroll to top
+            const offsetPadding = 20; // Extra padding to ensure good visibility
+            
+            // Get the position of the section
+            const sectionRect = sectionElement.getBoundingClientRect();
+            const sectionTop = sectionRect.top + window.pageYOffset;
+            
+            // Scroll directly to the section with offset for header
+            console.log("Scrolling to section:", targetId, "at position:", sectionTop - headerHeight - offsetPadding);
+            
+            setTimeout(() => {
               window.scrollTo({
-                top: 0,
+                top: sectionTop - headerHeight - offsetPadding,
                 behavior: "smooth",
               });
-            }
+            }, 50);
+            
             closeActiveMobileMenu();
           } else {
             window.location.href = this.getAttribute("href");

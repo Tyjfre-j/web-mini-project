@@ -422,7 +422,7 @@ INSERT INTO `banner` (`banner_id`, `banner_title`, `banner_text`, `banner_image_
 -- --------------------------------------------------------------------------------------------------------------
 
 INSERT INTO `settings` (`website_name`, `website_logo`, `website_footer`) VALUES
-('HCA E-Commerce', 'HCA-E-COMMERCE.png', 'HCA E-Commerce');
+('PeakGear', 'PeakGear.png', 'PeakGear');
 
 -- --------------------------------------------------------------------------------------------------------------
 -- End of File                                                                                                  |

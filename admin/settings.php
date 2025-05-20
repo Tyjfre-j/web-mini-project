@@ -67,14 +67,11 @@
         <input type="file" class="form-control" name="logo" />
       </div>
       <div class="col-md-6">
-        <label for="inputEmail4" class="form-label">Website Name</label>
-        <input
-          type="text"
-          name="website_name"
-          class="form-control"
-          required
-          value="<?php echo $row['website_name']; ?>"
-        />
+        <label for="">Site Name</label>
+        <input type="text" class="form-control" placeholder="Site Name"
+name="website_name"
+id="exampleInputPassword1"
+value="PeakGear" required />
       </div>
       <div class="col-md-6">
         <label for="inputPassword4" class="form-label"

@@ -39,7 +39,7 @@ else if(isset($_SERVER['HTTP_REFERER'])) {
       integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
       crossorigin="anonymous"
     />
-    <title>Sign Up - <?php echo $_SESSION['web-name']; ?></title>
+    <title>Sign Up - PeakGear</title>
     <style>
       * {
         box-sizing: border-box;

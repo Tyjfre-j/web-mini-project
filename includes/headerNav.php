@@ -6,8 +6,8 @@
 	//run whenever this file is used no need of isset or any condition to get website image footer etc
 	$settings = getSettings();
 	$row5 = mysqli_fetch_assoc($settings);
-	$_SESSION['web-name'] = $row5['website_name'];
-	$_SESSION['web-img'] = $row5['website_logo'];
+	$_SESSION['web-name'] = "PeakGear";
+	$_SESSION['web-img'] = "PeakGear.jpg";
 	$_SESSION['web-footer'] = $row5['website_footer'];
 
 	// TODO: Also update setting to add info email, whatsapp, address etc to change it dynamically
@@ -20,14 +20,15 @@
   	<meta charset="UTF-8" />
   	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
+    <meta name="description" content="PeakGear offers high-quality computer hardware including laptops, desktops, custom PCs, and components.">
     <meta name="author" content="">
+    <meta name="robots" content="index, follow">
 
 
 	<!-- Favicon -->
 	<link rel="shortcut icon" href="./images/flogo/fav.png" type="image/x-icon" />
 	
-    <title><?php echo $_SESSION['web-name']; ?></title>
+    <title>PeakGear</title>
 
 	
 
@@ -51,6 +52,56 @@
 	<link rel="stylesheet" type="text/css" href="./css/aboutus.css?<?php echo time(); ?>" />
 	<link rel="stylesheet" type="text/css" href="./css/contact.css?<?php echo time(); ?>" />
 	<link rel="stylesheet" type="text/css" href="./css/pagination.css?<?php echo time(); ?>" />
+	
+	<!-- Additional header styles -->
+	<style>
+		/* Site title animation */
+		.site-title {
+			background-image: linear-gradient(90deg, var(--main-maroon), var(--deep-maroon), var(--main-maroon));
+			background-size: 200% 100%;
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+			animation: gradientMove 8s ease infinite;
+			margin-left: 15px; /* Move title to the right */
+		}
+		
+		/* Override site title hover effect and underline */
+		.site-title:after {
+			display: none !important;
+		}
+		
+		.header-logo:hover .site-title {
+			transform: none !important;
+			color: var(--main-maroon) !important;
+		}
+		
+		/* Move cart and sign-in buttons to the left */
+		.header-user-actions.desktop-menu-category-list {
+			margin-right: 25px;
+		}
+		
+		@keyframes gradientMove {
+			0% { background-position: 0% 50%; }
+			50% { background-position: 100% 50%; }
+			100% { background-position: 0% 50%; }
+		}
+
+		/* Improved header spacing on smaller screens */
+		@media (max-width: 768px) {
+			.header-main {
+				padding: 15px 15px 20px;
+			}
+			.site-branding {
+				margin-bottom: 15px;
+			}
+		}
+
+		/* Subtle header shadow on scroll */
+		header.scroll-active {
+			box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+		}
+	</style>
+	
 	<!--
 		- google font link
 	-->

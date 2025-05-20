@@ -108,6 +108,315 @@
         }
     }
     
+    // Search across all product types
+    function searchProducts($search_term, $sort_by = 'default', $min_price = 0, $max_price = 10000, $page = 1, $items_per_page = 12, $filter_type = 'all', $filter_category = 'all') {
+        global $conn;
+        
+        // Sanitize search term
+        $search_term = mysqli_real_escape_string($conn, $search_term);
+        // If search term is just a single character, make sure to find all products containing it
+        $search_pattern = "%{$search_term}%";
+        
+        // Calculate offset for pagination
+        $offset = ($page - 1) * $items_per_page;
+        
+        // Base query for all product types with sorting
+        $sort_clause = "";
+        switch ($sort_by) {
+            case 'price_low':
+                $sort_clause = "ORDER BY price ASC";
+                break;
+            case 'price_high':
+                $sort_clause = "ORDER BY price DESC";
+                break;
+            case 'newest':
+                $sort_clause = "ORDER BY created_at DESC";
+                break;
+            default:
+                $sort_clause = ""; // Default sorting
+        }
+        
+        // Build query parts for each product type
+        $queries = [];
+        $count_queries = [];
+        
+        // Only include the tables that match the filter_type, or all if filter_type is 'all'
+        if ($filter_type == 'all' || $filter_type == 'Laptops') {
+            $category_filter = $filter_category != 'all' ? "AND category.category_name = '" . mysqli_real_escape_string($conn, $filter_category) . "'" : "";
+            
+            $queries[] = "(SELECT 
+                'Laptops' as product_type,
+                Laptops_id as id,
+                Laptops_name as name,
+                Laptops_image_path as image_path,
+                Laptops_price as price,
+                category.category_name as category,
+                Laptops_small_description as small_description,
+                Laptops_long_description as long_description,
+                Laptops_created_at as created_at
+            FROM 
+                `Laptops`
+            JOIN 
+                category ON Laptops.Laptops_category_id = category.category_id
+            WHERE 
+                LOWER(Laptops_name) LIKE LOWER('{$search_pattern}')
+                AND Laptops_price BETWEEN {$min_price} AND {$max_price}
+                AND Laptops_status = true
+                {$category_filter}
+            )";
+            
+            $count_queries[] = "(SELECT Laptops_id FROM `Laptops` 
+                JOIN category ON Laptops.Laptops_category_id = category.category_id
+                WHERE LOWER(Laptops_name) LIKE LOWER('{$search_pattern}')
+                AND Laptops_price BETWEEN {$min_price} AND {$max_price}
+                AND Laptops_status = true
+                {$category_filter})";
+        }
+        
+        if ($filter_type == 'all' || $filter_type == 'Desktops') {
+            $category_filter = $filter_category != 'all' ? "AND category.category_name = '" . mysqli_real_escape_string($conn, $filter_category) . "'" : "";
+            
+            $queries[] = "(SELECT 
+                'Desktops' as product_type,
+                Desktops_id as id,
+                Desktops_name as name,
+                Desktops_image_path as image_path,
+                Desktops_price as price,
+                category.category_name as category,
+                Desktops_small_description as small_description,
+                Desktops_long_description as long_description,
+                Desktops_created_at as created_at
+            FROM 
+                `Desktops`
+            JOIN 
+                category ON Desktops.Desktops_category_id = category.category_id
+            WHERE 
+                LOWER(Desktops_name) LIKE LOWER('{$search_pattern}')
+                AND Desktops_price BETWEEN {$min_price} AND {$max_price}
+                AND Desktops_status = true
+                {$category_filter}
+            )";
+            
+            $count_queries[] = "(SELECT Desktops_id FROM `Desktops` 
+                JOIN category ON Desktops.Desktops_category_id = category.category_id
+                WHERE LOWER(Desktops_name) LIKE LOWER('{$search_pattern}')
+                AND Desktops_price BETWEEN {$min_price} AND {$max_price}
+                AND Desktops_status = true
+                {$category_filter})";
+        }
+        
+        if ($filter_type == 'all' || $filter_type == 'Custom Builds') {
+            $category_filter = $filter_category != 'all' ? "AND category.category_name = '" . mysqli_real_escape_string($conn, $filter_category) . "'" : "";
+            
+            $queries[] = "(SELECT 
+                'Custom Builds' as product_type,
+                `Custom Builds_id` as id,
+                `Custom Builds_name` as name,
+                `Custom Builds_image_path` as image_path,
+                `Custom Builds_price` as price,
+                category.category_name as category,
+                `Custom Builds_small_description` as small_description,
+                `Custom Builds_long_description` as long_description,
+                `Custom Builds_created_at` as created_at
+            FROM 
+                `Custom Builds`
+            JOIN 
+                category ON `Custom Builds`.`Custom Builds_category_id` = category.category_id
+            WHERE 
+                LOWER(`Custom Builds_name`) LIKE LOWER('{$search_pattern}')
+                AND `Custom Builds_price` BETWEEN {$min_price} AND {$max_price}
+                AND `Custom Builds_status` = true
+                {$category_filter}
+            )";
+            
+            $count_queries[] = "(SELECT `Custom Builds_id` FROM `Custom Builds` 
+                JOIN category ON `Custom Builds`.`Custom Builds_category_id` = category.category_id
+                WHERE LOWER(`Custom Builds_name`) LIKE LOWER('{$search_pattern}')
+                AND `Custom Builds_price` BETWEEN {$min_price} AND {$max_price}
+                AND `Custom Builds_status` = true
+                {$category_filter})";
+        }
+        
+        if ($filter_type == 'all' || $filter_type == 'Display Screens') {
+            $category_filter = $filter_category != 'all' ? "AND category.category_name = '" . mysqli_real_escape_string($conn, $filter_category) . "'" : "";
+            
+            $queries[] = "(SELECT 
+                'Display Screens' as product_type,
+                `Display Screens_id` as id,
+                `Display Screens_name` as name,
+                `Display Screens_image_path` as image_path,
+                `Display Screens_price` as price,
+                category.category_name as category,
+                `Display Screens_small_description` as small_description,
+                `Display Screens_long_description` as long_description,
+                `Display Screens_created_at` as created_at
+            FROM 
+                `Display Screens`
+            JOIN 
+                category ON `Display Screens`.`Display Screens_category_id` = category.category_id
+            WHERE 
+                LOWER(`Display Screens_name`) LIKE LOWER('{$search_pattern}')
+                AND `Display Screens_price` BETWEEN {$min_price} AND {$max_price}
+                AND `Display Screens_status` = true
+                {$category_filter}
+            )";
+            
+            $count_queries[] = "(SELECT `Display Screens_id` FROM `Display Screens` 
+                JOIN category ON `Display Screens`.`Display Screens_category_id` = category.category_id
+                WHERE LOWER(`Display Screens_name`) LIKE LOWER('{$search_pattern}')
+                AND `Display Screens_price` BETWEEN {$min_price} AND {$max_price}
+                AND `Display Screens_status` = true
+                {$category_filter})";
+        }
+        
+        if ($filter_type == 'all' || $filter_type == 'Graphics Cards') {
+            $category_filter = $filter_category != 'all' ? "AND category.category_name = '" . mysqli_real_escape_string($conn, $filter_category) . "'" : "";
+            
+            $queries[] = "(SELECT 
+                'Graphics Cards' as product_type,
+                `Graphics Cards_id` as id,
+                `Graphics Cards_name` as name,
+                `Graphics Cards_image_path` as image_path,
+                `Graphics Cards_price` as price,
+                category.category_name as category,
+                `Graphics Cards_small_description` as small_description,
+                `Graphics Cards_long_description` as long_description,
+                `Graphics Cards_created_at` as created_at
+            FROM 
+                `Graphics Cards`
+            JOIN 
+                category ON `Graphics Cards`.`Graphics Cards_category_id` = category.category_id
+            WHERE 
+                `Graphics Cards_name` LIKE '{$search_pattern}'
+                AND `Graphics Cards_price` BETWEEN {$min_price} AND {$max_price}
+                AND `Graphics Cards_status` = true
+                {$category_filter}
+            )";
+            
+            $count_queries[] = "(SELECT `Graphics Cards_id` FROM `Graphics Cards` 
+                JOIN category ON `Graphics Cards`.`Graphics Cards_category_id` = category.category_id
+                WHERE `Graphics Cards_name` LIKE '{$search_pattern}'
+                AND `Graphics Cards_price` BETWEEN {$min_price} AND {$max_price}
+                AND `Graphics Cards_status` = true
+                {$category_filter})";
+        }
+        
+        if ($filter_type == 'all' || $filter_type == 'Processors') {
+            $category_filter = $filter_category != 'all' ? "AND category.category_name = '" . mysqli_real_escape_string($conn, $filter_category) . "'" : "";
+            
+            $queries[] = "(SELECT 
+                'Processors' as product_type,
+                `Processors_id` as id,
+                `Processors_name` as name,
+                `Processors_image_path` as image_path,
+                `Processors_price` as price,
+                category.category_name as category,
+                `Processors_small_description` as small_description,
+                `Processors_long_description` as long_description,
+                `Processors_created_at` as created_at
+            FROM 
+                `Processors`
+            JOIN 
+                category ON `Processors`.`Processors_category_id` = category.category_id
+            WHERE 
+                `Processors_name` LIKE '{$search_pattern}'
+                AND `Processors_price` BETWEEN {$min_price} AND {$max_price}
+                AND `Processors_status` = true
+                {$category_filter}
+            )";
+            
+            $count_queries[] = "(SELECT `Processors_id` FROM `Processors` 
+                JOIN category ON `Processors`.`Processors_category_id` = category.category_id
+                WHERE `Processors_name` LIKE '{$search_pattern}'
+                AND `Processors_price` BETWEEN {$min_price} AND {$max_price}
+                AND `Processors_status` = true
+                {$category_filter})";
+        }
+        
+        if ($filter_type == 'all' || $filter_type == 'Keyboards') {
+            $category_filter = $filter_category != 'all' ? "AND category.category_name = '" . mysqli_real_escape_string($conn, $filter_category) . "'" : "";
+            
+            $queries[] = "(SELECT 
+                'Keyboards' as product_type,
+                `Keyboards_id` as id,
+                `Keyboards_name` as name,
+                `Keyboards_image_path` as image_path,
+                `Keyboards_price` as price,
+                category.category_name as category,
+                `Keyboards_small_description` as small_description,
+                `Keyboards_long_description` as long_description,
+                `Keyboards_created_at` as created_at
+            FROM 
+                `Keyboards`
+            JOIN 
+                category ON `Keyboards`.`Keyboards_category_id` = category.category_id
+            WHERE 
+                `Keyboards_name` LIKE '{$search_pattern}'
+                AND `Keyboards_price` BETWEEN {$min_price} AND {$max_price}
+                AND `Keyboards_status` = true
+                {$category_filter}
+            )";
+            
+            $count_queries[] = "(SELECT `Keyboards_id` FROM `Keyboards` 
+                JOIN category ON `Keyboards`.`Keyboards_category_id` = category.category_id
+                WHERE `Keyboards_name` LIKE '{$search_pattern}'
+                AND `Keyboards_price` BETWEEN {$min_price} AND {$max_price}
+                AND `Keyboards_status` = true
+                {$category_filter})";
+        }
+        
+        // Combine the queries with UNION
+        $search_query = implode("\n\nUNION\n\n", $queries) . "\n\n{$sort_clause}\nLIMIT {$offset}, {$items_per_page}";
+        
+        $search_result = mysqli_query($conn, $search_query);
+        
+        // Count total results for pagination - combining all count queries
+        $count_query = "SELECT COUNT(*) as total FROM (" . implode("\nUNION ALL\n", $count_queries) . ") as results";
+        
+        $count_result = mysqli_query($conn, $count_query);
+        $total_row = mysqli_fetch_assoc($count_result);
+        $total_products = $total_row['total'];
+        
+        // For debugging: Get counts by product type
+        $debug_counts = [];
+        foreach (['Laptops', 'Desktops', 'Custom Builds', 'Display Screens', 'Graphics Cards', 'Processors', 'Keyboards'] as $type) {
+            if ($filter_type == 'all' || $filter_type == $type) {
+                $type_count_query = "SELECT COUNT(*) as type_count FROM (";
+                
+                // Find the matching count query for this type
+                foreach ($count_queries as $query) {
+                    if (strpos($query, "`$type") !== false || strpos($query, "$type") !== false) {
+                        $type_count_query .= $query;
+                        break;
+                    }
+                }
+                
+                $type_count_query .= ") as type_results";
+                
+                $type_count_result = mysqli_query($conn, $type_count_query);
+                if ($type_count_result) {
+                    $type_count_row = mysqli_fetch_assoc($type_count_result);
+                    $debug_counts[$type] = $type_count_row['type_count'];
+                } else {
+                    $debug_counts[$type] = "Error: " . mysqli_error($conn);
+                }
+            } else {
+                $debug_counts[$type] = "N/A (filtered out)";
+            }
+        }
+        
+        // Calculate total pages
+        $total_pages = ceil($total_products / $items_per_page);
+        
+        return [
+            'results' => $search_result,
+            'total_products' => $total_products,
+            'total_pages' => $total_pages,
+            'current_page' => $page,
+            'debug_counts' => $debug_counts
+        ];
+    }
+    
     // Keep old function for backward compatibility
     function get_items_by_category_items($category_name) {
         return getItemsByCategoryItems($category_name);
