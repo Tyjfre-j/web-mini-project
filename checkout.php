@@ -1,4 +1,48 @@
-<?php include_once('./includes/headerNav.php'); ?>
+<?php include_once('./includes/headerNav.php'); 
+require_once('./includes/db_procedures.php');
+
+// Check if user is logged in
+if (!isset($_SESSION['user_id'])) {
+    $_SESSION['cart_error'] = "Please login to complete your purchase";
+    header('location:login.php?redirect=checkout.php');
+    exit();
+}
+
+// Check if cart is empty
+if(!isset($_SESSION['mycart']) || empty($_SESSION['mycart'])) {
+    $_SESSION['cart_error'] = "Your cart is empty";
+    header('location:cart.php');
+    exit();
+}
+
+// Validate stock availability before showing checkout form
+$stockCheck = checkCartStockAvailability($_SESSION['mycart']);
+if (!$stockCheck['status']) {
+    $errorInfo = $stockCheck['error_info'];
+    if (is_array($errorInfo)) {
+        $_SESSION['cart_error'] = "Stock error: Cannot order {$errorInfo['requested_qty']} units of '{$errorInfo['product_name']}'. Only {$errorInfo['available_qty']} in stock.";
+    } else {
+        $_SESSION['cart_error'] = "Stock error: " . $errorInfo;
+    }
+    header('location:cart.php');
+    exit();
+}
+
+// Initialize error/success messages
+$error_message = '';
+$success_message = '';
+
+// Handle session messages
+if(isset($_SESSION['checkout_error'])) {
+    $error_message = $_SESSION['checkout_error'];
+    unset($_SESSION['checkout_error']); // Clear after use
+}
+
+if(isset($_SESSION['checkout_success'])) {
+    $success_message = $_SESSION['checkout_success'];
+    unset($_SESSION['checkout_success']); // Clear after use
+}
+?>
 <div class="overlay" data-overlay></div>
 <!--
     - HEADER
@@ -636,20 +680,6 @@ input {
     </style>
 
 <?php
-// Check if user is logged in
-if (!isset($_SESSION['user_id'])) {
-    $_SESSION['error_message'] = "Please login to complete your checkout";
-    header('Location: login.php');
-    exit();
-}
-
-// Check if cart is empty
-if (!isset($_SESSION['mycart']) || empty($_SESSION['mycart'])) {
-    $_SESSION['error_message'] = "Your cart is empty";
-    header('Location: cart.php');
-    exit();
-}
-
 // Fetch user information if logged in
 $customer_id = $_SESSION['user_id'];
 try {

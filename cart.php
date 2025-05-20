@@ -1,4 +1,54 @@
-<?php include_once('./includes/headerNav.php'); ?>
+<?php
+// Check if session is not already started
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Include database connection file once to prevent duplicate connections
+include_once('./includes/headerNav.php');
+
+// Initialize error/success messages
+$error_message = '';
+$success_message = '';
+
+// Handle session messages
+if(isset($_SESSION['cart_error'])) {
+    $error_message = $_SESSION['cart_error'];
+    unset($_SESSION['cart_error']); // Clear after use
+}
+
+if(isset($_SESSION['cart_success'])) {
+    $success_message = $_SESSION['cart_success'];
+    unset($_SESSION['cart_success']); // Clear after use
+}
+
+// Sanitize cart data if it exists
+if(isset($_SESSION['mycart']) && is_array($_SESSION['mycart'])) {
+    foreach($_SESSION['mycart'] as $key => $item) {
+        // Ensure all cart items have required fields
+        if(!isset($item['product_id']) || !isset($item['product_qty']) || !isset($item['product_price'])) {
+            // Remove invalid items
+            unset($_SESSION['mycart'][$key]);
+            continue;
+        }
+        
+        // Sanitize numeric values
+        $_SESSION['mycart'][$key]['product_qty'] = max(1, intval($item['product_qty']));
+        $_SESSION['mycart'][$key]['product_price'] = floatval($item['product_price']);
+        
+        // Sanitize text values
+        if(isset($item['product_name'])) {
+            $_SESSION['mycart'][$key]['product_name'] = htmlspecialchars($item['product_name'], ENT_QUOTES, 'UTF-8');
+        }
+        if(isset($item['product_category'])) {
+            $_SESSION['mycart'][$key]['product_category'] = htmlspecialchars($item['product_category'], ENT_QUOTES, 'UTF-8');
+        }
+    }
+    
+    // Reindex array if any items were removed
+    $_SESSION['mycart'] = array_values($_SESSION['mycart']);
+}
+?>
 
 <div class="overlay" data-overlay></div>
 
@@ -10,33 +60,56 @@
 
 <style>
 :root {
-    --main-maroon: #CE5959;
-    --deep-maroon: #89375F;
-    --light-gray: #f5f5f5;
-    --border-color: #e2e2e2;
-    --text-gray: #666;
-    --light-red: #ffefef;
-    --light-blue: #f0f7ff;
-    --accent-blue: #3a86ff;
-    --accent-green: #2ecc71;
-    --accent-yellow: #ffd43b;
-    --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    --card-radius: 12px;
-    --transition-fast: 0.2s ease;
-    --transition-medium: 0.3s ease;
+    --primary-color: #0d8a91; /* Main teal color from site */
+    --primary-dark: #00656b; /* Deep maroon/teal from site */
+    --secondary-color: #69585f; /* Coolers black from site */
+    --accent-color: #00656b; /* Using deep maroon as accent */
+    --success-color: #38b000;
+    --text-dark: #333333;
+    --text-light: #f8f9fa;
+    --bg-light: #f8f9fa;
+    --bg-primary: #e9f0f2;
+    --bg-secondary: #f0f5f6;
+    --bg-accent: #e3f2f3;
+    --gray-light: #f8f9fa;
+    --gray-medium: #e9ecef;
+    --gray-dark: #6c757d;
+    --border-light: #e0e0e0;
+    --border-radius-md: 10px;
+    --border-radius-sm: 5px;
+    --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
 .product-container {
-    padding: 2rem 1rem;
+    padding: 1rem 1rem;
     max-width: 1200px;
     margin: 0 auto;
+}
+
+/* Remove top spacing when cart is empty */
+.empty-cart {
+    text-align: center;
+    padding: 1.5rem 1rem;
+    background: white;
+    border-radius: var(--card-radius);
+    box-shadow: var(--shadow-md);
+    animation: fadeIn 0.5s ease-out;
+    margin-top: 0;
+}
+
+/* Also adjust the parent container when cart is empty */
+.product-container:has(.empty-cart) {
+    padding-top: 0;
+    margin-top: 0;
 }
 
 /* Cart header */
 .cart-header {
     margin-bottom: 2rem;
     padding-bottom: 1rem;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-light);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -45,7 +118,7 @@
 
 .cart-title {
     font-size: 1.8rem;
-    color: #333;
+    color: var(--text-dark);
     font-weight: 700;
     margin: 0;
     position: relative;
@@ -56,7 +129,7 @@
     position: absolute;
     height: 3px;
     width: 50px;
-    background: linear-gradient(90deg, var(--main-maroon), var(--deep-maroon));
+    background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
     left: 0;
     bottom: -8px;
     border-radius: 2px;
@@ -65,12 +138,12 @@
 .continue-shopping {
     display: inline-flex;
     align-items: center;
-    color: var(--deep-maroon);
+    color: var(--primary-dark);
     text-decoration: none;
     font-weight: 500;
     padding: 8px 16px;
     border-radius: 30px;
-    background-color: rgba(137, 55, 95, 0.08);
+    background-color: rgba(13, 138, 145, 0.08);
     transition: all var(--transition-fast);
 }
 
@@ -81,7 +154,7 @@
 
 .continue-shopping:hover {
     color: white;
-    background-color: var(--deep-maroon);
+    background-color: var(--primary-dark);
     text-decoration: none;
     transform: translateX(-5px);
 }
@@ -89,13 +162,14 @@
 /* Cart table */
 .cart-table-container {
     border-radius: var(--card-radius);
-    box-shadow: var(--box-shadow);
+    box-shadow: var(--shadow-md);
     overflow: hidden;
     background: white;
     animation: fadeSlideUp 0.5s ease-out;
     animation-delay: 0.1s;
     opacity: 0;
     animation-fill-mode: forwards;
+    padding: 1.5rem 0;
 }
 
 .cart-table {
@@ -154,15 +228,15 @@
 }
 
 .product-name:hover {
-    color: var(--main-maroon);
+    color: var(--primary-color);
 }
 
 .product-category {
-    color: var(--text-gray);
+    color: var(--gray-dark);
     font-size: 0.85rem;
     display: block;
     margin-top: 3px;
-    background-color: var(--light-gray);
+    background-color: var(--bg-light);
     padding: 2px 8px;
     border-radius: 20px;
     display: inline-block;
@@ -170,7 +244,7 @@
 
 .product-price {
     font-weight: 600;
-    color: var(--deep-maroon);
+    color: var(--primary-dark);
     font-size: 1.1rem;
 }
 
@@ -264,19 +338,19 @@
 }
 
 .delete-btn:hover {
-    background-color: var(--light-red);
+    background-color: rgba(220, 53, 69, 0.15);
     transform: rotate(5deg);
 }
 
 .delete-btn:hover .delete-icon {
-    color: var(--main-maroon);
+    color: #dc3545;
 }
 
 /* Cart Summary */
 .cart-summary {
     background: white;
     border-radius: var(--card-radius);
-    box-shadow: var(--box-shadow);
+    box-shadow: var(--shadow-md);
     padding: 1.5rem;
     margin-bottom: 2rem;
     animation: fadeSlideUp 0.5s ease-out;
@@ -294,7 +368,7 @@
     left: 0;
     width: 100%;
     height: 4px;
-    background: linear-gradient(90deg, var(--main-maroon), var(--deep-maroon));
+    background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
 }
 
 .summary-title {
@@ -349,7 +423,7 @@
 
 .progress-bar {
     height: 100%;
-    background: linear-gradient(90deg, var(--accent-blue), var(--accent-green));
+    background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
     border-radius: 3px;
     transition: width 0.6s ease;
 }
@@ -380,7 +454,7 @@
 
 /* Buttons */
 .checkout-btn {
-    background: linear-gradient(135deg, var(--main-maroon), var(--deep-maroon));
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
     color: white;
     padding: 1rem 2rem;
     border-radius: 50px;
@@ -396,7 +470,7 @@
     max-width: 350px;
     margin: 1rem auto 0;
     text-align: center;
-    box-shadow: 0 4px 15px rgba(206, 89, 89, 0.25);
+    box-shadow: 0 4px 15px rgba(13, 138, 145, 0.25);
     position: relative;
     overflow: hidden;
 }
@@ -416,9 +490,9 @@
 }
 
 .checkout-btn:hover {
-    background: linear-gradient(135deg, var(--deep-maroon), var(--main-maroon));
+    background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
     transform: translateY(-3px);
-    box-shadow: 0 6px 18px rgba(137, 55, 95, 0.35);
+    box-shadow: 0 6px 18px rgba(13, 138, 145, 0.35);
     color: white;
     text-decoration: none;
 }
@@ -434,22 +508,6 @@
 }
 
 /* Empty Cart */
-.empty-cart {
-    text-align: center;
-    padding: 3rem 1rem;
-    background: white;
-    border-radius: var(--card-radius);
-    box-shadow: var(--box-shadow);
-    animation: fadeIn 0.5s ease-out;
-}
-
-.empty-cart-icon {
-    font-size: 5rem;
-    color: var(--light-gray);
-    margin-bottom: 1.5rem;
-    animation: cartBounce 2s infinite ease-in-out;
-}
-
 .empty-cart h2 {
     color: #333;
     margin-bottom: 1rem;
@@ -474,8 +532,7 @@
 
 /* Animation Keyframes */
 @keyframes cartBounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-15px); }
+    /* Empty to prevent animation */
 }
 
 @keyframes fadeIn {
@@ -553,10 +610,6 @@
     .empty-cart {
         padding: 2rem 1rem;
     }
-    
-    .empty-cart-icon {
-        font-size: 4rem;
-    }
 }
 
 .cart-item {
@@ -623,7 +676,7 @@
 }
 
 .action-btn:hover {
-    color: var(--deep-maroon);
+    color: var(--primary-dark);
 }
 
 /* Related Products */
@@ -654,7 +707,7 @@
     transform: translateX(-50%);
     width: 80px;
     height: 3px;
-    background: linear-gradient(90deg, var(--main-maroon), var(--deep-maroon));
+    background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
     border-radius: 2px;
 }
 
@@ -694,7 +747,7 @@
 }
 
 .related-price {
-    color: var(--deep-maroon);
+    color: var(--primary-dark);
     font-weight: 700;
     margin-bottom: 0.5rem;
 }
@@ -702,7 +755,7 @@
 .related-add {
     display: block;
     text-align: center;
-    background-color: var(--accent-blue);
+    background-color: var(--primary-color);
     color: white;
     border: none;
     border-radius: 30px;
@@ -715,17 +768,17 @@
 }
 
 .related-add:hover {
-    background-color: var(--deep-maroon);
+    background-color: var(--primary-dark);
 }
 
 .promo-banner {
-    background: linear-gradient(135deg, #3a86ff, #8338ec);
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
     border-radius: var(--card-radius);
     padding: 1.5rem;
     margin-bottom: 2rem;
     color: white;
     text-align: center;
-    box-shadow: 0 4px 15px rgba(58, 134, 255, 0.3);
+    box-shadow: 0 4px 15px rgba(13, 138, 145, 0.3);
     animation: fadeSlideDown 0.5s ease-out;
     animation-delay: 0.1s;
     opacity: 0;
@@ -812,39 +865,12 @@
 }
 
 /* Loading Spinner */
-.loading-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(255, 255, 255, 0.7);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s, visibility 0.3s;
-}
-
-.loading-overlay.active {
-    opacity: 1;
-    visibility: visible;
-}
-
-.spinner {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: 3px solid rgba(137, 55, 95, 0.1);
-    border-top-color: var(--deep-maroon);
-    animation: spin 0.8s linear infinite;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+.loading-overlay, .spinner {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    width: 0 !important;
 }
 
 /* Item Removal Animation */
@@ -872,91 +898,27 @@
     overflow: hidden;
 }
 
-/* Quantity Badge */
-.cart-badge {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    background-color: var(--main-maroon);
-    color: white;
-    border-radius: 50%;
-    width: 18px;
-    height: 18px;
-    font-size: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.3s ease;
+/* Completely remove these classes */
+.cart-badge, .cart-badge.pulse, .cart-icon-container, .floating-cart {
+    /* These elements should be completely eliminated */
 }
 
-.cart-badge.pulse {
-    animation: badgePulse 0.5s ease;
-}
-
-@keyframes badgePulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.5); }
-    100% { transform: scale(1); }
-}
-
-/* Cart Button Styles */
-.cart-icon-container {
-    position: relative;
-    display: inline-block;
-}
-
-.floating-cart {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--main-maroon), var(--deep-maroon));
-    color: white;
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 15px rgba(206, 89, 89, 0.3);
-    cursor: pointer;
-    z-index: 99;
-    transition: transform var(--transition-medium);
-}
-
-.floating-cart:hover {
-    transform: translateY(-5px);
-}
-
-.floating-cart ion-icon {
-    font-size: 1.8rem;
-}
+/* Animation Keyframes */
 </style>
 
 <main>
-    <?php 
-    // Get cart total items count for badge
-    $cartTotalItems = 0;
-    if(isset($_SESSION['mycart'])) {
-        foreach($_SESSION['mycart'] as $item) {
-            $cartTotalItems += $item['product_qty'];
-        }
-    }
-    ?>
-
-    <!-- Floating Cart Button -->
-    <div class="floating-cart" onclick="window.location.href='cart.php'">
-        <div class="cart-icon-container">
-            <ion-icon name="cart-outline"></ion-icon>
-            <?php if($cartTotalItems > 0): ?>
-            <span class="cart-badge"><?php echo $cartTotalItems; ?></span>
-            <?php endif; ?>
-        </div>
+    <!-- Display error and success messages -->
+    <?php if(!empty($error_message)): ?>
+    <div class="alert alert-danger" role="alert">
+        <ion-icon name="alert-circle-outline"></ion-icon> <?php echo $error_message; ?>
     </div>
-
-    <!-- Loading Overlay -->
-    <div class="loading-overlay">
-        <div class="spinner"></div>
+    <?php endif; ?>
+    
+    <?php if(!empty($success_message)): ?>
+    <div class="alert alert-success" role="alert">
+        <ion-icon name="checkmark-circle-outline"></ion-icon> <?php echo $success_message; ?>
     </div>
+    <?php endif; ?>
 
     <div class="product-container">
         <?php if(isset($_SESSION['mycart']) && !empty($_SESSION['mycart'])): ?>
@@ -1140,15 +1102,92 @@
                     </div>
                     
                     <?php if(isset($_SESSION['user_id'])): ?>
-                    <a href="checkout.php" class="checkout-btn" onclick="showLoading()">
+                    <?php 
+                    // Check if all items are in stock before allowing checkout
+                    $all_items_in_stock = true;
+                    $out_of_stock_items = [];
+                    
+                    foreach($_SESSION['mycart'] as $item) {
+                        // Get current stock
+                        $product_id = $item['product_id'];
+                        $product_category = $item['product_category'];
+                        $product_qty = $item['product_qty'];
+                        $available_quantity = 0;
+                        
+                        $stock_query = "SELECT ";
+                        
+                        switch($product_category) {
+                            case 'Laptops':
+                                $stock_query .= "Laptops_quantity FROM Laptops WHERE Laptops_id = ?";
+                                break;
+                            case 'Desktops':
+                                $stock_query .= "Desktops_quantity FROM Desktops WHERE Desktops_id = ?";
+                                break;
+                            case 'Custom Builds':
+                                $stock_query .= "`Custom Builds_quantity` FROM `Custom Builds` WHERE `Custom Builds_id` = ?";
+                                break;
+                            case 'Processors':
+                                $stock_query .= "Processors_quantity FROM Processors WHERE Processors_id = ?";
+                                break;
+                            case 'Graphics Cards':
+                                $stock_query .= "`Graphics Cards_quantity` FROM `Graphics Cards` WHERE `Graphics Cards_id` = ?";
+                                break;
+                            case 'Keyboards':
+                                $stock_query .= "Keyboards_quantity FROM Keyboards WHERE Keyboards_id = ?";
+                                break;
+                            case 'Display Screens':
+                                $stock_query .= "`Display Screens_quantity` FROM `Display Screens` WHERE `Display Screens_id` = ?";
+                                break;
+                        }
+                        
+                        $stock_stmt = $conn->prepare($stock_query);
+                        $stock_stmt->bind_param("i", $product_id);
+                        $stock_stmt->execute();
+                        $stock_stmt->bind_result($available_quantity);
+                        $stock_stmt->fetch();
+                        $stock_stmt->close();
+                        
+                        // Check if stock is sufficient
+                        if($product_qty > $available_quantity) {
+                            $all_items_in_stock = false;
+                            $out_of_stock_items[] = [
+                                'name' => $item['product_name'],
+                                'requested' => $product_qty,
+                                'available' => $available_quantity
+                            ];
+                        }
+                    }
+                    ?>
+                    
+                    <?php if(!$all_items_in_stock): ?>
+                    <div style="margin: 1rem 0; color: var(--danger-color); text-align: center; padding: 0.5rem; background-color: rgba(230, 57, 70, 0.1); border-radius: 8px;">
+                        <ion-icon name="alert-circle-outline" style="vertical-align: middle; margin-right: 5px;"></ion-icon>
+                        Some items in your cart are out of stock:
+                        <ul style="text-align: left; margin-top: 0.5rem; padding-left: 2rem;">
+                            <?php foreach($out_of_stock_items as $item): ?>
+                            <li><?php echo $item['name']; ?> - Requested: <?php echo $item['requested']; ?>, Available: <?php echo $item['available']; ?></li>
+                            <?php endforeach; ?>
+                        </ul>
+                        Please update your cart before proceeding.
+                    </div>
+                    <button disabled class="checkout-btn" style="opacity: 0.6; cursor: not-allowed;">
+                        <ion-icon name="bag-check-outline"></ion-icon> Update Cart to Checkout
+                    </button>
+                    <?php else: ?>
+                    <button type="button" id="validate-stock-btn" class="btn checkout-btn" style="margin-right: 10px; background-color: #3a86ff;">
+                        <ion-icon name="checkmark-circle-outline" style="margin-right: 8px;"></ion-icon>
+                        Validate Stock
+                    </button>
+                    <a href="checkout.php" class="checkout-btn">
                         <ion-icon name="bag-check-outline"></ion-icon> Proceed to Checkout
                     </a>
+                    <?php endif; ?>
                     <?php else: ?>
                     <div style="margin: 1rem 0; color: var(--text-gray); text-align: center; padding: 0.5rem; background-color: var(--light-gray); border-radius: 8px;">
                         <ion-icon name="information-circle-outline" style="vertical-align: middle; margin-right: 5px;"></ion-icon>
                         Please login to complete your purchase
                     </div>
-                    <a href="login.php?redirect=cart.php" class="checkout-btn" onclick="showLoading()">
+                    <a href="login.php?redirect=cart.php" class="checkout-btn">
                         <ion-icon name="log-in-outline"></ion-icon> Login to Checkout
                     </a>
                     <?php endif; ?>
@@ -1188,7 +1227,6 @@
             
         <?php else: ?>
             <div class="empty-cart">
-                <ion-icon name="cart-outline" class="empty-cart-icon"></ion-icon>
                 <h2>Your Cart is Empty</h2>
                 <p>Looks like you haven't added any items to your cart yet. Browse our collections and find something you'll love!</p>
                 <a href="index.php" class="checkout-btn">
@@ -1199,9 +1237,45 @@
     </div>
     
     <div class="toast-container"></div>
+
+    <!-- Add a div to show validation results -->
+    <div id="stock-validation-result" class="mt-3" style="display: none;"></div>
 </main>
 
 <script>
+    // Add form submission prevention and AJAX functionality for a smoother experience
+    document.addEventListener('DOMContentLoaded', function() {
+        // Handle quantity form submissions
+        document.querySelectorAll('.quantity-form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                // Allow the form to submit normally but prevent multiple submissions
+                if (form.dataset.submitting === 'true') {
+                    e.preventDefault();
+                    return false;
+                }
+                form.dataset.submitting = 'true';
+                
+                // Reset the flag after submission completes
+                setTimeout(() => {
+                    form.dataset.submitting = 'false';
+                }, 1000);
+            });
+        });
+        
+        // Safely handle delete operations
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const form = this.closest('form');
+                const productName = this.closest('tr').querySelector('.product-name').textContent;
+                
+                if (confirm(`Are you sure you want to remove "${productName}" from your cart?`)) {
+                    form.submit();
+                }
+            });
+        });
+    });
+
     function decrementQuantity(button) {
         const input = button.nextElementSibling;
         const currentValue = parseInt(input.value);
@@ -1211,7 +1285,6 @@
             // Add animation
             button.closest('.cart-item').classList.add('quantity-change');
             setTimeout(() => {
-                showLoading();
                 button.closest('.cart-item').classList.remove('quantity-change');
                 input.form.submit();
             }, 300);
@@ -1221,37 +1294,27 @@
     function incrementQuantity(button) {
         const input = button.previousElementSibling;
         const currentValue = parseInt(input.value);
-        input.value = currentValue + 1;
-        
-        // Add animation
-        button.closest('.cart-item').classList.add('quantity-change');
-        setTimeout(() => {
-            showLoading();
-            button.closest('.cart-item').classList.remove('quantity-change');
-            input.form.submit();
-        }, 300);
+        // Add max quantity check
+        const maxQty = 99; // Reasonable limit
+        if (currentValue < maxQty) {
+            input.value = currentValue + 1;
+            
+            // Add animation
+            button.closest('.cart-item').classList.add('quantity-change');
+            setTimeout(() => {
+                button.closest('.cart-item').classList.remove('quantity-change');
+                input.form.submit();
+            }, 300);
+        } else {
+            showToast('Maximum Quantity', `You can only add up to ${maxQty} of this item`, 'info');
+        }
     }
     
-    // Add delete animation
-    document.querySelectorAll('.delete-btn').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            e.preventDefault();
-            const row = this.closest('tr');
-            
-            row.classList.add('removing');
-            
-            setTimeout(() => {
-                this.closest('form').submit();
-            }, 300);
-        });
-    });
-
     function confirmDelete(form) {
         const row = form.closest('tr');
         row.classList.add('removing-item');
         
         setTimeout(() => {
-            showLoading();
             return true;
         }, 500);
         
@@ -1259,40 +1322,14 @@
     }
 
     function showLoading() {
-        const loadingOverlay = document.querySelector('.loading-overlay');
-        loadingOverlay.classList.add('active');
-        
-        // Safety timeout - hide after 5 seconds in case of issues
-        setTimeout(() => {
-            loadingOverlay.classList.remove('active');
-        }, 5000);
+        // Empty function - loading has been removed
+        return;
     }
 
-    // Animate badge when adding to cart
     function animateCartBadge() {
-        const badge = document.querySelector('.cart-badge');
-        if (badge) {
-            badge.classList.add('pulse');
-            setTimeout(() => {
-                badge.classList.remove('pulse');
-            }, 500);
-        }
+        // Empty function - cart badge has been removed
+        return;
     }
-
-    function quickAddToCart(productId, name, price, img) {
-        // In a real app, this would be an AJAX call to add the item
-        // For demo, just show a toast notification
-        showToast('Added to Cart', `${name} has been added to your cart`, 'success');
-        
-        // Animate the cart badge
-        animateCartBadge();
-    }
-
-    // Disable loading overlay when page is fully loaded
-    window.addEventListener('load', function() {
-        const loadingOverlay = document.querySelector('.loading-overlay');
-        loadingOverlay.classList.remove('active');
-    });
 
     function saveForLater(productId) {
         // In a real app, this would call an AJAX endpoint to save the item
@@ -1306,7 +1343,7 @@
         
         toast.innerHTML = `
             <div class="toast-icon">
-                <ion-icon name="${type === 'success' ? 'checkmark-circle' : 'information-circle'}"></ion-icon>
+                <ion-icon name="${type === 'success' ? 'checkmark-circle' : type === 'danger' ? 'alert-circle' : 'information-circle'}"></ion-icon>
             </div>
             <div class="toast-content">
                 <div class="toast-title">${title}</div>
@@ -1331,12 +1368,115 @@
     }
 
     function copyPromoCode(code) {
-        navigator.clipboard.writeText(code).then(() => {
-            showToast('Copied!', 'Promo code copied to clipboard', 'success');
-        }).catch(err => {
-            console.error('Failed to copy: ', err);
-        });
+        // Use browser API to copy text
+        try {
+            navigator.clipboard.writeText(code).then(() => {
+                showToast('Copied!', 'Promo code copied to clipboard', 'success');
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+                // Fallback for browsers that don't support clipboard API
+                fallbackCopyTextToClipboard(code);
+            });
+        } catch (err) {
+            // Fallback for older browsers
+            fallbackCopyTextToClipboard(code);
+        }
     }
+    
+    // Fallback copy method for older browsers
+    function fallbackCopyTextToClipboard(text) {
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        
+        // Make the textarea out of viewport
+        textArea.style.position = "fixed";
+        textArea.style.left = "-999999px";
+        textArea.style.top = "-999999px";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        
+        try {
+            const successful = document.execCommand('copy');
+            if (successful) {
+                showToast('Copied!', 'Promo code copied to clipboard', 'success');
+            } else {
+                showToast('Error', 'Failed to copy promo code', 'danger');
+            }
+        } catch (err) {
+            showToast('Error', 'Failed to copy promo code', 'danger');
+        }
+        
+        document.body.removeChild(textArea);
+    }
+    
+    // Handle browser back button and page refreshes
+    window.addEventListener('pageshow', function(event) {
+        // If the page is loaded from the cache (back button)
+        if (event.persisted) {
+            // Reset any form submission flags
+            document.querySelectorAll('form').forEach(form => {
+                form.dataset.submitting = 'false';
+            });
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const validateStockBtn = document.getElementById('validate-stock-btn');
+        const resultDiv = document.getElementById('stock-validation-result');
+        
+        if (validateStockBtn) {
+            validateStockBtn.addEventListener('click', function() {
+                validateStockBtn.disabled = true;
+                validateStockBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Checking...';
+                
+                // Make AJAX request to check stock
+                fetch('validate_cart_stock.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        // No need to send cart items as they're in the session
+                        check_stock: true
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    validateStockBtn.disabled = false;
+                    validateStockBtn.innerHTML = '<ion-icon name="checkmark-circle-outline" style="margin-right: 8px;"></ion-icon> Validate Stock';
+                    
+                    resultDiv.style.display = 'block';
+                    
+                    if (data.status) {
+                        resultDiv.className = 'alert alert-success mt-3';
+                        resultDiv.innerHTML = '<strong>Success!</strong> All items are in stock and ready for checkout.';
+                        
+                        // Automatically redirect to checkout after 2 seconds
+                        setTimeout(() => {
+                            window.location.href = 'checkout.php';
+                        }, 2000);
+                    } else {
+                        resultDiv.className = 'alert alert-danger mt-3';
+                        if (data.error_info && typeof data.error_info === 'object') {
+                            resultDiv.innerHTML = `<strong>Stock Error:</strong> Cannot order ${data.error_info.requested_qty} units of '${data.error_info.product_name}'. Only ${data.error_info.available_qty} in stock.`;
+                        } else {
+                            resultDiv.innerHTML = `<strong>Error:</strong> ${data.error_info || 'Unknown error checking stock'}`;
+                        }
+                    }
+                })
+                .catch(error => {
+                    validateStockBtn.disabled = false;
+                    validateStockBtn.innerHTML = '<ion-icon name="checkmark-circle-outline" style="margin-right: 8px;"></ion-icon> Validate Stock';
+                    
+                    resultDiv.style.display = 'block';
+                    resultDiv.className = 'alert alert-danger mt-3';
+                    resultDiv.innerHTML = '<strong>Error:</strong> Failed to check stock. Please try again.';
+                    console.error('Error:', error);
+                });
+            });
+        }
+    });
 </script>
 
 <?php require_once './includes/footer.php'; ?>

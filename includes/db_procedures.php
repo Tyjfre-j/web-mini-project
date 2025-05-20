@@ -54,12 +54,10 @@ function getOrderDetails($orderId) {
  * 
  * @param int $customerId Customer making the order
  * @param string $shippingAddress Shipping address
- * @param string $billingAddress Billing address
  * @param string $paymentMethod Payment method used
- * @param string $orderNotes Additional notes
  * @return int|false New order ID or false on failure
  */
-function finalizeOrder($customerId, $shippingAddress, $billingAddress, $paymentMethod, $orderNotes = '') {
+function finalizeOrder($customerId, $shippingAddress, $paymentMethod, $orderNotes = '') {
     global $conn;
     
     try {
@@ -73,12 +71,10 @@ function finalizeOrder($customerId, $shippingAddress, $billingAddress, $paymentM
         }
         
         // Call the stored procedure
-        $stmt = $pdoConn->prepare("CALL FinalizeOrder(?, ?, ?, ?, ?, @new_order_id)");
+        $stmt = $pdoConn->prepare("CALL FinalizeOrder(?, ?, ?, @new_order_id)");
         $stmt->bindParam(1, $customerId, PDO::PARAM_INT);
         $stmt->bindParam(2, $shippingAddress, PDO::PARAM_STR);
-        $stmt->bindParam(3, $billingAddress, PDO::PARAM_STR);
-        $stmt->bindParam(4, $paymentMethod, PDO::PARAM_STR);
-        $stmt->bindParam(5, $orderNotes, PDO::PARAM_STR);
+        $stmt->bindParam(3, $paymentMethod, PDO::PARAM_STR);
         $stmt->execute();
         
         // Get the new order ID
@@ -270,5 +266,106 @@ function cancelOrder($orderId, $reason = '') {
     } catch (Exception $e) {
         error_log("Error in cancelOrder: " . $e->getMessage());
         return false;
+    }
+}
+
+/**
+ * Check if all items in the cart have sufficient stock
+ * Returns an array with status and detailed error information if any
+ * 
+ * @param array $cartItems Array of cart items from $_SESSION['mycart']
+ * @return array Array with 'status' (boolean) and 'error_info' (if status is false)
+ */
+function checkCartStockAvailability($cartItems) {
+    global $conn;
+    
+    if (empty($cartItems)) {
+        return ['status' => false, 'error_info' => 'Cart is empty'];
+    }
+    
+    try {
+        foreach ($cartItems as $item) {
+            $product_id = $item['product_id'];
+            $product_category = $item['product_category'];
+            $product_name = $item['product_name'];
+            $product_qty = $item['product_qty'];
+            
+            // Check stock of this item
+            $sql = '';
+            $fieldName = '';
+            
+            switch($product_category) {
+                case 'Laptops':
+                    $sql = "SELECT Laptops_quantity FROM Laptops WHERE Laptops_id = ?";
+                    $fieldName = 'Laptops_quantity';
+                    break;
+                case 'Desktops':
+                    $sql = "SELECT Desktops_quantity FROM Desktops WHERE Desktops_id = ?";
+                    $fieldName = 'Desktops_quantity';
+                    break;
+                case 'Custom Builds':
+                    $sql = "SELECT `Custom Builds_quantity` FROM `Custom Builds` WHERE `Custom Builds_id` = ?";
+                    $fieldName = 'Custom Builds_quantity';
+                    break;
+                case 'Processors':
+                    $sql = "SELECT Processors_quantity FROM Processors WHERE Processors_id = ?";
+                    $fieldName = 'Processors_quantity';
+                    break;
+                case 'Graphics Cards':
+                    $sql = "SELECT `Graphics Cards_quantity` FROM `Graphics Cards` WHERE `Graphics Cards_id` = ?";
+                    $fieldName = 'Graphics Cards_quantity';
+                    break;
+                case 'Keyboards':
+                    $sql = "SELECT Keyboards_quantity FROM Keyboards WHERE Keyboards_id = ?";
+                    $fieldName = 'Keyboards_quantity';
+                    break;
+                case 'Display Screens':
+                    $sql = "SELECT `Display Screens_quantity` FROM `Display Screens` WHERE `Display Screens_id` = ?";
+                    $fieldName = 'Display Screens_quantity';
+                    break;
+                default:
+                    return [
+                        'status' => false, 
+                        'error_info' => "Invalid product category: $product_category"
+                    ];
+            }
+            
+            if ($conn instanceof PDO) {
+                $stmt = $conn->prepare($sql);
+                $stmt->bindParam(1, $product_id, PDO::PARAM_INT);
+                $stmt->execute();
+                $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                $available_qty = $result[$fieldName] ?? 0;
+            } else {
+                // Using mysqli
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("i", $product_id);
+                $stmt->execute();
+                $stmt->bind_result($available_qty);
+                $stmt->fetch();
+                $stmt->close();
+            }
+            
+            // Compare with requested quantity
+            if ($product_qty > $available_qty) {
+                return [
+                    'status' => false,
+                    'error_info' => [
+                        'product_name' => $product_name,
+                        'requested_qty' => $product_qty,
+                        'available_qty' => $available_qty
+                    ]
+                ];
+            }
+        }
+        
+        // All items have sufficient stock
+        return ['status' => true];
+        
+    } catch (Exception $e) {
+        return [
+            'status' => false,
+            'error_info' => "Error checking stock: " . $e->getMessage()
+        ];
     }
 } 

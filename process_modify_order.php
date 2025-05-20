@@ -46,15 +46,16 @@ try {
     // Update order details
     $updateOrderStmt = $conn->prepare("UPDATE orders SET 
         shipping_address = :shipping_address,
-        billing_address = :billing_address,
         payment_method = :payment_method,
-        order_notes = :order_notes
+        tracking_number = :tracking_number,
+        order_status = :order_status,
+        updated_at = NOW()
         WHERE order_id = :order_id");
         
     $updateOrderStmt->bindParam(':shipping_address', $shipping_address);
-    $updateOrderStmt->bindParam(':billing_address', $shipping_address); // Use same address for billing
     $updateOrderStmt->bindParam(':payment_method', $payment_method);
-    $updateOrderStmt->bindParam(':order_notes', $order_notes);
+    $updateOrderStmt->bindParam(':tracking_number', $tracking_number);
+    $updateOrderStmt->bindParam(':order_status', $order_status);
     $updateOrderStmt->bindParam(':order_id', $order_id);
     $updateOrderStmt->execute();
     

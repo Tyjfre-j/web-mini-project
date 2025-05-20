@@ -146,7 +146,7 @@
                 
                 <h3>FinalizeOrder</h3>
                 <p>This procedure handles order creation:</p>
-                <div class="code-block">CALL FinalizeOrder(customer_id, shipping_address, billing_address, payment_method, order_notes, @new_order_id);</div>
+                <div class="code-block">CALL FinalizeOrder(customer_id, shipping_address, payment_method, @new_order_id);</div>
                 
                 <h3>GetCustomerOrderHistory</h3>
                 <p>This procedure returns a customer's order history:</p>
@@ -223,4 +223,12 @@
     </div>
 </main>
 
-<?php require_once './includes/footer.php'; ?> 
+<?php require_once './includes/footer.php'; ?>
+
+<script>
+window.onpageshow = function(event) {
+    if (event.persisted) {
+        window.location.reload();
+    }
+};
+</script> 

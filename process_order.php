@@ -25,18 +25,23 @@ $customer_id = $_SESSION['user_id'];
 
 // Process the form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Get form data
-    $shipping_address = $_POST['shipping_address'];
-    $billing_address = $_POST['billing_address'] ?? $shipping_address; // Use shipping address if billing not provided
-    $payment_method = $_POST['payment_method'];
-    $order_notes = $_POST['order_notes'] ?? '';
-    
+    // Sanitize inputs
+    $shipping_address = filter_var($_POST['shipping_address'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $payment_method = filter_var($_POST['payment_method'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+    // Validate required inputs
+    if (empty($shipping_address) || empty($payment_method)) {
+        $_SESSION['error_message'] = "Missing required fields for checkout";
+        header('Location: checkout.php');
+        exit();
+    }
+
     try {
         // Begin transaction
         $conn->beginTransaction();
         
         // Use the finalizeOrder function from db_procedures.php
-        $order_id = finalizeOrder($customer_id, $shipping_address, $billing_address, $payment_method, $order_notes);
+        $order_id = finalizeOrder($customer_id, $shipping_address, $payment_method);
         
         if (!$order_id) {
             throw new Exception("Failed to create order");
@@ -92,7 +97,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } catch (Exception $e) {
         // Rollback transaction on error
         $conn->rollBack();
-        $_SESSION['error_message'] = "Error processing your order: " . $e->getMessage();
+        
+        // Check if the error is from the stock trigger
+        $error_message = $e->getMessage();
+        if (strpos($error_message, 'STOCK_ERROR:') === 0) {
+            // Parse the detailed error message: STOCK_ERROR:product_name:requested_qty:available_qty
+            $error_parts = explode(':', $error_message);
+            if (count($error_parts) >= 4) {
+                $product_name = $error_parts[1];
+                $requested_qty = $error_parts[2];
+                $available_qty = $error_parts[3];
+                
+                $_SESSION['error_message'] = "Stock error: Cannot order $requested_qty units of '$product_name'. Only $available_qty in stock.";
+            } else {
+                $_SESSION['error_message'] = "There was an issue with product stock. Please check your cart.";
+            }
+        } else {
+            $_SESSION['error_message'] = "Error processing your order: " . $e->getMessage();
+        }
+        
         header('Location: checkout.php');
         exit();
     }

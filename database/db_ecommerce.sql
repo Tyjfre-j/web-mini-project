@@ -218,11 +218,8 @@ CREATE TABLE IF NOT EXISTS `orders` (
   `order_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `total_amount` DECIMAL(10,2) NOT NULL,
   `shipping_address` TEXT NOT NULL,
-  `billing_address` TEXT NOT NULL,
-  `payment_method` VARCHAR(50) NOT NULL,
+  `payment_method` ENUM('cash', 'card') NOT NULL,
   `order_status` ENUM('pending', 'processing', 'shipped', 'delivered', 'cancelled') DEFAULT 'pending',
-  `order_notes` TEXT,
-  `tracking_number` VARCHAR(100),
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (`customer_id`) REFERENCES `customer`(`customer_id`) ON DELETE RESTRICT
@@ -236,8 +233,8 @@ CREATE TABLE IF NOT EXISTS `order_items` (
   `item_id` INT AUTO_INCREMENT PRIMARY KEY,
   `order_id` INT NOT NULL,
   `product_id` INT NOT NULL,
-  `product_type` VARCHAR(50) NOT NULL,
-  `product_name` VARCHAR(100) NOT NULL,
+  `product_type` VARCHAR(40) NOT NULL,
+  `product_name` VARCHAR(40) NOT NULL,
   `quantity` INT NOT NULL,
   `price` DECIMAL(8,2) NOT NULL,
   `subtotal` DECIMAL(10,2) NOT NULL,
@@ -424,9 +421,305 @@ INSERT INTO `banner` (`banner_id`, `banner_title`, `banner_text`, `banner_image_
 INSERT INTO `settings` (`website_name`, `website_logo`, `website_footer`) VALUES
 ('PeakGear', 'PeakGear.png', 'PeakGear');
 
+
 -- --------------------------------------------------------------------------------------------------------------
 -- End of File                                                                                                  |
 -- --------------------------------------------------------------------------------------------------------------
+
+-- --------------------------------------------------------------------------------------------------------------
+-- Added Procedures and Triggers                                                                               |
+-- --------------------------------------------------------------------------------------------------------------
+
+DELIMITER //
+
+-- Procedure to display order details when total is paid
+CREATE PROCEDURE GetPaidOrderDetails(IN customerId INT, IN orderId INT)
+BEGIN
+    SELECT o.*, c.customer_fname, c.customer_email, c.customer_phone, c.customer_address
+    FROM orders o
+    JOIN customer c ON o.customer_id = c.customer_id
+    WHERE o.order_id = orderId AND o.customer_id = customerId 
+    AND o.order_status IN ('processing', 'shipped', 'delivered');
+    
+    SELECT oi.*, oi.quantity * oi.price AS item_total
+    FROM order_items oi
+    WHERE oi.order_id = orderId;
+END //
+
+-- Procedure to finalize an order and update its status
+CREATE PROCEDURE FinalizeOrder(IN orderId INT, OUT success BOOLEAN)
+BEGIN
+    DECLARE currentStatus VARCHAR(50);
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        SET success = FALSE;
+        ROLLBACK;
+    END;
+    
+    START TRANSACTION;
+    
+    -- Get current status
+    SELECT order_status INTO currentStatus FROM orders WHERE order_id = orderId;
+    
+    -- Only allow finalizing orders that are in pending status
+    IF currentStatus = 'pending' THEN
+        -- Update order status to processing
+        UPDATE orders SET order_status = 'processing', updated_at = NOW() WHERE order_id = orderId;
+        SET success = TRUE;
+    ELSE
+        SET success = FALSE;
+    END IF;
+    
+    COMMIT;
+END //
+
+-- Procedure to get order history for a customer
+CREATE PROCEDURE GetCustomerOrderHistory(IN customerId INT)
+BEGIN
+    SELECT 
+        o.order_id, 
+        o.order_date, 
+        o.total_amount, 
+        o.order_status,
+        COUNT(oi.item_id) AS total_items
+    FROM orders o
+    LEFT JOIN order_items oi ON o.order_id = oi.order_id
+    WHERE o.customer_id = customerId
+    GROUP BY o.order_id
+    ORDER BY o.order_date DESC;
+END //
+
+-- Trigger to update product stock after order validation
+CREATE TRIGGER after_order_validate
+AFTER UPDATE ON orders
+FOR EACH ROW
+BEGIN
+    -- Check if status changed from pending to processing
+    IF OLD.order_status = 'pending' AND NEW.order_status = 'processing' THEN
+        -- Update the stock for each item in the order
+        UPDATE Laptops L
+        JOIN order_items oi ON L.Laptops_id = oi.product_id
+        SET L.Laptops_quantity = L.Laptops_quantity - oi.quantity
+        WHERE oi.order_id = NEW.order_id AND oi.product_type = 'Laptops';
+        
+        UPDATE Desktops D
+        JOIN order_items oi ON D.Desktops_id = oi.product_id
+        SET D.Desktops_quantity = D.Desktops_quantity - oi.quantity
+        WHERE oi.order_id = NEW.order_id AND oi.product_type = 'Desktops';
+        
+        UPDATE `Custom Builds` CB
+        JOIN order_items oi ON CB.`Custom Builds_id` = oi.product_id
+        SET CB.`Custom Builds_quantity` = CB.`Custom Builds_quantity` - oi.quantity
+        WHERE oi.order_id = NEW.order_id AND oi.product_type = 'Custom Builds';
+        
+        UPDATE Processors P
+        JOIN order_items oi ON P.Processors_id = oi.product_id
+        SET P.Processors_quantity = P.Processors_quantity - oi.quantity
+        WHERE oi.order_id = NEW.order_id AND oi.product_type = 'Processors';
+        
+        UPDATE `Graphics Cards` GC
+        JOIN order_items oi ON GC.`Graphics Cards_id` = oi.product_id
+        SET GC.`Graphics Cards_quantity` = GC.`Graphics Cards_quantity` - oi.quantity
+        WHERE oi.order_id = NEW.order_id AND oi.product_type = 'Graphics Cards';
+        
+        UPDATE Keyboards K
+        JOIN order_items oi ON K.Keyboards_id = oi.product_id
+        SET K.Keyboards_quantity = K.Keyboards_quantity - oi.quantity
+        WHERE oi.order_id = NEW.order_id AND oi.product_type = 'Keyboards';
+        
+        UPDATE `Display Screens` DS
+        JOIN order_items oi ON DS.`Display Screens_id` = oi.product_id
+        SET DS.`Display Screens_quantity` = DS.`Display Screens_quantity` - oi.quantity
+        WHERE oi.order_id = NEW.order_id AND oi.product_type = 'Display Screens';
+    END IF;
+END //
+
+-- Temporary trigger to prevent order insertion if stock is insufficient
+CREATE TRIGGER before_order_item_insert
+BEFORE INSERT ON order_items
+FOR EACH ROW
+BEGIN
+    DECLARE available_stock INT;
+    DECLARE error_message VARCHAR(255);
+    
+    -- Check stock based on product type
+    CASE NEW.product_type
+        WHEN 'Laptops' THEN
+            SELECT Laptops_quantity INTO available_stock FROM Laptops WHERE Laptops_id = NEW.product_id;
+        WHEN 'Desktops' THEN
+            SELECT Desktops_quantity INTO available_stock FROM Desktops WHERE Desktops_id = NEW.product_id;
+        WHEN 'Custom Builds' THEN
+            SELECT `Custom Builds_quantity` INTO available_stock FROM `Custom Builds` WHERE `Custom Builds_id` = NEW.product_id;
+        WHEN 'Processors' THEN
+            SELECT Processors_quantity INTO available_stock FROM Processors WHERE Processors_id = NEW.product_id;
+        WHEN 'Graphics Cards' THEN
+            SELECT `Graphics Cards_quantity` INTO available_stock FROM `Graphics Cards` WHERE `Graphics Cards_id` = NEW.product_id;
+        WHEN 'Keyboards' THEN
+            SELECT Keyboards_quantity INTO available_stock FROM Keyboards WHERE Keyboards_id = NEW.product_id;
+        WHEN 'Display Screens' THEN
+            SELECT `Display Screens_quantity` INTO available_stock FROM `Display Screens` WHERE `Display Screens_id` = NEW.product_id;
+        ELSE
+            SET available_stock = 0;
+    END CASE;
+    
+    -- If insufficient stock, prevent insert with detailed error
+    IF NEW.quantity > available_stock THEN
+        SET error_message = CONCAT('STOCK_ERROR:', NEW.product_name, ':', NEW.quantity, ':', IFNULL(available_stock, 0));
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = error_message;
+    END IF;
+END //
+
+-- Trigger to restore stock after order cancellation
+CREATE TRIGGER after_order_cancel
+AFTER UPDATE ON orders
+FOR EACH ROW
+BEGIN
+    -- Check if status changed to cancelled
+    IF OLD.order_status IN ('pending', 'processing') AND NEW.order_status = 'cancelled' THEN
+        -- Restore the stock for each item in the order
+        UPDATE Laptops L
+        JOIN order_items oi ON L.Laptops_id = oi.product_id
+        SET L.Laptops_quantity = L.Laptops_quantity + oi.quantity
+        WHERE oi.order_id = NEW.order_id AND oi.product_type = 'Laptops';
+        
+        UPDATE Desktops D
+        JOIN order_items oi ON D.Desktops_id = oi.product_id
+        SET D.Desktops_quantity = D.Desktops_quantity + oi.quantity
+        WHERE oi.order_id = NEW.order_id AND oi.product_type = 'Desktops';
+        
+        UPDATE `Custom Builds` CB
+        JOIN order_items oi ON CB.`Custom Builds_id` = oi.product_id
+        SET CB.`Custom Builds_quantity` = CB.`Custom Builds_quantity` + oi.quantity
+        WHERE oi.order_id = NEW.order_id AND oi.product_type = 'Custom Builds';
+        
+        UPDATE Processors P
+        JOIN order_items oi ON P.Processors_id = oi.product_id
+        SET P.Processors_quantity = P.Processors_quantity + oi.quantity
+        WHERE oi.order_id = NEW.order_id AND oi.product_type = 'Processors';
+        
+        UPDATE `Graphics Cards` GC
+        JOIN order_items oi ON GC.`Graphics Cards_id` = oi.product_id
+        SET GC.`Graphics Cards_quantity` = GC.`Graphics Cards_quantity` + oi.quantity
+        WHERE oi.order_id = NEW.order_id AND oi.product_type = 'Graphics Cards';
+        
+        UPDATE Keyboards K
+        JOIN order_items oi ON K.Keyboards_id = oi.product_id
+        SET K.Keyboards_quantity = K.Keyboards_quantity + oi.quantity
+        WHERE oi.order_id = NEW.order_id AND oi.product_type = 'Keyboards';
+        
+        UPDATE `Display Screens` DS
+        JOIN order_items oi ON DS.`Display Screens_id` = oi.product_id
+        SET DS.`Display Screens_quantity` = DS.`Display Screens_quantity` + oi.quantity
+        WHERE oi.order_id = NEW.order_id AND oi.product_type = 'Display Screens';
+    END IF;
+END //
+
+-- Create order history table to track annual orders
+CREATE TABLE IF NOT EXISTS `order_history` (
+  `history_id` INT AUTO_INCREMENT PRIMARY KEY,
+  `customer_id` INT NOT NULL,
+  `order_id` INT NOT NULL,
+  `total_amount` DECIMAL(10,2) NOT NULL,
+  `order_status` VARCHAR(50) NOT NULL,
+  `items_count` INT NOT NULL,
+  `year` INT NOT NULL,
+  `month` INT NOT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (`customer_id`) REFERENCES `customer`(`customer_id`),
+  FOREIGN KEY (`order_id`) REFERENCES `orders`(`order_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Create detailed order history table for analytics and reporting
+CREATE TABLE IF NOT EXISTS `detailed_order_history` (
+  `detail_id` INT AUTO_INCREMENT PRIMARY KEY,
+  `order_id` INT NOT NULL,
+  `customer_id` INT NOT NULL,
+  `product_id` INT NOT NULL,
+  `product_type` VARCHAR(50) NOT NULL,
+  `product_name` VARCHAR(100) NOT NULL,
+  `quantity` INT NOT NULL,
+  `unit_price` DECIMAL(8,2) NOT NULL,
+  `subtotal` DECIMAL(10,2) NOT NULL,
+  `order_date` TIMESTAMP NOT NULL,
+  `order_status` VARCHAR(50) NOT NULL,
+  `payment_method` VARCHAR(50) NOT NULL,
+  `year` INT NOT NULL,
+  `month` INT NOT NULL,
+  `day` INT NOT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (`order_id`) REFERENCES `orders`(`order_id`),
+  FOREIGN KEY (`customer_id`) REFERENCES `customer`(`customer_id`),
+  INDEX `idx_product_type` (`product_type`),
+  INDEX `idx_product_id` (`product_id`),
+  INDEX `idx_date` (`year`, `month`, `day`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Trigger to track order history annually
+CREATE TRIGGER after_order_completion
+AFTER UPDATE ON orders
+FOR EACH ROW
+BEGIN
+    DECLARE items_count INT;
+    
+    -- Only track completed or cancelled orders
+    IF (OLD.order_status != NEW.order_status) AND 
+       (NEW.order_status IN ('delivered', 'cancelled')) THEN
+        
+        -- Count items
+        SELECT COUNT(*) INTO items_count FROM order_items WHERE order_id = NEW.order_id;
+        
+        -- Insert into history
+        INSERT INTO order_history 
+            (customer_id, order_id, total_amount, order_status, items_count, year, month)
+        VALUES 
+            (NEW.customer_id, NEW.order_id, NEW.total_amount, NEW.order_status, 
+             items_count, YEAR(NEW.updated_at), MONTH(NEW.updated_at));
+    END IF;
+END //
+
+-- Trigger to track detailed order history for analytics
+CREATE TRIGGER after_order_detail_completion
+AFTER UPDATE ON orders
+FOR EACH ROW
+BEGIN
+    -- Only track completed or cancelled orders
+    IF (OLD.order_status != NEW.order_status) AND 
+       (NEW.order_status IN ('delivered', 'cancelled')) THEN
+        
+        -- Insert detailed records for each order item
+        INSERT INTO detailed_order_history 
+            (order_id, customer_id, product_id, product_type, product_name, 
+             quantity, unit_price, subtotal, order_date, order_status, 
+             payment_method, year, month, day)
+        SELECT 
+            oi.order_id,
+            NEW.customer_id,
+            oi.product_id,
+            oi.product_type,
+            oi.product_name,
+            oi.quantity,
+            oi.price,
+            oi.subtotal,
+            NEW.order_date,
+            NEW.order_status,
+            NEW.payment_method,
+            YEAR(NEW.updated_at),
+            MONTH(NEW.updated_at),
+            DAY(NEW.updated_at)
+        FROM 
+            order_items oi
+        WHERE 
+            oi.order_id = NEW.order_id;
+    END IF;
+END //
+
+DELIMITER ;
+
+-- --------------------------------------------------------------------------------------------------------------
+-- End of Procedures and Triggers                                                                              |
+-- --------------------------------------------------------------------------------------------------------------
+
 SET FOREIGN_KEY_CHECKS=1; -- Re-enable foreign key checks
 
 -- Restore original values with explicit error handling

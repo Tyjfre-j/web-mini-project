@@ -14,7 +14,7 @@ function sanitize_input($data) {
 
 // Process form submissions
 if(isset($_POST['save'])){
-    $success_type = "";
+   $success_type = "";
     $error_message = "";
     
     // Include database connection
@@ -139,10 +139,10 @@ if(isset($_POST['save'])){
                         $stmt->bind_param("ssi", $name, $email, $_SESSION['id']);
                         
                         if($stmt->execute()){
-                            $_SESSION['success_message'] = 'Profile updated successfully!';
+         $_SESSION['success_message'] = 'Profile updated successfully!';
                             $_SESSION['customer_name'] = $name;
                             $_SESSION['customer_email'] = $email;
-                            $success_type = "profile";
+         $success_type = "profile";
                         } else {
                             $error_message = "Error updating profile: " . $conn->error;
                         }
@@ -175,9 +175,9 @@ if(isset($_POST['save'])){
                 $stmt->bind_param("si", $address, $_SESSION['id']);
                 
                 if($stmt->execute()){
-                    $_SESSION['success_message'] = 'Address updated successfully!';
+         $_SESSION['success_message'] = 'Address updated successfully!';
                     $_SESSION['customer_address'] = $address;
-                    $success_type = "address";
+         $success_type = "address";
                 } else {
                     $error_message = "Error updating address: " . $conn->error;
                 }
@@ -208,9 +208,9 @@ if(isset($_POST['save'])){
                 $stmt->bind_param("si", $phone, $_SESSION['id']);
                 
                 if($stmt->execute()){
-                    $_SESSION['success_message'] = 'Contact number updated successfully!';
+         $_SESSION['success_message'] = 'Contact number updated successfully!';
                     $_SESSION['customer_phone'] = $phone;
-                    $success_type = "contact";
+         $success_type = "contact";
                 } else {
                     $error_message = "Error updating phone: " . $conn->error;
                 }
@@ -223,16 +223,16 @@ if(isset($_POST['save'])){
     }
     
     // Close database connection
-    $conn->close();
+      $conn->close();
     
     // Store error message if any
     if(!empty($error_message)) {
         $_SESSION['error_message'] = $error_message;
-    }
-    
-    // Redirect to prevent form resubmission
+   }
+   
+   // Redirect to prevent form resubmission
     header("Location: " . $_SERVER['PHP_SELF'] . ($success_type ? "?update=" . $success_type : ""));
-    exit();
+   exit();
 }
 
 include_once('./includes/headerNav.php');
@@ -254,10 +254,10 @@ if($stmt = $conn->prepare($sql8)) {
     
     if($result->num_rows > 0) {
         $row8 = $result->fetch_assoc();
-        $_SESSION['customer_name'] = $row8['customer_fname'];
-        $_SESSION['customer_email'] = $row8['customer_email'];
-        $_SESSION['customer_phone'] = $row8['customer_phone'];
-        $_SESSION['customer_address'] = $row8['customer_address'];
+$_SESSION['customer_name'] = $row8['customer_fname'];
+$_SESSION['customer_email'] = $row8['customer_email'];
+$_SESSION['customer_phone'] = $row8['customer_phone'];
+$_SESSION['customer_address'] = $row8['customer_address'];
     }
     
     $stmt->close();
@@ -581,13 +581,13 @@ $conn->close();
     input.form-control {
         display: block;
         width: 100%;
-    }
+      }
       
-    .form-control:focus {
+      .form-control:focus {
         border-color: var(--primary-color);
         box-shadow: 0 0 0 3px rgba(13, 138, 145, 0.2);
         outline: none;
-    }
+      }
       
       .alert {
         border-radius: var(--border-radius-sm);
@@ -606,13 +606,13 @@ $conn->close();
         display: flex;
         align-items: center;
         justify-content: center;
-    }
+      }
       
-    .alert-success {
+      .alert-success {
         background-color: rgba(56, 176, 0, 0.15);
         border-left: 4px solid var(--success-color);
         color: var(--success-color);
-    }
+      }
     
     .alert-danger {
         background-color: rgba(220, 53, 69, 0.15);
@@ -632,15 +632,15 @@ $conn->close();
     
     .alert-danger:before {
         content: "\f071"; /* Warning icon */
-    }
-
-    .profile_edit, .address_edit, .contact_edit {
+      }
+      
+      .profile_edit, .address_edit, .contact_edit {
         display: none;
-    }
-       
-    .show {
+      }
+      
+      .show {
         display: block;
-    }
+      }
  
     .order-history {
         margin-top: 20px;
@@ -695,7 +695,7 @@ $conn->close();
         10% { opacity: 1; transform: translate(-50%, 0); }
         80% { opacity: 1; transform: translate(-50%, 0); }
         100% { opacity: 0; transform: translate(-50%, -20px); }
-    }
+      }
       
       @media (max-width: 767px) {
         .profile-card {
@@ -749,14 +749,14 @@ $conn->close();
               <div class="info-label">
                 Full Name
                 <span class="edit-btn" data-target="name-edit"><i class="fas fa-pencil-alt"></i> Edit</span>
-              </div>
+            </div>
               <div class="info-value"><?php echo htmlspecialchars($_SESSION['customer_name']); ?></div>
               <div class="info-edit" id="name-edit">
-                <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-                  <input
-                    type="text" 
-                    name="name" 
-                    class="form-control"
+              <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+                <input
+                  type="text" 
+                  name="name" 
+                  class="form-control"
                     value="<?php echo htmlspecialchars($_SESSION['customer_name']); ?>"
                     placeholder="Enter full name..."
                     minlength="3"
@@ -781,22 +781,22 @@ $conn->close();
               <div class="info-value"><?php echo htmlspecialchars($_SESSION['customer_email']); ?></div>
               <div class="info-edit" id="email-edit">
                 <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-                  <input
-                    type="email" 
-                    name="email" 
-                    class="form-control"
+                <input
+                  type="email" 
+                  name="email" 
+                  class="form-control"
                     value="<?php echo htmlspecialchars($_SESSION['customer_email']); ?>"
                     placeholder="Enter email address..."
                     required
-                  />
+                />
                   <input type="hidden" name="update_email" value="1" />
                   <div class="inline-buttons">
                     <button type="submit" name="save" class="btn-save"><i class="fas fa-save"></i> Save</button>
                     <div class="btn-cancel" data-target="email-edit"><i class="fas fa-times"></i> Cancel</div>
                   </div>
-                </form>
-              </div>
-            </div>
+              </form>
+        </div>
+      </div>
 
             <!-- Phone Field -->
             <div class="info-group">
@@ -828,7 +828,7 @@ $conn->close();
                 </form>
               </div>
             </div>
-            
+
             <!-- Address Field -->
             <div class="info-group">
               <div class="info-label">
@@ -841,12 +841,12 @@ $conn->close();
                 ?>
               </div>
               <div class="info-edit" id="address-edit">
-                <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-                  <textarea
-                    name="address" 
-                    class="form-control"
-                    placeholder="Enter your full address..."
-                    rows="3"
+              <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+                <textarea
+                  name="address" 
+                  class="form-control"
+                  placeholder="Enter your full address..."
+                  rows="3"
                     style="resize: none; min-height: 38px; padding: 12px 15px; font-family: inherit; line-height: 1.5;"
                     maxlength="255"
                   ><?php echo !empty($_SESSION['customer_address']) ? htmlspecialchars($_SESSION['customer_address']) : ''; ?></textarea>
@@ -854,9 +854,9 @@ $conn->close();
                     <button type="submit" name="save" class="btn-save"><i class="fas fa-save"></i> Save</button>
                     <div class="btn-cancel" data-target="address-edit"><i class="fas fa-times"></i> Cancel</div>
                   </div>
-                </form>
-              </div>
-            </div>
+              </form>
+        </div>
+      </div>
 
             <!-- Account Type Field -->
             <div class="info-group">
