@@ -1,7 +1,5 @@
 <!--  -->
 <?php include_once('./includes/headerNav.php'); ?>
-<?php require_once './includes/topheadactions.php'; ?>
-<?php require_once './includes/mobilenav.php'; ?>
 
 <?php
 // Get category from URL (GET method is appropriate for navigation)
@@ -90,6 +88,7 @@ if ($products && $products->num_rows > 0) {
 <link rel="stylesheet" href="css/product-display.css">
 
 <!-- Include JavaScript files -->
+<script src="js/index.js"></script>
 <script src="js/product-effects.js"></script>
 
 <div class="overlay" data-overlay></div>
@@ -97,16 +96,12 @@ if ($products && $products->num_rows > 0) {
     - HEADER
   -->
 <header>
-  <!-- top head action, search etc in php -->
-  <!-- inc/topheadactions.php -->
-  <?php require_once './includes/topheadactions.php'; ?>
   <!-- desktop navigation -->
   <!-- inc/desktopnav.php -->
   <?php require_once './includes/desktopnav.php' ?>
   <!-- mobile nav in php -->
   <!-- inc/mobilenav.php -->
   <?php require_once './includes/mobilenav.php'; ?>
-
 </header>
 
 <!--
@@ -114,8 +109,8 @@ if ($products && $products->num_rows > 0) {
   -->
 
 <main>
-  <div class="product-container">
-    <div class="container">
+  <div class="product-container" id="home">
+    
       <div class="category-header">
         <h2 class="main-heading"><?php echo $category; ?></h2>
         <p class="main-heading-desc">Browse our collection of <?php echo strtolower($category); ?></p>
@@ -126,7 +121,6 @@ if ($products && $products->num_rows > 0) {
         </div>
         <?php endif; ?>
       </div>
-    </div>
 
     <!-- Filter and sort section -->
     <div class="container">
@@ -251,6 +245,10 @@ if ($products && $products->num_rows > 0) {
 </main>
 
 <?php require_once './includes/footer.php'; ?>
+
+<!-- Include ionic icons (which is likely already in the headerNav.php but including here as a safeguard) -->
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 
 <!-- Include Category Page JavaScript -->
 <script src="js/category.js"></script>

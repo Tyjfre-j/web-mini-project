@@ -127,4 +127,72 @@
         return get_best_sellers();
     }
     
+    // Get product by ID from appropriate table based on category
+    function get_product($product_id) {
+        global $conn;
+        
+        // Check which category is passed in the URL
+        if(isset($_GET['category'])) {
+            $category = $_GET['category'];
+            
+            switch($category) {
+                case 'Laptops':
+                    $query = "SELECT *, Laptops_name as product_title, Laptops_price as product_price, 
+                             Laptops_price as discounted_price, Laptops_id as product_id, 
+                             Laptops_long_description as product_desc, 
+                             Laptops_image_path as product_img 
+                             FROM Laptops WHERE Laptops_id = $product_id";
+                    break;
+                case 'Desktops':
+                    $query = "SELECT *, Desktops_name as product_title, Desktops_price as product_price, 
+                             Desktops_price as discounted_price, Desktops_id as product_id, 
+                             Desktops_long_description as product_desc, 
+                             Desktops_image_path as product_img 
+                             FROM Desktops WHERE Desktops_id = $product_id";
+                    break;
+                case 'Custom Builds':
+                    $query = "SELECT *, `Custom Builds_name` as product_title, `Custom Builds_price` as product_price, 
+                             `Custom Builds_price` as discounted_price, `Custom Builds_id` as product_id, 
+                             `Custom Builds_long_description` as product_desc, 
+                             `Custom Builds_image_path` as product_img 
+                             FROM `Custom Builds` WHERE `Custom Builds_id` = $product_id";
+                    break;
+                case 'Display Screens':
+                    $query = "SELECT *, `Display Screens_name` as product_title, `Display Screens_price` as product_price, 
+                             `Display Screens_price` as discounted_price, `Display Screens_id` as product_id, 
+                             `Display Screens_long_description` as product_desc, 
+                             `Display Screens_image_path` as product_img 
+                             FROM `Display Screens` WHERE `Display Screens_id` = $product_id";
+                    break;
+                case 'Graphics Cards':
+                    $query = "SELECT *, `Graphics Cards_name` as product_title, `Graphics Cards_price` as product_price, 
+                             `Graphics Cards_price` as discounted_price, `Graphics Cards_id` as product_id, 
+                             `Graphics Cards_long_description` as product_desc, 
+                             `Graphics Cards_image_path` as product_img 
+                             FROM `Graphics Cards` WHERE `Graphics Cards_id` = $product_id";
+                    break;
+                case 'Processors':
+                    $query = "SELECT *, Processors_name as product_title, Processors_price as product_price, 
+                             Processors_price as discounted_price, Processors_id as product_id, 
+                             Processors_long_description as product_desc, 
+                             Processors_image_path as product_img 
+                             FROM Processors WHERE Processors_id = $product_id";
+                    break;
+                case 'Keyboards':
+                    $query = "SELECT *, Keyboards_name as product_title, Keyboards_price as product_price, 
+                             Keyboards_price as discounted_price, Keyboards_id as product_id, 
+                             Keyboards_long_description as product_desc, 
+                             Keyboards_image_path as product_img 
+                             FROM Keyboards WHERE Keyboards_id = $product_id";
+                    break;
+                default:
+                    return false;
+            }
+            
+            return mysqli_query($conn, $query);
+        }
+        
+        return false;
+    }
+    
     ?>

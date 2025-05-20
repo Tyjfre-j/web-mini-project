@@ -3,6 +3,18 @@
 //  all functions
 require_once 'functions/functions.php';
 
+// Debug mode
+$debug = false;
+if($debug && isset($_SESSION)) {
+    echo "<pre>SESSION: ";
+    print_r($_SESSION);
+    echo "</pre>";
+    echo "<pre>GET: ";
+    print_r($_GET);
+    echo "</pre>";
+    echo "<pre>REFERER: " . (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : "Not set") . "</pre>";
+}
+
  //run whenever this file is used no need of isset or any condition to get website image footer etc
  $sql5 ="SELECT * FROM  settings;";
  $result5 = $conn->query($sql5);
@@ -10,6 +22,34 @@ require_once 'functions/functions.php';
  $_SESSION['web-name'] = $row5['website_name'];
  $_SESSION['web-img'] = $row5['website_logo'];
  $_SESSION['web-footer'] = $row5['website_footer'];
+
+// Store referrer URL if no explicit redirect parameter is provided
+if(!isset($_GET['redirect']) && isset($_SERVER['HTTP_REFERER'])) {
+    $referer = $_SERVER['HTTP_REFERER'];
+    // Only store internal referrers from this website
+    if(strpos($referer, $_SERVER['SERVER_NAME']) !== false) {
+        // Extract only the path portion of the URL, not the full URL
+        $parsed_url = parse_url($referer);
+        $path = isset($parsed_url['path']) ? $parsed_url['path'] : '';
+        
+        // Include the query string if present
+        if(isset($parsed_url['query']) && !empty($parsed_url['query'])) {
+            $path .= '?' . $parsed_url['query'];
+        }
+        
+        // Don't redirect back to login or signup pages
+        if(strpos($path, 'login.php') === false && strpos($path, 'signup.php') === false) {
+            $_SESSION['login_referrer'] = $path;
+        }
+    }
+}
+
+// Direct redirect parameter has higher priority
+if(isset($_GET['redirect']) && !empty($_GET['redirect'])) {
+    // Make sure the redirect URL is properly decoded if it was encoded
+    $redirect = urldecode($_GET['redirect']);
+    $_SESSION['login_referrer'] = $redirect; 
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -23,7 +63,7 @@ require_once 'functions/functions.php';
       integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
       crossorigin="anonymous"
     />
-    <title>Login(USER)</title>
+    <title>Login - <?php echo $_SESSION['web-name']; ?></title>
     <style>
       * {
         box-sizing: border-box;
@@ -36,12 +76,15 @@ require_once 'functions/functions.php';
         height: 100vh;
         justify-content: center;
         align-items: center;
+        background-color: #f8f9fa;
       }
-      form {
-        border: 1px solid red;
-        width: 400px;
-        padding: 25px;
+      .login-container {
+        width: 100%;
+        max-width: 420px;
+        padding: 30px;
         border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        background-color: white;
       }
       .logo-box {
         padding: 10px;
@@ -49,128 +92,162 @@ require_once 'functions/functions.php';
         justify-content: center;
         flex-direction: column;
         align-items: center;
+        margin-bottom: 20px;
       }
-      #signup-btn {
-        text-decoration: none;
-        color: white;
+      .form-title {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #333;
+      }
+      .error-message {
+        color: #dc3545;
+        background-color: #f8d7da;
+        border: 1px solid #f5c6cb;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 15px;
+        text-align: center;
+      }
+      .btn-container {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+      }
+      .signup-link {
+        display: inline-block;
+        margin-top: 15px;
+        text-align: center;
+        width: 100%;
       }
     </style>
   </head>
   <body>
-
-  	 <?php 
-     if( !( isset( $_SESSION['id']))){
+     <?php 
+     if(!(isset($_SESSION['id']))){
      ?>
-    <form action="<?php echo $_SERVER['PHP_SELF']; ?> " method="post">
-      <div class="logo-box">
-        <img
-          src="admin/upload/<?php echo $_SESSION['web-img']; ?>"
-          alt="logo"
-          width="200px"
-        />
-      </div>
-      <div class="row mb-3">
-        <!-- <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label> -->
-        <div class="col-sm-12">
-          <input
-            id="inputEmail"
-            name="email"
-            type="email"
-            class="form-control"
-            placeholder="Email"
+     <div class="login-container">
+        <div class="logo-box">
+          <img
+            src="admin/upload/<?php echo $_SESSION['web-img']; ?>"
+            alt="logo"
+            width="200px"
           />
+          <h3 class="form-title">User Login</h3>
         </div>
-      </div>
-      <div class="row mb-3">
-        <!-- <label for="inputPassword3" class="col-sm-2 col-form-label"
-          >Password</label
-        > -->
-        <div class="col-sm-12">
-          <input
-            id="inputPassword"
-            name="pwd"
-            type="password"
-            class="form-control"
-            placeholder="Password"
-          />
-        </div>
-      </div>
-
-      <div class="row mb-3">
-        <div class="col-sm-10">
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="gridCheck1" />
-            <label class="form-check-label" for="gridCheck1">
-              Remeber Me
-            </label>
-          </div>
-        </div>
-      </div>
-      <div style="float: right">
-        <button 
-        type="submit" 
-        class="btn btn-primary">
-        <a href="./signup.php" id="signup-btn">
-             Sign up
-		</a>
-           
-        </button>
-
-        <button 
-        type="submit" 
-        class="btn btn-primary"
-        name="login">
-            Sign in
-        </button>
-      </div>
-    </form>
-
-	<?php }?>
-
-    
-	<?php
- //1st step(i.e connection) done through config file
-if(isset($_POST['login'])){
-
-    if(empty($_POST['email'])){
-           echo "<h4 id='error_login'>Enter email</h4>";
-    }
-
-    if(empty($_POST['pwd'])){
-        echo "<h4 id='error_login'>Enter password</h4>";
- }
-
-$email = mysqli_real_escape_string($conn,$_POST['email']);
-$password =mysqli_real_escape_string($conn,$_POST['pwd']);
-
-$sql ="SELECT * FROM  customer WHERE customer_email='{$email}';";
-$result = $conn->query($sql);
-
-if($result->num_rows==1){ //if any one data found go inside it
-    $row = $result->fetch_assoc();
-    if($password == $row['customer_pwd']){
-
-    //session will be created only if users email and passwords matched
-	session_start();
-	$_SESSION['id'] = $row['customer_id'];
-	$_SESSION['customer_role'] = $row['customer_role'];
-
-    header("location:profile.php?id={$_SESSION['id']}");
-            // put exit after a redirect as header() does not stop execution
-            exit;}else{
-                echo "<h4 id='error_login'>Incorrect password</h4>";//as user get inside if statem if userEmail matched
+        
+        <?php
+        if(isset($_POST['login'])){
+            $hasError = false;
+            if(empty($_POST['email'])){
+                echo "<div class='error-message'>Please enter your email</div>";
+                $hasError = true;
             }
+            
+            if(empty($_POST['pwd'])){
+                echo "<div class='error-message'>Please enter your password</div>";
+                $hasError = true;
+            }
+            
+            if(!$hasError) {
+                $email = mysqli_real_escape_string($conn,$_POST['email']);
+                $password = mysqli_real_escape_string($conn,$_POST['pwd']);
+                
+                $sql ="SELECT * FROM customer WHERE customer_email='{$email}';";
+                $result = $conn->query($sql);
+                
+                if($result->num_rows==1){ //if any one data found go inside it
+                    $row = $result->fetch_assoc();
+                    // For security: This should use password_verify() instead of direct comparison
+                    // But keeping existing logic for now
+                    if($password == $row['customer_password']){
+                        // Session already started at the top of the file
+                        $_SESSION['id'] = $row['customer_id'];
+                        $_SESSION['user_id'] = $row['customer_id'];
+                        $_SESSION['customer_role'] = $row['customer_role'];
+                        
+                        $redirect_to = "profile.php?id={$_SESSION['id']}"; // Default redirect
+                        
+                        // Check if there's a stored referrer
+                        if(isset($_SESSION['login_referrer']) && !empty($_SESSION['login_referrer'])) {
+                            $redirect_to = $_SESSION['login_referrer'];
+                            unset($_SESSION['login_referrer']); // Clear it after using
+                        }
+                        
+                        header("location: " . $redirect_to);
+                        exit();
+                    } else {
+                        echo "<div class='error-message'>Incorrect password</div>";
+                    }
+                } else {
+                    if(!empty($_POST['email'])){
+                        echo "<div class='error-message'>Account not found. Please sign up first.</div>";
+                    }
+                }
+            }
+        }
+        ?>
+        
+        <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+          <div class="mb-3">
+            <label for="inputEmail" class="form-label">Email address</label>
+            <input
+              id="inputEmail"
+              name="email"
+              type="email"
+              class="form-control"
+              placeholder="Enter your email"
+              value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="inputPassword" class="form-label">Password</label>
+            <input
+              id="inputPassword"
+              name="pwd"
+              type="password"
+              class="form-control"
+              placeholder="Enter your password"
+            />
+          </div>
 
-
-}else{
-    if($_POST['email']){ //it means it will run if email field is filled
-    echo "<h4 id='error_login'>(unavailable) please signup first</h4>";
-    }
-}
-}//end of 1st ifstatement
-
-?>
-
-
+          <div class="mb-3">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="rememberMe" name="remember" />
+              <label class="form-check-label" for="rememberMe">
+                Remember Me
+              </label>
+            </div>
+          </div>
+          
+          <div class="btn-container">
+            <button type="submit" name="login" class="btn btn-primary">
+                Sign in
+            </button>
+            <a href="./signup.php" class="btn btn-outline-secondary">
+                Create Account
+            </a>
+          </div>
+        </form>
+      </div>
+    <?php } else { ?>
+      <div class="login-container">
+        <div class="logo-box">
+          <img
+            src="admin/upload/<?php echo $_SESSION['web-img']; ?>"
+            alt="logo"
+            width="200px"
+          />
+          <h3 class="form-title">You're already logged in</h3>
+        </div>
+        <div class="btn-container">
+          <a href="profile.php?id=<?php echo $_SESSION['id']; ?>" class="btn btn-primary">
+            Go to Profile
+          </a>
+          <a href="logout.php" class="btn btn-outline-danger">
+            Logout
+          </a>
+        </div>
+      </div>
+    <?php } ?>
   </body>
 </html>

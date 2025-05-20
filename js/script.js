@@ -29,11 +29,32 @@ document.addEventListener("DOMContentLoaded", function () {
           const targetId = hrefParts[1];
           const targetElement = document.getElementById(targetId);
 
+          // Special handling for home links
+          if (targetId === "home" && hrefParts[0].includes("index.php")) {
+            e.preventDefault();
+
+            // Instead of instantly scrolling to top, just navigate to index.php
+            // with a small delay to avoid the instant jump
+            if (window.location.pathname.includes("index.php")) {
+              // Already on index.php, just scroll a little bit down from the top
+              window.scrollTo({
+                top: 1,
+                behavior: "auto",
+              });
+            } else {
+              // Navigate to index.php without the hash to avoid jumping
+              window.location.href = hrefParts[0];
+            }
+            return;
+          }
+
           if (targetElement) {
             e.preventDefault();
 
             // Scroll smoothly to the target with offset
-            const headerOffset = 180; // Increased to match the CSS scroll-padding-top value
+            const header = document.querySelector("header");
+            const headerHeight = header ? header.offsetHeight : 0;
+            const headerOffset = headerHeight + 30; // Add extra padding to ensure title is visible
             const elementPosition = targetElement.getBoundingClientRect().top;
             const offsetPosition =
               elementPosition + window.pageYOffset - headerOffset;

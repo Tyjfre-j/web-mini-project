@@ -1,4 +1,3 @@
-
 <?php
    include_once('./includes/headerNav.php');
    //this restriction will secure the pages path injection
@@ -103,16 +102,12 @@
    </style>
 </head>
 <header>
-  <!-- top head action, search etc in php -->
-  <!-- inc/topheadactions.php -->
-  <?php require_once './includes/topheadactions.php'; ?>
   <!-- desktop navigation -->
   <!-- inc/desktopnav.php -->
   <?php require_once './includes/desktopnav.php' ?>
   <!-- mobile nav in php -->
   <!-- inc/mobilenav.php -->
   <?php require_once './includes/mobilenav.php'; ?>
-
 </header>
 <hr>
 <!-- Header End====================================================================== -->
@@ -323,6 +318,24 @@
           <!-- Card End -->
         </div>
         <!-- Col End -->
+
+      </div>
+        <div class="col d-flex justify-content-center">
+          <!-- Orders Card -->
+          <div class="card" style="width: 18rem">
+            <div class="card-body">
+              <h5 class="card-title">MY ORDERS</h5>
+              <div class="col">
+                <a class="btn btn-primary" href="orders.php">View Orders</a>
+              </div>
+              <br>
+              <br>
+              <p class="card-text">
+                View your order history, track shipments, and manage your purchases.
+              </p>
+            </div>
+          </div>
+        </div>
 
       </div>
     </div>

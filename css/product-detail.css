@@ -2,10 +2,38 @@
  * Product Detail Page Styles
  */
 
+/* Direct override for the main padding on product detail pages */
+body main {
+  padding-top: 0 !important;
+}
+
+/* Override the main padding from style-prefix.css */
+main .product-detail-container,
+main.no-padding {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.no-padding {
+  padding: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
 .product-detail-container {
-  padding-top: 120px; /* Accounts for fixed header */
   background-color: #f9fafb;
   min-height: 100vh;
+  padding: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* Add specific header spacing */
+header + main {
+  margin-top: 10px !important;
+}
+
+header + main .product-detail-container {
+  margin-top: 10px !important;
 }
 
 .breadcrumb {
@@ -298,7 +326,8 @@
 
 @media (max-width: 768px) {
   .product-detail-container {
-    padding-top: 100px;
+    padding: 0 !important;
+    margin: 0 !important;
   }
 
   .product-detail-title {
@@ -321,7 +350,8 @@
 
 @media (max-width: 576px) {
   .product-detail-container {
-    padding-top: 90px;
+    padding: 0 !important;
+    margin: 0 !important;
   }
 
   .product-detail-left,

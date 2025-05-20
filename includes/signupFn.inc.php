@@ -1,4 +1,3 @@
-
 <?php
 //this all are input validity functions that will provide true/false for error finding 
 //in case condition not matched--it executes during signup 
@@ -66,20 +65,39 @@ if(!$conn){
     die("Connection failed: ".$conn->connect_error());
 }
 
+   //using prepare statement for preventing injection
+   $sql = $conn->prepare("INSERT INTO customer (customer_fname,customer_email,customer_password,customer_phone,customer_address) VALUES (?,?,?,?,?)");
 
-
-       //using prepare statement for preventing injection
-       $sql = $conn->prepare("INSERT INTO customer (customer_fname,customer_email,customer_pwd,customer_phone,customer_address) VALUES (?,?,?,?,?)");
-    
-       $sql->bind_param('sssss',$name,$email,$pwd,$number,$address);
-       $sql->execute();
-     
-    //after saving user data to database redirecting user to add page
-    header("location: ../index.php?userSuccessfullycreated!loginNow");
-    
-       //last step closing connection
-       $sql->close(); //closing prepare statement
-       $conn->close();
-    
-    }
+   $sql->bind_param('sssss',$name,$email,$pwd,$number,$address);
+   $sql->execute();
+ 
+   //last step closing connection
+   $sql->close(); //closing prepare statement
+   $conn->close();
+   
+   // Get redirect parameter if it exists
+   session_start();
+   if (isset($_SESSION['redirect_after_signup']) && !empty($_SESSION['redirect_after_signup'])) {
+       $redirect = $_SESSION['redirect_after_signup'];
+       unset($_SESSION['redirect_after_signup']); // Clear it after use
+       
+       // Check if it's an absolute URL or just a path
+       if (filter_var($redirect, FILTER_VALIDATE_URL)) {
+           // For security, extract just the path
+           $parsed_url = parse_url($redirect);
+           $path = isset($parsed_url['path']) ? $parsed_url['path'] : '';
+           
+           // Include the query string if present
+           if(isset($parsed_url['query']) && !empty($parsed_url['query'])) {
+               $path .= '?' . $parsed_url['query'];
+           }
+           
+           header("location: ../login.php?signup=success&redirect=" . urlencode($path));
+       } else {
+           header("location: ../login.php?signup=success&redirect=" . urlencode($redirect));
+       }
+   } else {
+       header("location: ../login.php?signup=success");
+   }
+}
     

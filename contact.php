@@ -10,9 +10,6 @@
 <!-- get tables data from db -->
 
 <header>
-  <!-- top head action, search etc in php -->
-  <!-- inc/topheadactions.php -->
-  <?php require_once './includes/topheadactions.php'; ?>
   <!-- desktop navigation -->
   <!-- inc/desktopnav.php -->
   <?php require_once './includes/desktopnav.php' ?>

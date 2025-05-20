@@ -18,13 +18,81 @@ $keyboards = getKeyboards();
 <div class="overlay" data-overlay></div>
 <script src="js/index.js"></script>
 
+<!-- Toast notification for messages -->
+<?php if(isset($_GET['message']) && $_GET['message'] == 'successfully_logged_out'): ?>
+<div class="notification-toast show" id="notification-toast">
+  <div class="toast-container success">
+    <div class="toast-message">
+      <i class="fas fa-check-circle"></i>
+      <span>You have been successfully logged out</span>
+    </div>
+    <button class="toast-close" onclick="document.getElementById('notification-toast').classList.remove('show')">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+</div>
+<style>
+  .notification-toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    transform: translateX(150%);
+    transition: transform 0.3s ease-in-out;
+  }
+  .notification-toast.show {
+    transform: translateX(0);
+  }
+  .toast-container {
+    padding: 15px 20px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-width: 300px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    animation: fadeIn 0.3s ease-in-out;
+  }
+  .toast-container.success {
+    background-color: #d4edda;
+    color: #155724;
+    border-left: 4px solid #28a745;
+  }
+  .toast-message {
+    display: flex;
+    align-items: center;
+  }
+  .toast-message i {
+    margin-right: 10px;
+    font-size: 20px;
+  }
+  .toast-close {
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+</style>
+<script>
+  // Auto-hide notification after 5 seconds
+  setTimeout(function() {
+    const toast = document.getElementById('notification-toast');
+    if (toast) {
+      toast.classList.remove('show');
+    }
+  }, 5000);
+</script>
+<?php endif; ?>
+
 <!--
     - HEADER
   -->
 <header>
-  <!-- top head action, search etc in php -->
-  <!-- inc/topheadactions.php -->
-  <?php require_once './includes/topheadactions.php'; ?>
   <!-- desktop navigation -->
   <!-- inc/desktopnav.php -->
   <?php require_once './includes/desktopnav.php' ?>
@@ -40,7 +108,7 @@ $keyboards = getKeyboards();
   <!--
       - BANNER: Coursal
     -->
-  <div class="banner">
+  <div class="banner" id="home">
     <div class="container">
       <div class="slider-container has-scrollbar">
         <!-- Display data from db in banner -->

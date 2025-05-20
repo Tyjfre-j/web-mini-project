@@ -1,6 +1,86 @@
 <?php include_once('./includes/headerNav.php'); ?>
-<?php require_once './includes/topheadactions.php'; ?>
-<?php require_once './includes/mobilenav.php'; ?>
+
+<!-- Add product detail CSS at the end of the head section for highest specificity -->
+<style>
+  body main {
+    padding-top: 0 !important;
+  }
+  
+  .product-detail-container {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  
+  main.no-padding {
+    padding-top: 0 !important;
+  }
+  
+  /* Direct styling for header-main spacing */
+  header + main {
+    margin-top: 10px !important;
+  }
+  
+  /* Additional direct target for the container */
+  header + main .product-detail-container {
+    margin-top: 10px !important;
+  }
+  
+  /* Login message and button styles */
+  .login-message {
+    margin-top: 20px;
+  }
+  
+  .login-message p {
+    margin-bottom: 10px;
+    color: #555;
+  }
+  
+  .login-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 24px;
+    background-color: #CE5959;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+    max-width: 250px;
+  }
+  
+  .login-btn ion-icon {
+    margin-right: 8px;
+    font-size: 18px;
+  }
+  
+  .login-btn:hover {
+    background-color: #89375F;
+    color: white;
+  }
+</style>
+
+<link rel="stylesheet" href="css/product-detail.css">
+
+<!-- Include JavaScript files -->
+<script src="js/index.js"></script>
+<script src="js/script.js"></script>
+
+<div class="overlay" data-overlay></div>
+
+<!--
+    - HEADER
+  -->
+<header>
+  <!-- desktop navigation -->
+  <!-- inc/desktopnav.php -->
+  <?php require_once './includes/desktopnav.php' ?>
+  <!-- mobile nav in php -->
+  <!-- inc/mobilenav.php -->
+  <?php require_once './includes/mobilenav.php'; ?>
+</header>
 
 <?php
 // Get product ID and type from URL using GET (appropriate for page navigation)
@@ -68,25 +148,12 @@ $category_field = $type_alias . '_category_name';
 $quantity_field = $product_type . '_quantity';
 ?>
 
-<link rel="stylesheet" href="css/product-detail.css">
-
-<div class="overlay" data-overlay></div>
-
-<header>
-  <?php require_once './includes/topheadactions.php'; ?>
-  <?php require_once './includes/desktopnav.php' ?>
-  <?php require_once './includes/mobilenav.php'; ?>
-</header>
-
-<main>
+<!--
+    - MAIN
+  -->
+<main class="no-padding">
   <div class="product-detail-container">
-    <div class="container">
-      <div class="breadcrumb">
-        <a href="index.php">Home</a> &gt; 
-        <a href="category.php?category=<?php echo urlencode($product_type); ?>"><?php echo htmlspecialchars($product_type); ?></a> &gt; 
-        <span><?php echo htmlspecialchars($product[$name_field]); ?></span>
-      </div>
-      
+    <div class="container no-padding">
       <div class="product-detail-main">
         <div class="product-detail-left">
           <div class="product-image-container">
@@ -131,6 +198,8 @@ $quantity_field = $product_type . '_quantity';
             <?php endif; ?>
           </div>
           
+          <?php if(isset($_SESSION['user_id'])): ?>
+          <!-- User is logged in, show standard add to cart form -->
           <form action="manage_cart.php" method="post" class="cart-form">
             <input type="hidden" name="product_id" value="<?php echo $product[$id_field]; ?>">
             <input type="hidden" name="product_name" value="<?php echo htmlspecialchars($product[$name_field]); ?>">
@@ -152,6 +221,20 @@ $quantity_field = $product_type . '_quantity';
               Add to Cart
             </button>
           </form>
+          <?php else: ?>
+          <!-- User is not logged in, show login button -->
+          <div class="login-message">
+            <p>Please log in to add items to your cart</p>
+            <?php
+            // Build current URL for redirect
+            $current_url = "product.php?id={$product_id}&type=" . urlencode($product_type);
+            ?>
+            <a href="login.php?redirect=<?php echo urlencode($current_url); ?>" class="login-btn">
+              <ion-icon name="log-in-outline"></ion-icon>
+              Login to Purchase
+            </a>
+          </div>
+          <?php endif; ?>
         </div>
       </div>
     </div>

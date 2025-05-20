@@ -16,12 +16,31 @@
   font-weight: 700;
   text-align: center;
   text-transform: uppercase;
+  position: relative;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+}
+
+.main-heading::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  background: var(--main-maroon);
+  border-radius: 2px;
 }
 
 .main-heading-desc {
-  color: var(--sonic-silver);
-  font-size: 1rem;
+  color: var(--text-secondary);
+  font-size: 1.1rem;
   text-align: center;
+  margin-bottom: 10px;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* Product section layout */
@@ -49,30 +68,43 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
   border-bottom: 2px solid var(--main-maroon);
-  padding-bottom: 10px;
+  padding: 0 0 10px 0;
+  background: linear-gradient(90deg, rgba(13, 138, 145, 0.08), transparent);
+  border-radius: 8px 8px 0 0;
+  height: 60px;
+  position: relative;
 }
 
 /* View All button next to title */
 .view-all-btn {
-  font-size: 0.9rem;
-  padding: 5px 15px;
+  font-size: 1rem;
+  padding: 10px 18px;
   background-color: var(--main-maroon);
   color: #fff;
   border-radius: 4px;
   text-decoration: none;
-  transition: background-color 0.3s;
-  width: 150px;
+  transition: background-color 0.3s, transform 0.2s;
+  width: 140px;
   text-align: center;
-  display: inline-block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  margin-right: 0;
+  height: 42px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  /* Removed top positioning to let flexbox alignment work */
 }
 
 .view-all-btn:hover {
   background-color: var(--deep-maroon);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 /* Product section title - updated for better visibility */
@@ -81,6 +113,11 @@
   font-weight: 700;
   color: var(--eerie-black);
   margin: 0;
+  padding: 0 0 0 15px;
+  display: flex;
+  align-items: center;
+  line-height: 1;
+  height: 50px;
 }
 
 /* Product main container */
@@ -130,17 +167,20 @@
 
 .showcase {
   background: white;
-  border-radius: 8px;
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  transition: box-shadow 0.3s ease;
+  box-shadow: var(--shadow-md);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
   height: 380px !important;
   display: flex;
   flex-direction: column;
+  border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .showcase:hover {
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-5px);
+  border-color: var(--main-maroon);
 }
 
 /* Product image container */
@@ -304,13 +344,14 @@
   width: 100%;
   margin-top: -20px;
   margin-bottom: 0;
+  scroll-margin-top: var(--header-offset, 120px);
 }
 
 /* Title-only container */
 .title-only-container {
   display: block;
   width: 100%;
-  padding-top: 10px;
+  padding-top: 20px;
   margin-bottom: 15px;
   padding-bottom: 0;
 }
@@ -323,16 +364,7 @@
 /* Smooth scrolling and scroll padding for fixed header */
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 180px; /* Increased to provide more space below nav bar */
-}
-
-/* Add some spacing before section headings for better visibility when scrolled to */
-.section-container {
-  margin-top: -20px;
-}
-
-.title-only-container {
-  margin-bottom: 15px;
+  scroll-padding-top: var(--header-offset, 120px);
 }
 
 /* Removing highlight effects as requested */

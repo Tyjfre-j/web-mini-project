@@ -4,39 +4,70 @@
     
             if(isset($_POST['add_to_cart']))
             {    
+                // Check if user is logged in
+                if(!isset($_SESSION['user_id'])) {
+                    $_SESSION['error_message'] = "Please login to add items to your cart";
+                    // Support both product.php and viewdetail.php (for backward compatibility)
+                    if(isset($_POST['product_category']) && $_POST['product_category'] == 'viewdetail') {
+                        $redirect = "viewdetail.php?id=".$_POST['product_id']."&category=".$_POST['product_type'];
+                        header('location:login.php?redirect='.urlencode($redirect));
+                    } else {
+                        $redirect = "product.php?id=".$_POST['product_id']."&type=".$_POST['product_category'];
+                        header('location:login.php?redirect='.urlencode($redirect));
+                    }
+                    exit();
+                }
                
-                     
-            if(isset($_SESSION['mycart']))
-            {
-               $item_id = array_column($_SESSION['mycart'],'product_id');
-               $item_check_id = in_array($_POST['product_id'],$item_id);
-               
-               if($item_check_id==true)
-               {
-                header('location:viewdetail.php?id='.$_POST['product_id'].'&category='.$_POST['product_category'].'');
-
-               }else{
-                $count_card = count($_SESSION['mycart']);
-                $_SESSION['mycart'][$count_card]=array('name'=>$_POST['product_name'],'price'=>$_POST['product_price'],'product_id'=>$_POST['product_id'],'category'=>$_POST['product_category'],'product_qty'=>$_POST['product_qty'],'product_img'=>$_POST['product_img']);
-
-                header('location:viewdetail.php?id='.$_POST['product_id'].'&category='.$_POST['product_category'].'');
-
-               }
-
+                // Add item to cart session
+                if(!isset($_SESSION['mycart'])) {
+                    $_SESSION['mycart'] = array();
+                }
                 
-
-              
-
-
-            }else{
-              $_SESSION['mycart'][0]=array('name'=>$_POST['product_name'],'price'=>$_POST['product_price'],'product_id'=>$_POST['product_id'],'category'=>$_POST['product_category'],'product_qty'=>$_POST['product_qty'],'product_img'=>$_POST['product_img']);
-             
-              header('location:viewdetail.php?id='.$_POST['product_id'].'&category='.$_POST['product_category'].'');
-            }
-
+                $product_id = $_POST['product_id'];
+                $product_name = $_POST['product_name'];
+                $product_price = $_POST['product_price'];
+                $product_qty = $_POST['product_qty'];
+                $product_category = $_POST['product_category'];
+                $product_img = $_POST['product_img'];
+                
+                // Check if product already exists in cart
+                $item_exists = false;
+                foreach($_SESSION['mycart'] as $key => $item) {
+                    if($item['product_id'] == $product_id && $item['product_category'] == $product_category) {
+                        // Update quantity
+                        $_SESSION['mycart'][$key]['product_qty'] += $product_qty;
+                        $item_exists = true;
+                        break;
+                    }
+                }
+                
+                // If product doesn't exist in cart, add it
+                if(!$item_exists) {
+                    $item_array = array(
+                        'product_id' => $product_id,
+                        'product_name' => $product_name,
+                        'product_price' => $product_price,
+                        'product_qty' => $product_qty,
+                        'product_category' => $product_category,
+                        'product_img' => $product_img
+                    );
+                    
+                    array_push($_SESSION['mycart'], $item_array);
+                }
+                
+                $_SESSION['success_message'] = "Product added to cart successfully!";
+                header('Location: cart.php');
+                exit();
             }
 
             if(isset($_POST['action'])) {
+              // Check if user is logged in
+              if(!isset($_SESSION['user_id'])) {
+                  $_SESSION['error_message'] = "Please login to manage your cart";
+                  header('location:login.php?redirect=cart.php');
+                  exit();
+              }
+              
               $action = $_POST['action'];
               
               // Update quantity
