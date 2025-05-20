@@ -5,15 +5,24 @@ $banner_products = getBanners();
 $categories = getCategories();
 $product_types = getProductTypes();
 
-// Get all products
-$laptops = getLaptops();
-$desktops = getDesktops();
-$customBuilds = getCustomBuilds();
-$displayScreens = getDisplayScreens();
-$graphicsCards = getGraphicsCards();
-$processors = getProcessors();
-$keyboards = getKeyboards();
+// We'll load product data on demand rather than all at once
 ?>
+
+<!-- Fix spacing between content and footer -->
+<style>
+  .product-container {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+  }
+  
+  main {
+    margin-bottom: 0 !important;
+  }
+  
+  .container:last-child {
+    margin-bottom: 0 !important;
+  }
+</style>
 
 <div class="overlay" data-overlay></div>
 <script src="js/index.js"></script>
@@ -79,42 +88,6 @@ $keyboards = getKeyboards();
     if ($product_types && mysqli_num_rows($product_types) > 0) {
       while ($type = mysqli_fetch_assoc($product_types)) {
         $type_name = $type['type_name'];
-        $variable_name = '';
-        
-        // Map table name to variable name
-        switch($type_name) {
-          case 'Laptops':
-            $variable_name = 'laptops';
-            break;
-          case 'Desktops':
-            $variable_name = 'desktops';
-            break;
-          case 'Custom Builds':
-            $variable_name = 'customBuilds';
-            break;
-          case 'Display Screens':
-            $variable_name = 'displayScreens';
-            break;
-          case 'Graphics Cards':
-            $variable_name = 'graphicsCards';
-            break;
-          case 'Processors':
-            $variable_name = 'processors';
-            break;
-          case 'Keyboards':
-            $variable_name = 'keyboards';
-            break;
-          default:
-            continue 2; // Skip this iteration of the while loop if type name is unknown
-        }
-        
-        // Access the appropriate products variable
-        $products = $$variable_name;
-        
-        // Check if we have products for this type
-        if (!$products || mysqli_num_rows($products) == 0) {
-          continue; // Skip this product type if no products are available
-        }
         
         // Create CSS-friendly ID from type name (lowercase, hyphens)
         $section_id = strtolower(str_replace(' ', '-', $type_name));
@@ -125,6 +98,39 @@ $keyboards = getKeyboards();
             $css_class = 'graphics-cards';
         } else if ($section_id === 'processors') {
             $css_class = 'processors';
+        }
+        
+        // Only get products for this specific type (load on demand)
+        $products = null;
+        switch($type_name) {
+          case 'Laptops':
+            $products = getLaptops();
+            break;
+          case 'Desktops':
+            $products = getDesktops();
+            break;
+          case 'Custom Builds':
+            $products = getCustomBuilds();
+            break;
+          case 'Display Screens':
+            $products = getDisplayScreens();
+            break;
+          case 'Graphics Cards':
+            $products = getGraphicsCards();
+            break;
+          case 'Processors':
+            $products = getProcessors();
+            break;
+          case 'Keyboards':
+            $products = getKeyboards();
+            break;
+          default:
+            continue 2; // Skip this iteration of the while loop if type name is unknown
+        }
+        
+        // Check if we have products for this type
+        if (!$products || mysqli_num_rows($products) == 0) {
+          continue; // Skip this product type if no products are available
         }
     ?>
     <!-- Product section for <?php echo $type_name; ?> -->
@@ -156,7 +162,7 @@ $keyboards = getKeyboards();
           <a href="product.php?id=<?php echo $row[$id_field]; ?>&type=<?php echo urlencode($type_name); ?>" class="product-link <?php echo $section_id; ?>-card">
             <div class="showcase">
               <div class="showcase-banner">
-                <img src="<?php echo htmlspecialchars($row[$image_field]); ?>" alt="<?php echo htmlspecialchars($row[$name_field]); ?>" class="product-img" />
+                <img src="<?php echo htmlspecialchars($row[$image_field]); ?>" alt="<?php echo htmlspecialchars($row[$name_field]); ?>" class="product-img" loading="lazy" />
               </div>
               <div class="showcase-content">
                 <div class="showcase-category"><?php echo htmlspecialchars($row[$category_field]); ?></div>

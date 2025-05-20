@@ -11,10 +11,10 @@ const modalCloseFunc = function () {
 };
 
 // modal eventListener
-modalCloseOverlay.addEventListener("click", modalCloseFunc);
-modalCloseBtn.addEventListener("click", modalCloseFunc);
+if (modalCloseOverlay) modalCloseOverlay.addEventListener("click", modalCloseFunc);
+if (modalCloseBtn) modalCloseBtn.addEventListener("click", modalCloseFunc);
 
-// Smooth scrolling for navigation links without visual effects
+// Optimized navigation handling
 document.addEventListener("DOMContentLoaded", function () {
   // Get all links that have a hash in them
   const navLinks = document.querySelectorAll('a[href*="#"]');
@@ -23,22 +23,21 @@ document.addEventListener("DOMContentLoaded", function () {
   navLinks.forEach((link) => {
     if (link.getAttribute("href").indexOf("#") !== -1) {
       link.addEventListener("click", function (e) {
-        // Prevent the default navigation
-        e.preventDefault();
-
         const hrefParts = this.getAttribute("href").split("#");
         const targetId = hrefParts[1];
-
+        
         // If we're not on index.php but trying to navigate to a section there
         if (
           hrefParts[0].includes("index.php") &&
           !window.location.pathname.includes("index.php") &&
           !window.location.pathname.endsWith("/")
         ) {
-          // Navigate to index.php with the hash
-          window.location.href = this.getAttribute("href");
+          // Let the browser handle the navigation
           return;
         }
+        
+        // Prevent default only for same-page navigation
+        e.preventDefault();
 
         // Special handling for home - scroll to top
         if (targetId === "home") {
@@ -46,74 +45,56 @@ document.addEventListener("DOMContentLoaded", function () {
             top: 0,
             behavior: "smooth",
           });
-
+          
           // Close mobile menu if open
           closeActiveMobileMenu();
           return;
         }
 
-        // Use a more specific selector for product sections
-        if (targetId.endsWith("-section")) {
-          let sectionElement = document.getElementById(targetId);
-          if (sectionElement) {
-            // Get header height for offset
-            const header = document.querySelector("header");
-            const headerHeight = header ? header.offsetHeight : 0;
-            const offsetPadding = 20; // Extra padding to ensure good visibility
-            
-            // Get the position of the section
-            const sectionRect = sectionElement.getBoundingClientRect();
-            const sectionTop = sectionRect.top + window.pageYOffset;
-            
-            // Scroll directly to the section with offset for header
-            console.log("Scrolling to section:", targetId, "at position:", sectionTop - headerHeight - offsetPadding);
-            
-            setTimeout(() => {
-              window.scrollTo({
-                top: sectionTop - headerHeight - offsetPadding,
-                behavior: "smooth",
-              });
-            }, 50);
-            
-            closeActiveMobileMenu();
-          } else {
-            window.location.href = this.getAttribute("href");
-          }
-        } else {
-          // For any other elements (non-section IDs)
-          const element = document.getElementById(targetId);
-
-          if (element) {
-            // Get header height
-            const header = document.querySelector("header");
-            const headerHeight = header ? header.offsetHeight : 0;
-
-            // Calculate position
-            const elementRect = element.getBoundingClientRect();
-            const elementTopPosition = elementRect.top + window.pageYOffset;
-
-            // Scroll to position
-            window.scrollTo({
-              top: elementTopPosition - headerHeight,
-              behavior: "smooth",
-            });
-
-            // Close mobile menu if open
-            closeActiveMobileMenu();
-          } else {
-            // Fallback if element not found
-            window.location.href = this.getAttribute("href");
-          }
-        }
+        // Handle section scrolling
+        scrollToElement(targetId);
       });
     }
   });
+  
+  // Consolidated scrolling function
+  function scrollToElement(targetId) {
+    let element;
+    
+    // Look for section first
+    if (targetId.endsWith("-section")) {
+      element = document.getElementById(targetId);
+    } else {
+      // For any other elements
+      element = document.getElementById(targetId);
+    }
+    
+    if (element) {
+      // Get header height
+      const header = document.querySelector("header");
+      const headerHeight = header ? header.offsetHeight : 0;
+      const offsetPadding = 20; // Extra padding
+      
+      // Calculate position
+      const elementRect = element.getBoundingClientRect();
+      const elementTopPosition = elementRect.top + window.scrollY;
+      
+      // Scroll to position
+      window.scrollTo({
+        top: elementTopPosition - headerHeight - offsetPadding,
+        behavior: "smooth",
+      });
+      
+      // Close mobile menu if open
+      closeActiveMobileMenu();
+    }
+  }
 
   // Helper function to close mobile menu
   function closeActiveMobileMenu() {
     const mobileMenu = document.querySelector("[data-mobile-menu].active");
     const overlay = document.querySelector("[data-overlay]");
-    if (mobileMenu) {
+    if (mobileMenu && overlay) {
       mobileMenu.classList.remove("active");
       overlay.classList.remove("active");
     }
@@ -125,9 +106,11 @@ const notificationToast = document.querySelector("[data-toast]");
 const toastCloseBtn = document.querySelector("[data-toast-close]");
 
 // notification toast eventListener
-toastCloseBtn.addEventListener("click", function () {
-  notificationToast.classList.add("closed");
-});
+if (toastCloseBtn) {
+  toastCloseBtn.addEventListener("click", function () {
+    notificationToast.classList.add("closed");
+  });
+}
 
 // mobile menu variables
 const mobileMenuOpenBtn = document.querySelectorAll(

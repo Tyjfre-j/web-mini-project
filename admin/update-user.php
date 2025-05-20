@@ -2,6 +2,27 @@
     include_once('./includes/headerNav.php');
     include_once('./includes/restriction.php');
 
+    // Process the form submission first
+    if(isset($_POST['update'])){
+        //below sql will update user details inside sql table when update is clicked
+        include "includes/config.php";
+        $sql1 = "UPDATE customer 
+                SET  customer_fname= '{$_POST['name']}' ,
+                    customer_phone= '{$_POST['phone']}' ,
+                    customer_address= '{$_POST['address']}' ,
+                    customer_role= '{$_POST['role']}' 
+                WHERE customer_id={$_GET['id']} ";
+        
+        if($conn->query($sql1)){
+            $_SESSION['update_success'] = true;
+        }   
+        
+        $conn->close();
+        // Redirect to prevent form resubmission
+        header("Location: update-user.php?id={$_GET['id']}&updated=1");
+        exit();
+    }
+
     //this will provide previous user value before updating 
     include "includes/config.php";
     $sql = "SELECT * FROM customer where customer_id={$_GET['id']}";
@@ -37,7 +58,17 @@
  <div class="content-box">
     <div class="update">
 <h1>Update User Details</h1>
-    <form class="row g-3" action="<?php $_SERVER['PHP_SELF']; ?>" method="POST">
+
+<?php 
+    // Show success message if update was successful
+    if(isset($_GET['updated']) && isset($_SESSION['update_success'])) {
+        echo '<div class="alert alert-success" role="alert">User details updated successfully!</div>';
+        // Clear the session variable
+        unset($_SESSION['update_success']);
+    }
+?>
+
+    <form class="row g-3" action="<?php echo $_SERVER['PHP_SELF'] . '?id=' . $_GET['id']; ?>" method="POST">
       <div class="col-md-6">
         <label for="inputEmail4" class="form-label">Name</label>
         <input
@@ -89,23 +120,3 @@
  </div>
 
  </div>
-
-
-
-<?php
-   if(isset($_POST['update'])){
-    //below sql will update user details inside sql table when update is clicked
-    include "includes/config.php";
-    $sql1 = "UPDATE customer 
-             SET  customer_fname= '{$_POST['name']}' ,
-                  customer_phone= '{$_POST['phone']}' ,
-                  customer_address= '{$_POST['address']}' ,
-                  customer_role= '{$_POST['role']}' 
-             WHERE customer_id={$_GET['id']} ";
-    $conn->query($sql1);   
-    
-    $conn->close();
-    header("Location:http://localhost/E-commerce/admin/update-user.php?succesfullyUpdated");
-    // http://localhost/E-commerce/admin/update-user.php?id=9
-   }
-?>

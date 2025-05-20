@@ -238,7 +238,7 @@
   font-weight: 700;
   min-width: 35px;
   text-align: center;
-  color: var(--main-maroon);
+  color: #e60000;
 }
 
 .price-input input {

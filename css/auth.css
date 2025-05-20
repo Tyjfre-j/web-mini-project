@@ -1,0 +1,280 @@
+/*
+  Authentication Pages Styling (login, signup)
+  For PeakGear E-commerce site
+*/
+
+:root {
+  --primary-color: #0d8a91; /* Match the main brand color */
+  --primary-dark: #00656b;
+  --secondary-color: #8338ec;
+  --accent-color: #ff006e;
+  --success-color: #38b000;
+  --text-dark: #333333;
+  --text-light: #f8f9fa;
+  --gray-light: #f8f9fa;
+  --gray-medium: #e9ecef;
+  --gray-dark: #6c757d;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.auth-body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, var(--gray-light), var(--gray-medium));
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.auth-body::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -10%;
+  width: 120%;
+  height: 80%;
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+  transform: rotate(-6deg);
+  z-index: -1;
+  border-radius: 0 0 50% 50% / 0 0 100% 100%;
+}
+
+.auth-container {
+  width: 100%;
+  max-width: 450px;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  background-color: white;
+  position: relative;
+  overflow: hidden;
+  margin: 20px;
+}
+
+.signup-container {
+  max-width: 800px;
+}
+
+.auth-logo-box {
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.auth-site-title {
+  font-size: 2.6rem; 
+  font-weight: 800; 
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); 
+  -webkit-background-clip: text; 
+  -webkit-text-fill-color: transparent; 
+  margin-bottom: 10px;
+}
+
+.auth-form-title {
+  text-align: center;
+  margin: 15px 0;
+  color: var(--text-dark);
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.auth-divider {
+  height: 2px;
+  background: linear-gradient(to right, transparent, var(--primary-color), transparent);
+  margin: 10px auto 25px;
+  width: 60%;
+}
+
+.auth-error-message {
+  color: white;
+  background-color: var(--accent-color);
+  border-radius: 8px;
+  padding: 12px 15px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(255, 0, 110, 0.2);
+}
+
+.auth-success-message {
+  color: white;
+  background-color: var(--success-color);
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(56, 176, 0, 0.2);
+}
+
+.auth-form-group {
+  margin-bottom: 1.5rem;
+}
+
+.auth-input-group {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.auth-input-icon {
+  position: absolute;
+  top: 50%;
+  left: 15px;
+  transform: translateY(-50%);
+  color: var(--gray-dark);
+}
+
+.auth-input {
+  width: 100%;
+  padding: 12px 15px 12px 45px;
+  border: 1px solid var(--gray-medium);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+}
+
+.auth-input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(13, 138, 145, 0.2);
+  outline: none;
+}
+
+.auth-check-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.auth-check-input {
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+  border: 1px solid var(--gray-medium);
+}
+
+.auth-check-input:checked {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.auth-check-label {
+  font-size: 0.95rem;
+  color: var(--gray-dark);
+}
+
+.auth-btn-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 25px;
+  gap: 15px;
+}
+
+.auth-btn-primary {
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(13, 138, 145, 0.3);
+  flex: 1;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.auth-btn-primary:hover {
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(13, 138, 145, 0.35);
+}
+
+.auth-btn-secondary {
+  background: transparent;
+  border: 2px solid var(--gray-medium);
+  color: var(--text-dark);
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex: 1;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.auth-btn-secondary:hover {
+  background-color: var(--gray-light);
+  border-color: var(--gray-dark);
+  transform: translateY(-2px);
+}
+
+.auth-link {
+  display: block;
+  margin-top: 20px;
+  text-align: center;
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.auth-link:hover {
+  color: var(--primary-dark);
+  text-decoration: underline;
+}
+
+/* Form row for signup page */
+.auth-form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 10px;
+}
+
+.auth-form-col {
+  flex: 1 0 calc(50% - 7.5px);
+  min-width: 0;
+}
+
+/* Responsive styles */
+@media (max-width: 576px) {
+  .auth-container {
+    padding: 30px 20px;
+  }
+  
+  .auth-btn-container {
+    flex-direction: column;
+  }
+  
+  .auth-btn-primary, 
+  .auth-btn-secondary {
+    width: 100%;
+  }
+  
+  .auth-form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+  
+  .auth-form-col {
+    flex: 1 0 100%;
+  }
+} 

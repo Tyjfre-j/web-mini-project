@@ -107,7 +107,10 @@
     </form>
 
     <?php
-session_start(); // Ensure session is started at the top
+// Check if session is not already started
+if (session_status() === PHP_SESSION_NONE) {
+    session_start(); // Ensure session is started at the top
+}
 
 if (isset($_POST['login'])) {
     include "includes/config.php";

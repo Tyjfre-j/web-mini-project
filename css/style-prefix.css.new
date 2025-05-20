@@ -1116,7 +1116,7 @@ header.scroll-active .desktop-menu-category-list .menu-category > .menu-title {
 .sidebar .price-box .price {
   font-size: var(--fs-7);
   font-weight: var(--weight-600);
-  color: var(--davys-gray);
+  color: #e60000; /* Changed from var(--davys-gray) to bright red */
 }
 
 /*-----------------------------------*\
@@ -1223,7 +1223,7 @@ header.scroll-active .desktop-menu-category-list .menu-category > .menu-title {
 .product-minimal .price {
   font-size: var(--fs-7);
   font-weight: var(--weight-700);
-  color: var(--main-maroon);
+  color: #e60000; /* Changed from var(--main-maroon) to bright red */
 }
 
 .product-minimal .price-box del {
@@ -1319,7 +1319,7 @@ header.scroll-active .desktop-menu-category-list .menu-category > .menu-title {
 }
 
 .product-featured .price {
-  color: var(--main-maroon);
+  color: #e60000; /* Changed from var(--main-maroon) to bright red */
   font-weight: var(--weight-700);
 }
 
@@ -1622,6 +1622,7 @@ header.scroll-active .desktop-menu-category-list .menu-category > .menu-title {
 
 .product-grid .price {
   font-weight: var(--weight-700);
+  color: #e60000; /* Changed from default to bright red */
 }
 
 .product-grid del {

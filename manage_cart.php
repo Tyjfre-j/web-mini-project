@@ -1,5 +1,8 @@
 <?php
-            session_start();
+// Check if session is not already started
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
            
     
             if(isset($_POST['add_to_cart']))

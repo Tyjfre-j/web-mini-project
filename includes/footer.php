@@ -2,7 +2,7 @@
     - FOOTER
   -->
 
-    <footer id="footer" style="margin-top:70px; background: linear-gradient(to right, #f8f9fa, #f1f5f5, #f8f9fa); padding: 40px 0 30px; border-top: 1px solid #e9ecef; box-shadow: 0 -5px 15px rgba(0,0,0,0.03);">
+    <footer id="footer" style="margin-top:0 !important; background: linear-gradient(to right, #f8f9fa, #f1f5f5, #f8f9fa); padding: 40px 0 30px; border-top: 1px solid #e9ecef; box-shadow: 0 -5px 15px rgba(0,0,0,0.03);">
         <div class="container">
         <div class="row" style="display: flex; flex-wrap: wrap; justify-content: center; text-align: center;">
           <div class="footer-content" style="max-width: 700px;">

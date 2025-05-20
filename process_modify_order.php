@@ -1,5 +1,8 @@
 <?php
-session_start();
+// Check if session is not already started
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 include('./includes/dbconnection.php');
 
 // Check if user is logged in

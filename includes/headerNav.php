@@ -1,16 +1,20 @@
-<?php  session_start();
-	include_once 'includes/config.php';
-	//  all functions
-	require_once 'includes/functions.php';
+<?php
+// Only start session if one isn't already active
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+include_once 'includes/config.php';
+//  all functions
+require_once 'includes/functions.php';
 
-	//run whenever this file is used no need of isset or any condition to get website image footer etc
-	$settings = getSettings();
-	$row5 = mysqli_fetch_assoc($settings);
-	$_SESSION['web-name'] = "PeakGear";
-	$_SESSION['web-img'] = "PeakGear.jpg";
-	$_SESSION['web-footer'] = $row5['website_footer'];
+//run whenever this file is used no need of isset or any condition to get website image footer etc
+$settings = getSettings();
+$row5 = mysqli_fetch_assoc($settings);
+$_SESSION['web-name'] = "PeakGear";
+$_SESSION['web-img'] = "PeakGear.jpg";
+$_SESSION['web-footer'] = $row5['website_footer'];
 
-	// TODO: Also update setting to add info email, whatsapp, address etc to change it dynamically
+// TODO: Also update setting to add info email, whatsapp, address etc to change it dynamically
 ?>
 
 <!DOCTYPE html>
@@ -41,10 +45,10 @@
 		- custom css link
 	-->
 	
-	<link rel="stylesheet" type="text/css" href="./css/style-prefix.css?<?php echo time(); ?>" />
+	<link rel="stylesheet" type="text/css" href="./css/style-prefix.css" />
 	<!-- <link rel="stylesheet" href="./css/style-prefix.css" /> -->
-	<link rel="stylesheet" type="text/css" href="./css/product-display.css?<?php echo time(); ?>" />
-	<link rel="stylesheet" type="text/css" href="./css/pagination.css?<?php echo time(); ?>" />
+	<link rel="stylesheet" type="text/css" href="./css/product-display.css" />
+	<link rel="stylesheet" type="text/css" href="./css/pagination.css" />
 	
 	<!-- Additional header styles -->
 	<style>

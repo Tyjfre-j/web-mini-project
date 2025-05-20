@@ -32,7 +32,10 @@ if(isset($_FILES['prod-img'])){
 
 //now finally if all condition good i.e error=false than save-post to database
    if($error===false){
-    session_start();
+    // Check if session is not already started
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
     $today_date =  date("j,n,Y"); 
     $author = $_SESSION['customer_name'];
     $sql="INSERT INTO products 

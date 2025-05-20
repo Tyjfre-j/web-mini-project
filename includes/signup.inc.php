@@ -1,4 +1,3 @@
-
 <?php
 
 
@@ -20,14 +19,14 @@ if(isset($_POST['submit'])){
 //error handler done by using diff functions
 
 //1st checking if any input field is left empty by the user
-if(emptyInputSignup($name, $email,  $number, $pwd,$rpwd,$address) == true){
-    header("location: ../signup.php?error=emptyInput");
+if(emptyInputSignup($name, $email,  $number, $address, $pwd,$rpwd) == true){
+    header("location: ../signup.php?error=emptyinput");
     exit();
 }
 
 //2nd checking if user entererd uid is appropriate or not
 if(invalidPhone($number) == true){
-    header("location: ../signup.php?error=enterValidNumber");
+    header("location: ../signup.php?error=invalidphone");
     exit();
 }
 
@@ -39,7 +38,7 @@ if(invalidEmail($email) ==true){
 }
 //4th checking if user entererd password match repeated pwd
 if(pwdMatch($pwd,$rpwd) !==true){
-    header("location: ../signup.php?error=pwdnotmatch");
+    header("location: ../signup.php?error=passwordsdontmatch");
     exit();
 }
 

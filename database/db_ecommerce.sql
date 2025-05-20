@@ -300,9 +300,9 @@ INSERT INTO `category` (`category_id`, `category_name`, `category_status`) VALUE
 -- --------------------------------------------------------------------------------------------------------------
 
 INSERT INTO `customer` (`customer_id`, `customer_fname`, `customer_email`, `customer_password`, `customer_phone`, `customer_address`, `customer_role`) VALUES
-(9, 'abouda', 'aboudaha@gmail.com', '123456789', '0550301515', 'alger', 'admin'), 
-(24, 'mouad', 'mouadmouad@gamil.com', '123456789', '0550304416', 'alger', 'normal'),
-(25, 'tamim', 'tamimtamim@gmail.com', '123456789', '0550304415', 'alger', 'normal');
+(1, 'abouda', 'aboudaha@gmail.com', '123456789', '0550301515', 'alger', 'admin'), 
+(2, 'mouad', 'mouadmouad@gamil.com', '123456789', '0550304416', 'alger', 'normal'),
+(3, 'tamim', 'tamimtamim@gmail.com', '123456789', '0550304415', 'alger', 'normal');
 
 -- --------------------------------------------------------------------------------------------------------------
 -- insert table `Laptops` data                                                                                   |

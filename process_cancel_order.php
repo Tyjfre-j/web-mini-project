@@ -1,5 +1,8 @@
 <?php
-session_start();
+// Check if session is not already started
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 include('./includes/dbconnection.php');
 require_once('./includes/functions.php'); // This will include db_procedures.php
 

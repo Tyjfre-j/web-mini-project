@@ -1,6 +1,19 @@
 <?php include_once('./includes/headerNav.php'); ?>
 
-
+<!-- Add custom styling for the contact page -->
+<style>
+  main {
+    margin-top: 10px !important;
+    padding-top: 10px !important;
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+  }
+  
+  .product-container {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+  }
+</style>
 
 <div class="overlay" data-overlay></div>
 <!--

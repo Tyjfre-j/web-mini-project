@@ -13,16 +13,19 @@
   
   main.no-padding {
     padding-top: 0 !important;
+    margin-bottom: 0 !important;
   }
   
   /* Direct styling for header-main spacing */
   header + main {
     margin-top: 10px !important;
+    margin-bottom: 0 !important;
   }
   
   /* Additional direct target for the container */
   header + main .product-detail-container {
     margin-top: 10px !important;
+    margin-bottom: 0 !important;
   }
   
   /* Login message and button styles */
@@ -68,9 +71,9 @@
 
 <link rel="stylesheet" href="css/product-detail.css">
 
-<!-- Include JavaScript files -->
-<script src="js/index.js"></script>
-<script src="js/script.js"></script>
+<!-- Include JavaScript files with defer attribute -->
+<script src="js/index.js" defer></script>
+<script src="js/script.js" defer></script>
 
 <div class="overlay" data-overlay></div>
 
@@ -186,9 +189,9 @@ $quantity_field = $product_type . '_quantity';
               <ion-icon name="star"></ion-icon>
               <ion-icon name="star"></ion-icon>
               <ion-icon name="star"></ion-icon>
-              <ion-icon name="star-outline"></ion-icon>
+              <ion-icon name="star"></ion-icon>
             </div>
-            <span class="rating-count">(4.0)</span>
+            <span class="rating-count">(5.0)</span>
           </div>
           
           <div class="product-detail-description">

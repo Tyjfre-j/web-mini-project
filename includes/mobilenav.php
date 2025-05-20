@@ -3,58 +3,9 @@ $total_cart_items = 0;
 if (isset($_SESSION['mycart'])) {
   $total_cart_items = count($_SESSION['mycart']);
 }
-
-
 ?>
 
-<!-- mobile bottom navigation -->
-<div class="mobile-bottom-navigation">
-  <button class="action-btn" data-mobile-menu-open-btn>
-    <ion-icon name="menu-outline"></ion-icon>
-  </button>
-
-  <button class="action-btn">
-    <a href="./cart.php">
-      <ion-icon name="bag-handle-outline"></ion-icon>
-    </a>
-
-    <span class="count">
-      <?php
-      echo $total_cart_items;
-
-      ?>
-    </span>
-  </button>
-
-  <button class="action-btn">
-    <a href="./index.php#home">
-      <ion-icon name="home-outline"></ion-icon>
-    </a>
-  </button>
-
-  <?php if (isset($_SESSION['id'])) { ?>
-    <!-- Logout Button for logged-in users -->
-    <button class="action-btn">
-      <a href="logout.php" id="a" role="button">
-        <ion-icon name="log-out-outline"></ion-icon>
-      </a>
-    </button>
-
-  <?php } else { ?>
-    <!-- Sign Up Button for non-logged users -->
-    <button class="action-btn">
-      <a href="./signup.php" id="a">
-        <ion-icon name="person-add-outline"></ion-icon>
-      </a>
-    </button>
-
-  <?php } ?>
-
-  <button class="action-btn" data-mobile-menu-open-btn>
-    <ion-icon name="grid-outline"></ion-icon>
-  </button>
-</div>
-
+<!-- Mobile navigation menu - activated by the button in header -->
 <nav class="mobile-navigation-menu has-scrollbar" data-mobile-menu>
   <div class="menu-top">
     <h2 class="menu-title">Menu</h2>
@@ -138,15 +89,52 @@ if (isset($_SESSION['mycart'])) {
         </a>
       </li>
       
+      <li class="menu-category">
+        <a href="./cart.php" class="menu-title">
+          <ion-icon name="bag-handle-outline" class="menu-icon"></ion-icon>
+          <span>Cart</span>
+          <?php if($total_cart_items > 0): ?>
+            <span class="count"><?php echo $total_cart_items; ?></span>
+          <?php endif; ?>
+        </a>
+      </li>
+      
       <?php if (isset($_SESSION['id'])) { ?>
+        <li class="menu-category">
+          <a href="orders.php" class="menu-title">
+            <ion-icon name="cube-outline" class="menu-icon"></ion-icon>
+            <span>Orders</span>
+          </a>
+        </li>
+        
         <li class="menu-category">
           <a href="profile.php?id=<?php echo (isset($_SESSION['customer_name'])) ? $_SESSION['id'] : 'unknown'; ?>" class="menu-title">
             <ion-icon name="person-outline" class="menu-icon"></ion-icon>
             <span>Profile</span>
           </a>
         </li>
+        
+        <li class="menu-category">
+          <a href="logout.php" class="menu-title">
+            <ion-icon name="log-out-outline" class="menu-icon"></ion-icon>
+            <span>Logout</span>
+          </a>
+        </li>
+      <?php } else { ?>
+        <li class="menu-category">
+          <a href="./login.php" class="menu-title">
+            <ion-icon name="log-in-outline" class="menu-icon"></ion-icon>
+            <span>Sign In</span>
+          </a>
+        </li>
+        
+        <li class="menu-category">
+          <a href="./signup.php" class="menu-title">
+            <ion-icon name="person-add-outline" class="menu-icon"></ion-icon>
+            <span>Sign Up</span>
+          </a>
+        </li>
       <?php } ?>
-
     </ul>
 
     <div class="menu-bottom">
