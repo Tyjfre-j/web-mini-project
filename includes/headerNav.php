@@ -1,7 +1,7 @@
 <?php  session_start();
 	include_once 'includes/config.php';
 	//  all functions
-	require_once 'functions/functions.php';
+	require_once 'includes/functions.php';
 
 	//run whenever this file is used no need of isset or any condition to get website image footer etc
 	$settings = getSettings();

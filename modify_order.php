@@ -1,9 +1,7 @@
 <?php include_once('./includes/headerNav.php'); ?>
-
-<header>
-  <?php require_once './includes/desktopnav.php' ?>
-  <?php require_once './includes/mobilenav.php'; ?>
-</header>
+<?php require_once './includes/topheadactions.php'; ?>
+<?php require_once './includes/desktopnav.php' ?>
+<?php require_once './includes/mobilenav.php'; ?>
 
 <?php
 // Check if user is logged in

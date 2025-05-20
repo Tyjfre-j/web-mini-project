@@ -23,61 +23,115 @@ document.addEventListener("DOMContentLoaded", function () {
   navLinks.forEach((link) => {
     if (link.getAttribute("href").indexOf("#") !== -1) {
       link.addEventListener("click", function (e) {
-        // Only prevent default if not an empty hash
-        if (this.getAttribute("href") !== "#") {
-          const hrefParts = this.getAttribute("href").split("#");
-          const targetId = hrefParts[1];
-          const targetElement = document.getElementById(targetId);
+        // Prevent the default navigation
+        e.preventDefault();
 
-          // Special handling for home links
-          if (targetId === "home" && hrefParts[0].includes("index.php")) {
-            e.preventDefault();
+        const hrefParts = this.getAttribute("href").split("#");
+        const targetId = hrefParts[1];
 
-            // Instead of instantly scrolling to top, just navigate to index.php
-            // with a small delay to avoid the instant jump
-            if (window.location.pathname.includes("index.php")) {
-              // Already on index.php, just scroll a little bit down from the top
-              window.scrollTo({
-                top: 1,
-                behavior: "auto",
-              });
-            } else {
-              // Navigate to index.php without the hash to avoid jumping
-              window.location.href = hrefParts[0];
+        // If we're not on index.php but trying to navigate to a section there
+        if (
+          hrefParts[0].includes("index.php") &&
+          !window.location.pathname.includes("index.php") &&
+          !window.location.pathname.endsWith("/")
+        ) {
+          // Navigate to index.php with the hash
+          window.location.href = this.getAttribute("href");
+          return;
+        }
+
+        // Special handling for home - scroll to top
+        if (targetId === "home") {
+          window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+          });
+
+          // Close mobile menu if open
+          closeActiveMobileMenu();
+          return;
+        }
+
+        // Use a more specific selector for product sections
+        if (targetId.endsWith("-section")) {
+          let sectionElement = document.getElementById(targetId);
+          if (sectionElement) {
+            // Find the previous sibling .product-section
+            let prevSection = sectionElement.previousElementSibling;
+            while (
+              prevSection &&
+              !prevSection.classList.contains("product-section")
+            ) {
+              prevSection = prevSection.previousElementSibling;
             }
-            return;
-          }
-
-          if (targetElement) {
-            e.preventDefault();
-
-            // Scroll smoothly to the target with offset
             const header = document.querySelector("header");
             const headerHeight = header ? header.offsetHeight : 0;
-            const headerOffset = headerHeight + 30; // Add extra padding to ensure title is visible
-            const elementPosition = targetElement.getBoundingClientRect().top;
-            const offsetPosition =
-              elementPosition + window.pageYOffset - headerOffset;
+            if (prevSection) {
+              // Scroll to the bottom of the previous section
+              const prevRect = prevSection.getBoundingClientRect();
+              const prevBottom = prevRect.bottom + window.pageYOffset;
+              console.log(
+                "Scrolling to end of previous section:",
+                prevSection,
+                "at",
+                prevBottom - headerHeight
+              );
+              setTimeout(() => {
+                window.scrollTo({
+                  top: prevBottom - headerHeight,
+                  behavior: "smooth",
+                });
+              }, 50);
+            } else {
+              // No previous section, scroll to top
+              window.scrollTo({
+                top: 0,
+                behavior: "smooth",
+              });
+            }
+            closeActiveMobileMenu();
+          } else {
+            window.location.href = this.getAttribute("href");
+          }
+        } else {
+          // For any other elements (non-section IDs)
+          const element = document.getElementById(targetId);
 
+          if (element) {
+            // Get header height
+            const header = document.querySelector("header");
+            const headerHeight = header ? header.offsetHeight : 0;
+
+            // Calculate position
+            const elementRect = element.getBoundingClientRect();
+            const elementTopPosition = elementRect.top + window.pageYOffset;
+
+            // Scroll to position
             window.scrollTo({
-              top: offsetPosition,
+              top: elementTopPosition - headerHeight,
               behavior: "smooth",
             });
 
             // Close mobile menu if open
-            const mobileMenu = document.querySelector(
-              "[data-mobile-menu].active"
-            );
-            const overlay = document.querySelector("[data-overlay]");
-            if (mobileMenu) {
-              mobileMenu.classList.remove("active");
-              overlay.classList.remove("active");
-            }
+            closeActiveMobileMenu();
+          } else {
+            // Fallback if element not found
+            window.location.href = this.getAttribute("href");
           }
         }
       });
     }
   });
+
+  // Helper function to close mobile menu
+  function closeActiveMobileMenu() {
+    const mobileMenu = document.querySelector("[data-mobile-menu].active");
+    const overlay = document.querySelector("[data-overlay]");
+    if (mobileMenu) {
+      mobileMenu.classList.remove("active");
+      overlay.classList.remove("active");
+    }
+  }
 });
 
 // notification toast variables

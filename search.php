@@ -9,6 +9,9 @@
   -->
 
 <header>
+  <!-- top head action, search etc in php -->
+  <?php require_once './includes/topheadactions.php'; ?>
+
   <!-- desktop navigation -->
   <?php require_once './includes/desktopnav.php' ?>
   

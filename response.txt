@@ -1,0 +1,1475 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  	<meta charset="UTF-8" />
+  	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+
+	<!-- Favicon -->
+	<link rel="shortcut icon" href="./images/flogo/fav.png" type="image/x-icon" />
+	
+    <title>HCA E-Commerce</title>
+
+	
+
+
+	<!-- <link href="./css/font-awesome.css" rel="stylesheet" type="text/css"> -->
+	<!-- font awesome code -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+	
+	<!-- main style -->
+	<!-- <link rel="stylesheet" href="./css/style.php"> -->
+	
+	<!--
+		- custom css link
+	-->
+	
+	<link rel="stylesheet" type="text/css" href="./css/style-prefix.css?1747706041" />
+	<!-- <link rel="stylesheet" href="./css/style-prefix.css" /> -->
+	<link rel="stylesheet" type="text/css" href="./css/product-display.css?1747706041" />
+	<link rel="stylesheet" type="text/css" href="./css/view-details.css?1747706041" />
+	<link rel="stylesheet" type="text/css" href="./css/cart-card-design.css?1747706041" />
+	<link rel="stylesheet" type="text/css" href="./css/aboutus.css?1747706041" />
+	<link rel="stylesheet" type="text/css" href="./css/contact.css?1747706041" />
+	<link rel="stylesheet" type="text/css" href="./css/pagination.css?1747706041" />
+	<!--
+		- google font link
+	-->
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  </head>
+
+<body>
+
+<!-- added manually to some places like contact and about page and footer -->
+
+<div class="overlay" data-overlay></div>
+<script src="js/index.js"></script>
+
+<!-- Toast notification for messages -->
+
+<!--
+    - HEADER
+  -->
+<header>
+  <!-- top head action, search etc in php -->
+  <!-- inc/topheadactions.php -->
+  <div class="header-main mobile-only">
+  <div class="container">
+    <!-- logo section -->
+    <a href="./index.php?id=unknown" class="header-logo" style="color: hsl(0, 0%, 13%);">
+      <h1 style="text-align: center;">
+        <img src="admin/upload/HCA-E-COMMERCE.png" alt="logo" width="200px" class="logo-image">
+      </h1>
+    </a>
+
+    <!-- search input for mobile only -->
+    <div class="header-search-container">
+      <form class="search-form" method="post" action="./search.php">
+        <div class="search-wrapper">
+          <input 
+            type="search" 
+            name="search" 
+            class="search-field" 
+            placeholder="Search for products..." 
+            required 
+            oninvalid="this.setCustomValidity('Please enter a search term')" 
+            oninput="this.setCustomValidity('')" 
+          />
+          <button class="search-btn" type="submit" name="submit">
+            <ion-icon name="search-outline"></ion-icon>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="header-user-actions mobile-actions">
+              <!-- Sign Up Button for non-logged users -->
+        <button class="action-btn action-signup" title="Create Account">
+          <a href="./signup.php">
+            <ion-icon name="person-add-outline"></ion-icon>
+          </a>
+        </button>
+      
+      <!-- Cart Button -->
+      <button class="action-btn action-cart" title="Shopping Cart">
+        <a href="./cart.php">
+          <ion-icon name="bag-handle-outline"></ion-icon>
+        </a>
+              </button>
+    </div>
+  </div>
+</div>
+
+        <!-- desktop navigation -->
+  <!-- inc/desktopnav.php -->
+  <!-- desktop navigation -->
+<nav class="desktop-navigation-menu">
+  <div class="container">
+    <div class="nav-top-row">
+      <!-- Site name on the left -->
+      <div class="site-brand">
+        <a href="./index.php" class="site-title">HCA E-Commerce</a>
+      </div>
+
+      <!-- Action icons on the right -->
+      <div class="header-user-actions desktop-actions">
+                  <!-- Sign Up Button for non-logged users -->
+          <button class="action-btn action-signup" title="Create Account">
+            <a href="./signup.php">
+              <ion-icon name="person-add-outline"></ion-icon>
+            </a>
+          </button>
+        
+        <!-- Cart Button -->
+        <button class="action-btn action-cart" title="Shopping Cart">
+          <a href="./cart.php">
+            <ion-icon name="bag-handle-outline"></ion-icon>
+          </a>
+                  </button>
+      </div>
+    </div>
+
+    <!-- Menu categories -->
+    <ul class="desktop-menu-category-list">
+      <li class="menu-category">
+        <a href="index.php#home" class="menu-title">
+          <ion-icon name="home-outline" class="menu-icon"></ion-icon>
+          <span>Home</span>
+        </a>
+      </li>
+
+      <li class="menu-category">
+        <a href="index.php#laptops-heading" class="menu-title">
+          <ion-icon name="laptop-outline" class="menu-icon"></ion-icon>
+          <span>Laptops</span>
+        </a>
+      </li>
+
+      <li class="menu-category">
+        <a href="index.php#desktops-heading" class="menu-title">
+          <ion-icon name="desktop-outline" class="menu-icon"></ion-icon>
+          <span>Desktops</span>
+        </a>
+      </li>
+      
+      <li class="menu-category">
+        <a href="index.php#custom-builds-heading" class="menu-title">
+          <ion-icon name="construct-outline" class="menu-icon"></ion-icon>
+          <span>Custom Build</span>
+        </a>
+      </li>
+
+      <li class="menu-category has-dropdown">
+        <div class="menu-title">
+          <ion-icon name="hardware-chip-outline" class="menu-icon"></ion-icon>
+          <span>PC Parts</span>
+          <ion-icon name="chevron-down-outline" class="dropdown-icon"></ion-icon>
+        </div>
+        
+        <div class="dropdown-panel">
+          <ul class="dropdown-panel-list">
+            <li class="panel-list-item">
+              <a href="index.php#display-screens-heading" class="pc-part-item">
+                <div class="item-icon">
+                  <ion-icon name="tv-outline" class="dropdown-icon"></ion-icon>
+                </div>
+                <span>Display Screens</span>
+              </a>
+            </li>
+            <li class="panel-list-item">
+              <a href="index.php#processors-heading" class="pc-part-item">
+                <div class="item-icon">
+                  <ion-icon name="flash-outline" class="dropdown-icon"></ion-icon>
+                </div>
+                <span>Processors</span>
+              </a>
+            </li>
+            <li class="panel-list-item">
+              <a href="index.php#graphics-cards-heading" class="pc-part-item">
+                <div class="item-icon">
+                  <ion-icon name="extension-puzzle-outline" class="dropdown-icon"></ion-icon>
+                </div>
+                <span>Graphics Cards</span>
+              </a>
+            </li>
+            <li class="panel-list-item">
+              <a href="index.php#keyboards-heading" class="pc-part-item">
+                <div class="item-icon">
+                  <ion-icon name="keypad-outline" class="dropdown-icon"></ion-icon>
+                </div>
+                <span>Keyboards</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </li>
+
+      <li class="menu-category">
+        <a href="contact.php?id=unknown" class="menu-title">
+          <ion-icon name="call-outline" class="menu-icon"></ion-icon>
+          <span>Contact</span>
+        </a>
+      </li>
+
+      <!-- Profile Link Setup -->
+      
+      <!-- Visit Admin Panel After Login -->
+         </ul>
+    
+    <!-- Search bar below menu categories -->
+    <div class="header-search-container nav-search">
+      <form class="search-form" method="post" action="./search.php">
+        <div class="search-wrapper">
+          <input 
+            type="search" 
+            name="search" 
+            class="search-field" 
+            placeholder="Search for products..." 
+            required 
+            oninvalid="this.setCustomValidity('Please enter a search term')" 
+            oninput="this.setCustomValidity('')" 
+          />
+          <button class="search-btn" type="submit" name="submit">
+            <ion-icon name="search-outline"></ion-icon>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</nav>  <!-- mobile nav in php -->
+  <!-- inc/mobilenav.php -->
+  
+<!-- mobile bottom navigation -->
+<div class="mobile-bottom-navigation">
+  <button class="action-btn" data-mobile-menu-open-btn>
+    <ion-icon name="menu-outline"></ion-icon>
+  </button>
+
+  <button class="action-btn">
+    <a href="./cart.php">
+      <ion-icon name="bag-handle-outline"></ion-icon>
+    </a>
+
+    <span class="count">
+      0    </span>
+  </button>
+
+  <button class="action-btn">
+    <a href="./index.php#home">
+      <ion-icon name="home-outline"></ion-icon>
+    </a>
+  </button>
+
+      <!-- Sign Up Button for non-logged users -->
+    <button class="action-btn">
+      <a href="./signup.php" id="a">
+        <ion-icon name="person-add-outline"></ion-icon>
+      </a>
+    </button>
+
+  
+  <button class="action-btn" data-mobile-menu-open-btn>
+    <ion-icon name="grid-outline"></ion-icon>
+  </button>
+</div>
+
+<nav class="mobile-navigation-menu has-scrollbar" data-mobile-menu>
+  <div class="menu-top">
+    <h2 class="menu-title">Menu</h2>
+
+    <button class="menu-close-btn" data-mobile-menu-close-btn>
+      <ion-icon name="close-outline"></ion-icon>
+    </button>
+  </div>
+
+    <ul class="mobile-menu-category-list">
+      <li class="menu-category">
+        <a href="./index.php#home" class="menu-title">
+          <ion-icon name="home-outline" class="menu-icon"></ion-icon>
+          <span>Home</span>
+        </a>
+      </li>
+
+      <li class="menu-category">
+        <a href="./index.php#laptops-heading" class="menu-title">
+          <ion-icon name="laptop-outline" class="menu-icon"></ion-icon>
+          <span>Laptops</span>
+        </a>
+      </li>
+      
+      <li class="menu-category">
+        <a href="./index.php#desktops-heading" class="menu-title">
+          <ion-icon name="desktop-outline" class="menu-icon"></ion-icon>
+          <span>Desktops</span>
+        </a>
+      </li>
+      
+      <li class="menu-category">
+        <a href="./index.php#custom-builds-heading" class="menu-title">
+          <ion-icon name="construct-outline" class="menu-icon"></ion-icon>
+          <span>Custom Build</span>
+        </a>
+      </li>
+
+      <li class="menu-category">
+        <button class="accordion-menu pc-parts-menu" data-accordion-btn>
+          <div class="menu-title">
+            <ion-icon name="hardware-chip-outline" class="menu-icon"></ion-icon>
+            <span>PC Parts</span>
+          </div>
+          <ion-icon name="add-outline" class="add-icon"></ion-icon>
+          <ion-icon name="remove-outline" class="remove-icon"></ion-icon>
+        </button>
+
+        <ul class="submenu-category-list" data-accordion>
+          <li class="submenu-category">
+            <a href="./index.php#display-screens-heading" class="submenu-title">
+              <ion-icon name="tv-outline" class="submenu-icon"></ion-icon>
+              <span>Display Screens</span>
+            </a>
+          </li>
+          <li class="submenu-category">
+            <a href="./index.php#processors-heading" class="submenu-title">
+              <ion-icon name="flash-outline" class="submenu-icon"></ion-icon>
+              <span>Processors</span>
+            </a>
+          </li>
+          <li class="submenu-category">
+            <a href="./index.php#graphics-cards-heading" class="submenu-title">
+              <ion-icon name="extension-puzzle-outline" class="submenu-icon"></ion-icon>
+              <span>Graphics Cards</span>
+            </a>
+          </li>
+          <li class="submenu-category">
+            <a href="./index.php#keyboards-heading" class="submenu-title">
+              <ion-icon name="keypad-outline" class="submenu-icon"></ion-icon>
+              <span>Keyboards</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+
+      <li class="menu-category">
+        <a href="contact.php" class="menu-title">
+          <ion-icon name="call-outline" class="menu-icon"></ion-icon>
+          <span>Contact</span>
+        </a>
+      </li>
+      
+      
+    </ul>
+
+    <div class="menu-bottom">
+      <ul class="menu-category-list">
+        <li class="menu-category">
+          <button class="accordion-menu" data-accordion-btn>
+            <p class="menu-title">Language</p>
+
+            <ion-icon name="caret-back-outline" class="caret-back"></ion-icon>
+          </button>
+
+          <ul class="submenu-category-list" data-accordion>
+            <li class="submenu-category">
+              <a href="#" class="submenu-title">English</a>
+            </li>
+
+            <li class="submenu-category">
+              <a href="#" class="submenu-title">Espa&ntilde;ol</a>
+            </li>
+
+            <li class="submenu-category">
+              <a href="#" class="submenu-title">Fren&ccedil;h</a>
+            </li>
+          </ul>
+        </li>
+
+        <li class="menu-category">
+          <button class="accordion-menu" data-accordion-btn>
+            <p class="menu-title">Currency</p>
+            <ion-icon name="caret-back-outline" class="caret-back"></ion-icon>
+          </button>
+
+          <ul class="submenu-category-list" data-accordion>
+            <li class="submenu-category">
+              <a href="#" class="submenu-title">USD &dollar;</a>
+            </li>
+
+            <li class="submenu-category">
+              <a href="#" class="submenu-title">EUR &euro;</a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+
+      <ul class="menu-social-container">
+        <li>
+          <a href="#" class="social-link">
+            <ion-icon name="logo-facebook"></ion-icon>
+          </a>
+        </li>
+
+        <li>
+          <a href="#" class="social-link">
+            <ion-icon name="logo-twitter"></ion-icon>
+          </a>
+        </li>
+
+        <li>
+          <a href="#" class="social-link">
+            <ion-icon name="logo-instagram"></ion-icon>
+          </a>
+        </li>
+
+        <li>
+          <a href="#" class="social-link">
+            <ion-icon name="logo-linkedin"></ion-icon>
+          </a>
+        </li>
+      </ul>
+    </div>
+</nav></header>
+
+<!--
+    - MAIN
+  -->
+<main>
+  <!--
+      - BANNER: Coursal
+    -->
+  <div class="banner" id="home">
+    <div class="container">
+      <div class="slider-container has-scrollbar">
+        <!-- Display data from db in banner -->
+                  <div class="slider-item" data-banner="1" style="display: none;">
+            <img src="./images/banners/banner-1.jpg" class="banner-img" />
+
+            <div class="banner-content">
+              <h2 class="banner-title">
+                LIMITED DEALS              </h2>
+              <p class="banner-text">check out our latest deals</p>
+            </div>
+          </div>
+                  <div class="slider-item" data-banner="2" style="display: none;">
+            <img src="./images/banners/banner-2.jpg" class="banner-img" />
+
+            <div class="banner-content">
+              <h2 class="banner-title">
+                NEXT-GEN GAMING LAPTOPS              </h2>
+              <p class="banner-text">check out our collection of gaming laptops</p>
+            </div>
+          </div>
+                  <div class="slider-item" data-banner="3" style="display: none;">
+            <img src="./images/banners/banner-3.jpg" class="banner-img" />
+
+            <div class="banner-content">
+              <h2 class="banner-title">
+                GET YOUR CUSTOM PC              </h2>
+              <p class="banner-text">get professional assembly and 3-year warranty</p>
+            </div>
+          </div>
+              </div>
+    </div>
+  </div>
+
+  <!--
+      - PRODUCT
+    -->
+  <div class="product-container">
+    <div class="container">
+      <h2 class="main-heading">Welcome to our store</h2>
+      <p class="main-heading-desc">Explore our selection of high-quality computer hardware</p>
+    </div>
+        <!-- Product section for Laptops -->
+    <div class="container product-section" id="laptops-section">
+      <div class="title-with-button" id="laptops-title">
+        <h2 class="product-section-title" id="laptops-heading">Laptops</h2>
+        <a href="category.php?category=Laptops" class="btn-primary view-all-btn">View All</a>
+      </div>
+      
+      <div class="product-main">
+        <div class="product-grid laptops-grid">
+                  <a href="product.php?id=1&type=Laptops" class="product-link laptops-card">
+            <div class="showcase">
+              <div class="showcase-banner">
+                <img src="./images/products_images/laptops/laptop1.jpg" alt="Dell XPS 13" class="product-img" />
+              </div>
+              <div class="showcase-content">
+                <div class="showcase-category">student</div>
+                <h4 class="showcase-title">Dell XPS 13</h4>
+                <div class="showcase-small-desc">Compact ultrabook for students</div>
+                <div class="showcase-rating">
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                </div>
+                <div class="price-box">
+                  <p class="price">Price: $1200.00</p>
+                </div>
+              </div>
+            </div>
+          </a>
+                  <a href="product.php?id=2&type=Laptops" class="product-link laptops-card">
+            <div class="showcase">
+              <div class="showcase-banner">
+                <img src="./images/products_images/laptops/laptop2.jpg" alt="MacBook Pro" class="product-img" />
+              </div>
+              <div class="showcase-content">
+                <div class="showcase-category">business</div>
+                <h4 class="showcase-title">MacBook Pro</h4>
+                <div class="showcase-small-desc">Professional business laptop</div>
+                <div class="showcase-rating">
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                </div>
+                <div class="price-box">
+                  <p class="price">Price: $1800.00</p>
+                </div>
+              </div>
+            </div>
+          </a>
+                  <a href="product.php?id=3&type=Laptops" class="product-link laptops-card">
+            <div class="showcase">
+              <div class="showcase-banner">
+                <img src="./images/products_images/laptops/laptop3.jpg" alt="HP Spectre x360" class="product-img" />
+              </div>
+              <div class="showcase-content">
+                <div class="showcase-category">student</div>
+                <h4 class="showcase-title">HP Spectre x360</h4>
+                <div class="showcase-small-desc">Convertible for students</div>
+                <div class="showcase-rating">
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                </div>
+                <div class="price-box">
+                  <p class="price">Price: $1400.00</p>
+                </div>
+              </div>
+            </div>
+          </a>
+                  <a href="product.php?id=4&type=Laptops" class="product-link laptops-card">
+            <div class="showcase">
+              <div class="showcase-banner">
+                <img src="./images/products_images/laptops/laptop4.jpg" alt="Acer Predator Helios" class="product-img" />
+              </div>
+              <div class="showcase-content">
+                <div class="showcase-category">gaming</div>
+                <h4 class="showcase-title">Acer Predator Helios</h4>
+                <div class="showcase-small-desc">High-performance gaming laptop</div>
+                <div class="showcase-rating">
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                </div>
+                <div class="price-box">
+                  <p class="price">Price: $1600.00</p>
+                </div>
+              </div>
+            </div>
+          </a>
+                </div>
+      </div>
+    </div>
+        <!-- Product section for Desktops -->
+    <div class="container product-section" id="desktops-section">
+      <div class="title-with-button" id="desktops-title">
+        <h2 class="product-section-title" id="desktops-heading">Desktops</h2>
+        <a href="category.php?category=Desktops" class="btn-primary view-all-btn">View All</a>
+      </div>
+      
+      <div class="product-main">
+        <div class="product-grid desktops-grid">
+                  <a href="product.php?id=1&type=Desktops" class="product-link desktops-card">
+            <div class="showcase">
+              <div class="showcase-banner">
+                <img src="./images/products_images/desktops/desktop1.jpg" alt="Dell OptiPlex 3080" class="product-img" />
+              </div>
+              <div class="showcase-content">
+                <div class="showcase-category">business</div>
+                <h4 class="showcase-title">Dell OptiPlex 3080</h4>
+                <div class="showcase-small-desc">Reliable business desktop</div>
+                <div class="showcase-rating">
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                </div>
+                <div class="price-box">
+                  <p class="price">Price: $900.00</p>
+                </div>
+              </div>
+            </div>
+          </a>
+                  <a href="product.php?id=2&type=Desktops" class="product-link desktops-card">
+            <div class="showcase">
+              <div class="showcase-banner">
+                <img src="./images/products_images/desktops/desktop2.jpg" alt="HP Pavilion" class="product-img" />
+              </div>
+              <div class="showcase-content">
+                <div class="showcase-category">student</div>
+                <h4 class="showcase-title">HP Pavilion</h4>
+                <div class="showcase-small-desc">Versatile student desktop</div>
+                <div class="showcase-rating">
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                </div>
+                <div class="price-box">
+                  <p class="price">Price: $700.00</p>
+                </div>
+              </div>
+            </div>
+          </a>
+                  <a href="product.php?id=3&type=Desktops" class="product-link desktops-card">
+            <div class="showcase">
+              <div class="showcase-banner">
+                <img src="./images/products_images/desktops/desktop3.jpg" alt="Lenovo ThinkCentre" class="product-img" />
+              </div>
+              <div class="showcase-content">
+                <div class="showcase-category">gaming</div>
+                <h4 class="showcase-title">Lenovo ThinkCentre</h4>
+                <div class="showcase-small-desc">Powerful gaming desktop</div>
+                <div class="showcase-rating">
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                </div>
+                <div class="price-box">
+                  <p class="price">Price: $1100.00</p>
+                </div>
+              </div>
+            </div>
+          </a>
+                  <a href="product.php?id=4&type=Desktops" class="product-link desktops-card">
+            <div class="showcase">
+              <div class="showcase-banner">
+                <img src="./images/products_images/desktops/desktop4.jpg" alt="Acer Aspire TC" class="product-img" />
+              </div>
+              <div class="showcase-content">
+                <div class="showcase-category">student</div>
+                <h4 class="showcase-title">Acer Aspire TC</h4>
+                <div class="showcase-small-desc">Affordable student desktop</div>
+                <div class="showcase-rating">
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                </div>
+                <div class="price-box">
+                  <p class="price">Price: $650.00</p>
+                </div>
+              </div>
+            </div>
+          </a>
+                </div>
+      </div>
+    </div>
+        <!-- Product section for Custom Builds -->
+    <div class="container product-section" id="custom-builds-section">
+      <div class="title-with-button" id="custom-builds-title">
+        <h2 class="product-section-title" id="custom-builds-heading">Custom Builds</h2>
+        <a href="category.php?category=Custom+Builds" class="btn-primary view-all-btn">View All</a>
+      </div>
+      
+      <div class="product-main">
+        <div class="product-grid custom-builds-grid">
+                  <a href="product.php?id=1&type=Custom+Builds" class="product-link custom-builds-card">
+            <div class="showcase">
+              <div class="showcase-banner">
+                <img src="./images/products_images/custombuilds/custom1.jpg" alt="Gaming Beast" class="product-img" />
+              </div>
+              <div class="showcase-content">
+                <div class="showcase-category">gaming</div>
+                <h4 class="showcase-title">Gaming Beast</h4>
+                <div class="showcase-small-desc">Ultimate gaming build</div>
+                <div class="showcase-rating">
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                </div>
+                <div class="price-box">
+                  <p class="price">Price: $2000.00</p>
+                </div>
+              </div>
+            </div>
+          </a>
+                  <a href="product.php?id=2&type=Custom+Builds" class="product-link custom-builds-card">
+            <div class="showcase">
+              <div class="showcase-banner">
+                <img src="./images/products_images/custombuilds/custom2.jpg" alt="Office Pro" class="product-img" />
+              </div>
+              <div class="showcase-content">
+                <div class="showcase-category">business</div>
+                <h4 class="showcase-title">Office Pro</h4>
+                <div class="showcase-small-desc">Business custom PC</div>
+                <div class="showcase-rating">
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                </div>
+                <div class="price-box">
+                  <p class="price">Price: $1500.00</p>
+                </div>
+              </div>
+            </div>
+          </a>
+                  <a href="product.php?id=3&type=Custom+Builds" class="product-link custom-builds-card">
+            <div class="showcase">
+              <div class="showcase-banner">
+                <img src="./images/products_images/custombuilds/custom3.jpg" alt="Budget Build" class="product-img" />
+              </div>
+              <div class="showcase-content">
+                <div class="showcase-category">student</div>
+                <h4 class="showcase-title">Budget Build</h4>
+                <div class="showcase-small-desc">Affordable student PC</div>
+                <div class="showcase-rating">
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                </div>
+                <div class="price-box">
+                  <p class="price">Price: $800.00</p>
+                </div>
+              </div>
+            </div>
+          </a>
+                  <a href="product.php?id=4&type=Custom+Builds" class="product-link custom-builds-card">
+            <div class="showcase">
+              <div class="showcase-banner">
+                <img src="./images/products_images/custombuilds/custom4.jpg" alt="Creator Studio" class="product-img" />
+              </div>
+              <div class="showcase-content">
+                <div class="showcase-category">business</div>
+                <h4 class="showcase-title">Creator Studio</h4>
+                <div class="showcase-small-desc">Content creation powerhouse</div>
+                <div class="showcase-rating">
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                </div>
+                <div class="price-box">
+                  <p class="price">Price: $2500.00</p>
+                </div>
+              </div>
+            </div>
+          </a>
+                </div>
+      </div>
+    </div>
+        <!-- Product section for Display Screens -->
+    <div class="container product-section" id="display-screens-section">
+      <div class="title-with-button" id="display-screens-title">
+        <h2 class="product-section-title" id="display-screens-heading">Display Screens</h2>
+        <a href="category.php?category=Display+Screens" class="btn-primary view-all-btn">View All</a>
+      </div>
+      
+      <div class="product-main">
+        <div class="product-grid display-screens-grid">
+                  <a href="product.php?id=1&type=Display+Screens" class="product-link display-screens-card">
+            <div class="showcase">
+              <div class="showcase-banner">
+                <img src="./images/products_images/displayscreens/display1.jpg" alt="Dell UltraSharp" class="product-img" />
+              </div>
+              <div class="showcase-content">
+                <div class="showcase-category">business</div>
+                <h4 class="showcase-title">Dell UltraSharp</h4>
+                <div class="showcase-small-desc">High-res business monitor</div>
+                <div class="showcase-rating">
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                </div>
+                <div class="price-box">
+                  <p class="price">Price: $400.00</p>
+                </div>
+              </div>
+            </div>
+          </a>
+                  <a href="product.php?id=2&type=Display+Screens" class="product-link display-screens-card">
+            <div class="showcase">
+              <div class="showcase-banner">
+                <img src="./images/products_images/displayscreens/display2.jpg" alt="Acer Predator" class="product-img" />
+              </div>
+              <div class="showcase-content">
+                <div class="showcase-category">gaming</div>
+                <h4 class="showcase-title">Acer Predator</h4>
+                <div class="showcase-small-desc">Gaming monitor with high refresh</div>
+                <div class="showcase-rating">
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                </div>
+                <div class="price-box">
+                  <p class="price">Price: $500.00</p>
+                </div>
+              </div>
+            </div>
+          </a>
+                  <a href="product.php?id=3&type=Display+Screens" class="product-link display-screens-card">
+            <div class="showcase">
+              <div class="showcase-banner">
+                <img src="./images/products_images/displayscreens/display3.jpg" alt="HP EliteDisplay" class="product-img" />
+              </div>
+              <div class="showcase-content">
+                <div class="showcase-category">student</div>
+                <h4 class="showcase-title">HP EliteDisplay</h4>
+                <div class="showcase-small-desc">Student-friendly display</div>
+                <div class="showcase-rating">
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                </div>
+                <div class="price-box">
+                  <p class="price">Price: $250.00</p>
+                </div>
+              </div>
+            </div>
+          </a>
+                  <a href="product.php?id=4&type=Display+Screens" class="product-link display-screens-card">
+            <div class="showcase">
+              <div class="showcase-banner">
+                <img src="./images/products_images/displayscreens/display4.jpg" alt="LG UltraGear" class="product-img" />
+              </div>
+              <div class="showcase-content">
+                <div class="showcase-category">gaming</div>
+                <h4 class="showcase-title">LG UltraGear</h4>
+                <div class="showcase-small-desc">4K Gaming Monitor with G-Sync</div>
+                <div class="showcase-rating">
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                </div>
+                <div class="price-box">
+                  <p class="price">Price: $700.00</p>
+                </div>
+              </div>
+            </div>
+          </a>
+                </div>
+      </div>
+    </div>
+        <!-- Product section for Graphics Cards -->
+    <div class="container product-section" id="graphics-cards-section">
+      <div class="title-with-button" id="graphics-cards-title">
+        <h2 class="product-section-title" id="graphics-cards-heading">Graphics Cards</h2>
+        <a href="category.php?category=Graphics+Cards" class="btn-primary view-all-btn">View All</a>
+      </div>
+      
+      <div class="product-main">
+        <div class="product-grid graphics-cards-grid">
+                  <a href="product.php?id=1&type=Graphics+Cards" class="product-link graphics-cards-card">
+            <div class="showcase">
+              <div class="showcase-banner">
+                <img src="./images/products_images/gpus/gpu1.jpg" alt="NVIDIA GeForce RTX 3060" class="product-img" />
+              </div>
+              <div class="showcase-content">
+                <div class="showcase-category">gaming</div>
+                <h4 class="showcase-title">NVIDIA GeForce RTX 3060</h4>
+                <div class="showcase-small-desc">12GB GDDR6X Gaming GPU</div>
+                <div class="showcase-rating">
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                </div>
+                <div class="price-box">
+                  <p class="price">Price: $500.00</p>
+                </div>
+              </div>
+            </div>
+          </a>
+                  <a href="product.php?id=2&type=Graphics+Cards" class="product-link graphics-cards-card">
+            <div class="showcase">
+              <div class="showcase-banner">
+                <img src="./images/products_images/gpus/gpu2.jpg" alt="AMD Radeon RX 6800 XT" class="product-img" />
+              </div>
+              <div class="showcase-content">
+                <div class="showcase-category">gaming</div>
+                <h4 class="showcase-title">AMD Radeon RX 6800 XT</h4>
+                <div class="showcase-small-desc">16GB GDDR6 Gaming GPU</div>
+                <div class="showcase-rating">
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                </div>
+                <div class="price-box">
+                  <p class="price">Price: $700.00</p>
+                </div>
+              </div>
+            </div>
+          </a>
+                  <a href="product.php?id=3&type=Graphics+Cards" class="product-link graphics-cards-card">
+            <div class="showcase">
+              <div class="showcase-banner">
+                <img src="./images/products_images/gpus/gpu3.jpg" alt="NVIDIA GeForce RTX 3070" class="product-img" />
+              </div>
+              <div class="showcase-content">
+                <div class="showcase-category">gaming</div>
+                <h4 class="showcase-title">NVIDIA GeForce RTX 3070</h4>
+                <div class="showcase-small-desc">8GB GDDR6X Gaming GPU</div>
+                <div class="showcase-rating">
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                </div>
+                <div class="price-box">
+                  <p class="price">Price: $600.00</p>
+                </div>
+              </div>
+            </div>
+          </a>
+                  <a href="product.php?id=4&type=Graphics+Cards" class="product-link graphics-cards-card">
+            <div class="showcase">
+              <div class="showcase-banner">
+                <img src="./images/products_images/gpus/gpu4.jpg" alt="NVIDIA GeForce RTX 3080" class="product-img" />
+              </div>
+              <div class="showcase-content">
+                <div class="showcase-category">gaming</div>
+                <h4 class="showcase-title">NVIDIA GeForce RTX 3080</h4>
+                <div class="showcase-small-desc">10GB GDDR6X Gaming GPU</div>
+                <div class="showcase-rating">
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                </div>
+                <div class="price-box">
+                  <p class="price">Price: $800.00</p>
+                </div>
+              </div>
+            </div>
+          </a>
+                </div>
+      </div>
+    </div>
+        <!-- Product section for Processors -->
+    <div class="container product-section" id="processors-section">
+      <div class="title-with-button" id="processors-title">
+        <h2 class="product-section-title" id="processors-heading">Processors</h2>
+        <a href="category.php?category=Processors" class="btn-primary view-all-btn">View All</a>
+      </div>
+      
+      <div class="product-main">
+        <div class="product-grid processors-grid">
+                  <a href="product.php?id=1&type=Processors" class="product-link processors-card">
+            <div class="showcase">
+              <div class="showcase-banner">
+                <img src="./images/products_images/cpus/cpu1.jpg" alt="Intel Core i5-1135G7" class="product-img" />
+              </div>
+              <div class="showcase-content">
+                <div class="showcase-category">business</div>
+                <h4 class="showcase-title">Intel Core i5-1135G7</h4>
+                <div class="showcase-small-desc">Quad-core with integrated graphics</div>
+                <div class="showcase-rating">
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                </div>
+                <div class="price-box">
+                  <p class="price">Price: $250.00</p>
+                </div>
+              </div>
+            </div>
+          </a>
+                  <a href="product.php?id=2&type=Processors" class="product-link processors-card">
+            <div class="showcase">
+              <div class="showcase-banner">
+                <img src="./images/products_images/cpus/cpu2.jpg" alt="AMD Ryzen 5 5600X" class="product-img" />
+              </div>
+              <div class="showcase-content">
+                <div class="showcase-category">gaming</div>
+                <h4 class="showcase-title">AMD Ryzen 5 5600X</h4>
+                <div class="showcase-small-desc">6-core processor for gaming</div>
+                <div class="showcase-rating">
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                </div>
+                <div class="price-box">
+                  <p class="price">Price: $300.00</p>
+                </div>
+              </div>
+            </div>
+          </a>
+                  <a href="product.php?id=3&type=Processors" class="product-link processors-card">
+            <div class="showcase">
+              <div class="showcase-banner">
+                <img src="./images/products_images/cpus/cpu3.jpg" alt="Intel Core i7-11700K" class="product-img" />
+              </div>
+              <div class="showcase-content">
+                <div class="showcase-category">gaming</div>
+                <h4 class="showcase-title">Intel Core i7-11700K</h4>
+                <div class="showcase-small-desc">8-core high-performance CPU</div>
+                <div class="showcase-rating">
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                </div>
+                <div class="price-box">
+                  <p class="price">Price: $400.00</p>
+                </div>
+              </div>
+            </div>
+          </a>
+                  <a href="product.php?id=4&type=Processors" class="product-link processors-card">
+            <div class="showcase">
+              <div class="showcase-banner">
+                <img src="./images/products_images/cpus/cpu4.jpg" alt="AMD Ryzen 9 5950X" class="product-img" />
+              </div>
+              <div class="showcase-content">
+                <div class="showcase-category">gaming</div>
+                <h4 class="showcase-title">AMD Ryzen 9 5950X</h4>
+                <div class="showcase-small-desc">16-core high-end processor</div>
+                <div class="showcase-rating">
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                </div>
+                <div class="price-box">
+                  <p class="price">Price: $750.00</p>
+                </div>
+              </div>
+            </div>
+          </a>
+                </div>
+      </div>
+    </div>
+        <!-- Product section for Keyboards -->
+    <div class="container product-section" id="keyboards-section">
+      <div class="title-with-button" id="keyboards-title">
+        <h2 class="product-section-title" id="keyboards-heading">Keyboards</h2>
+        <a href="category.php?category=Keyboards" class="btn-primary view-all-btn">View All</a>
+      </div>
+      
+      <div class="product-main">
+        <div class="product-grid keyboards-grid">
+                  <a href="product.php?id=1&type=Keyboards" class="product-link keyboards-card">
+            <div class="showcase">
+              <div class="showcase-banner">
+                <img src="./images/products_images/keyboards/keyboard1.jpg" alt="Logitech G Pro" class="product-img" />
+              </div>
+              <div class="showcase-content">
+                <div class="showcase-category">gaming</div>
+                <h4 class="showcase-title">Logitech G Pro</h4>
+                <div class="showcase-small-desc">Mechanical gaming keyboard</div>
+                <div class="showcase-rating">
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                </div>
+                <div class="price-box">
+                  <p class="price">Price: $100.00</p>
+                </div>
+              </div>
+            </div>
+          </a>
+                  <a href="product.php?id=2&type=Keyboards" class="product-link keyboards-card">
+            <div class="showcase">
+              <div class="showcase-banner">
+                <img src="./images/products_images/keyboards/keyboard2.jpg" alt="Razer Huntsman Elite" class="product-img" />
+              </div>
+              <div class="showcase-content">
+                <div class="showcase-category">gaming</div>
+                <h4 class="showcase-title">Razer Huntsman Elite</h4>
+                <div class="showcase-small-desc">RGB gaming keyboard</div>
+                <div class="showcase-rating">
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                </div>
+                <div class="price-box">
+                  <p class="price">Price: $150.00</p>
+                </div>
+              </div>
+            </div>
+          </a>
+                  <a href="product.php?id=3&type=Keyboards" class="product-link keyboards-card">
+            <div class="showcase">
+              <div class="showcase-banner">
+                <img src="./images/products_images/keyboards/keyboard3.jpg" alt="Corsair K95 RGB Platinum" class="product-img" />
+              </div>
+              <div class="showcase-content">
+                <div class="showcase-category">gaming</div>
+                <h4 class="showcase-title">Corsair K95 RGB Platinum</h4>
+                <div class="showcase-small-desc">Premium gaming keyboard</div>
+                <div class="showcase-rating">
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                </div>
+                <div class="price-box">
+                  <p class="price">Price: $200.00</p>
+                </div>
+              </div>
+            </div>
+          </a>
+                  <a href="product.php?id=4&type=Keyboards" class="product-link keyboards-card">
+            <div class="showcase">
+              <div class="showcase-banner">
+                <img src="./images/products_images/keyboards/keyboard4.jpg" alt="Ducky One 2 Mini" class="product-img" />
+              </div>
+              <div class="showcase-content">
+                <div class="showcase-category">gaming</div>
+                <h4 class="showcase-title">Ducky One 2 Mini</h4>
+                <div class="showcase-small-desc">Compact mechanical keyboard</div>
+                <div class="showcase-rating">
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                  <ion-icon name="star"></ion-icon>
+                </div>
+                <div class="price-box">
+                  <p class="price">Price: $120.00</p>
+                </div>
+              </div>
+            </div>
+          </a>
+                </div>
+      </div>
+    </div>
+      </div>
+</main>
+
+
+   <!--
+    - FOOTER
+  -->
+
+    <footer style="margin-top:70px">
+      <div class="footer-category">
+        <div class="container">
+          <h2 class="footer-category-title">Brand directory</h2>
+
+          <div class="footer-category-box">
+            <h3 class="category-box-title">Fashion :</h3>
+
+            <a href="#" class="footer-category-link">T-shirt</a>
+            <a href="#" class="footer-category-link">Shirts</a>
+            <a href="#" class="footer-category-link">shorts & jeans</a>
+            <a href="#" class="footer-category-link">jacket</a>
+            <a href="#" class="footer-category-link">dress & frock</a>
+            <a href="#" class="footer-category-link">innerwear</a>
+            <a href="#" class="footer-category-link">hosiery</a>
+          </div>
+
+          <div class="footer-category-box">
+            <h3 class="category-box-title">footwear :</h3>
+
+            <a href="#" class="footer-category-link">sport</a>
+            <a href="#" class="footer-category-link">formal</a>
+            <a href="#" class="footer-category-link">Boots</a>
+            <a href="#" class="footer-category-link">casual</a>
+            <a href="#" class="footer-category-link">cowboy shoes</a>
+            <a href="#" class="footer-category-link">safety shoes</a>
+            <a href="#" class="footer-category-link">Party wear shoes</a>
+            <a href="#" class="footer-category-link">Branded</a>
+            <a href="#" class="footer-category-link">Firstcopy</a>
+            <a href="#" class="footer-category-link">Long shoes</a>
+          </div>
+
+          <div class="footer-category-box">
+            <h3 class="category-box-title">jewellery :</h3>
+
+            <a href="#" class="footer-category-link">Necklace</a>
+            <a href="#" class="footer-category-link">Earrings</a>
+            <a href="#" class="footer-category-link">Couple rings</a>
+            <a href="#" class="footer-category-link">Pendants</a>
+            <a href="#" class="footer-category-link">Crystal</a>
+            <a href="#" class="footer-category-link">Bangles</a>
+            <a href="#" class="footer-category-link">bracelets</a>
+            <a href="#" class="footer-category-link">nosepin</a>
+            <a href="#" class="footer-category-link">chain</a>
+            <a href="#" class="footer-category-link">Earrings</a>
+            <a href="#" class="footer-category-link">Couple rings</a>
+          </div>
+
+          <div class="footer-category-box">
+            <h3 class="category-box-title">cosmetics :</h3>
+
+            <a href="#" class="footer-category-link">Shampoo</a>
+            <a href="#" class="footer-category-link">Bodywash</a>
+            <a href="#" class="footer-category-link">Facewash</a>
+            <a href="#" class="footer-category-link">makeup kit</a>
+            <a href="#" class="footer-category-link">liner</a>
+            <a href="#" class="footer-category-link">lipstick</a>
+            <a href="#" class="footer-category-link">prefume</a>
+            <a href="#" class="footer-category-link">Body soap</a>
+            <a href="#" class="footer-category-link">scrub</a>
+            <a href="#" class="footer-category-link">hair gel</a>
+            <a href="#" class="footer-category-link">hair colors</a>
+            <a href="#" class="footer-category-link">hair dye</a>
+            <a href="#" class="footer-category-link">sunscreen</a>
+            <a href="#" class="footer-category-link">skin loson</a>
+            <a href="#" class="footer-category-link">liner</a>
+            <a href="#" class="footer-category-link">lipstick</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-nav">
+        <div class="container">
+          <ul class="footer-nav-list">
+            <li class="footer-nav-item">
+              <h2 class="nav-title">Popular Categories</h2>
+            </li>
+
+            <li class="footer-nav-item">
+              <a href="#" class="footer-nav-link">Fashion</a>
+            </li>
+
+            <li class="footer-nav-item">
+              <a href="#" class="footer-nav-link">Electronic</a>
+            </li>
+
+            <li class="footer-nav-item">
+              <a href="#" class="footer-nav-link">Cosmetic</a>
+            </li>
+
+            <li class="footer-nav-item">
+              <a href="#" class="footer-nav-link">Health</a>
+            </li>
+
+            <li class="footer-nav-item">
+              <a href="#" class="footer-nav-link">Watches</a>
+            </li>
+          </ul>
+
+          <ul class="footer-nav-list">
+            <li class="footer-nav-item">
+              <h2 class="nav-title">Products</h2>
+            </li>
+
+            <li class="footer-nav-item">
+              <a href="#" class="footer-nav-link">Prices drop</a>
+            </li>
+
+            <li class="footer-nav-item">
+              <a href="#" class="footer-nav-link">New products</a>
+            </li>
+
+            <li class="footer-nav-item">
+              <a href="#" class="footer-nav-link">Best sales</a>
+            </li>
+
+            <li class="footer-nav-item">
+              <a href="./contact.php" class="footer-nav-link">Contact us</a>
+            </li>
+
+            <li class="footer-nav-item">
+              <a href="#" class="footer-nav-link">Sitemap</a>
+            </li>
+          </ul>
+
+          <ul class="footer-nav-list">
+            <li class="footer-nav-item">
+              <h2 class="nav-title">Our Company</h2>
+            </li>
+
+            <li class="footer-nav-item">
+              <a href="#" class="footer-nav-link">Delivery</a>
+            </li>
+
+            <li class="footer-nav-item">
+              <a href="#" class="footer-nav-link">Legal Notice</a>
+            </li>
+
+            <li class="footer-nav-item">
+              <a href="#" class="footer-nav-link">Terms and conditions</a>
+            </li>
+
+            <li class="footer-nav-item">
+              <a href="./about.php" class="footer-nav-link">About us</a>
+            </li>
+
+            <li class="footer-nav-item">
+              <a href="#" class="footer-nav-link">Secure payment</a>
+            </li>
+          </ul>
+
+          <ul class="footer-nav-list">
+            <li class="footer-nav-item">
+              <h2 class="nav-title">Services</h2>
+            </li>
+
+            <li class="footer-nav-item">
+              <a href="#" class="footer-nav-link">Prices drop</a>
+            </li>
+
+            <li class="footer-nav-item">
+              <a href="#" class="footer-nav-link">New products</a>
+            </li>
+
+            <li class="footer-nav-item">
+              <a href="#" class="footer-nav-link">Best sales</a>
+            </li>
+
+            <li class="footer-nav-item">
+              <a href="./contact.php" class="footer-nav-link">Contact us</a>
+            </li>
+
+            <li class="footer-nav-item">
+              <a href="#" class="footer-nav-link">Sitemap</a>
+            </li>
+          </ul>
+
+          <ul class="footer-nav-list">
+            <li class="footer-nav-item">
+              <h2 class="nav-title">Contact</h2>
+            </li>
+
+            <li class="footer-nav-item flex">
+              <div class="icon-box">
+                <ion-icon name="location-outline"></ion-icon>
+              </div>
+              <!-- Adress -->
+              <address class="content">
+                Rue Smail BENMOUNAH,EL Biar, Alger              </address>
+            </li>
+
+            <li class="footer-nav-item flex">
+              <div class="icon-box">
+                <ion-icon name="call-outline"></ion-icon>
+              </div>
+
+              <a href="tel:+607936-8058" class="footer-nav-link">+213 555 55 55 55</a>
+            </li>
+
+            <li class="footer-nav-item flex">
+              <div class="icon-box">
+                <ion-icon name="mail-outline"></ion-icon>
+              </div>
+
+              <a href="mailto:schakibhad@.com" class="footer-nav-link">schakibhad@.com</a>
+            </li>
+          </ul>
+
+          <ul class="footer-nav-list">
+            <li class="footer-nav-item">
+              <h2 class="nav-title">Follow Us</h2>
+            </li>
+
+            <li>
+              <ul class="social-link">
+                <li class="footer-nav-item">
+                  <a href="#" class="footer-nav-link">
+                    <ion-icon name="logo-facebook"></ion-icon>
+                  </a>
+                </li>
+
+                <li class="footer-nav-item">
+                  <a href="#" class="footer-nav-link">
+                    <ion-icon name="logo-twitter"></ion-icon>
+                  </a>
+                </li>
+
+                <li class="footer-nav-item">
+                  <a href="#" class="footer-nav-link">
+                    <ion-icon name="logo-linkedin"></ion-icon>
+                  </a>
+                </li>
+
+                <li class="footer-nav-item">
+                  <a href="#" class="footer-nav-link">
+                    <ion-icon name="logo-instagram"></ion-icon>
+                  </a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="container">
+          <img src="./images/payment.png" alt="payment method" class="payment-img" />
+
+          <p class="copyright">
+            Copyright &copy; <a href="#">HCA E-Commerce</a> all rights reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <!--
+    - custom js link
+  -->
+    <!-- <script src="./assets/js/script.js"></script> -->
+    <script src="./js/notification.js"></script>
+    <script src="./js/mobilemenu.js"></script>
+    <script src="./js/datamodal.js"></script>
+    <script src="./js/dataaccordion.js"></script>
+    <script src="./ajax/I.js"></script>
+    <!--
+    - ionicon link
+  -->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    
+	<script src="./js/jquery.js" type="text/javascript"></script>
+	<script src="./js/bootstrap.min.js" type="text/javascript"></script>
+	<script src="./js/main.js"></script>
+
+    </body>
+
+    </html>

@@ -3,6 +3,7 @@
 <div class="overlay" data-overlay></div>
 
 <header>
+    <?php require_once './includes/topheadactions.php'; ?>
     <?php require_once './includes/desktopnav.php' ?>
     <?php require_once './includes/mobilenav.php'; ?>
 </header>

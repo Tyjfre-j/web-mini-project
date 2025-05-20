@@ -102,12 +102,16 @@
    </style>
 </head>
 <header>
+  <!-- top head action, search etc in php -->
+  <!-- inc/topheadactions.php -->
+  <?php require_once './includes/topheadactions.php'; ?>
   <!-- desktop navigation -->
   <!-- inc/desktopnav.php -->
   <?php require_once './includes/desktopnav.php' ?>
   <!-- mobile nav in php -->
   <!-- inc/mobilenav.php -->
   <?php require_once './includes/mobilenav.php'; ?>
+
 </header>
 <hr>
 <!-- Header End====================================================================== -->

@@ -73,21 +73,21 @@ if (isset($_SESSION['mycart'])) {
       </li>
 
       <li class="menu-category">
-        <a href="./index.php#laptops-heading" class="menu-title">
+        <a href="./index.php#laptops-section" class="menu-title">
           <ion-icon name="laptop-outline" class="menu-icon"></ion-icon>
           <span>Laptops</span>
         </a>
       </li>
       
       <li class="menu-category">
-        <a href="./index.php#desktops-heading" class="menu-title">
+        <a href="./index.php#desktops-section" class="menu-title">
           <ion-icon name="desktop-outline" class="menu-icon"></ion-icon>
           <span>Desktops</span>
         </a>
       </li>
       
       <li class="menu-category">
-        <a href="./index.php#custom-builds-heading" class="menu-title">
+        <a href="./index.php#custom-builds-section" class="menu-title">
           <ion-icon name="construct-outline" class="menu-icon"></ion-icon>
           <span>Custom Build</span>
         </a>
@@ -105,25 +105,25 @@ if (isset($_SESSION['mycart'])) {
 
         <ul class="submenu-category-list" data-accordion>
           <li class="submenu-category">
-            <a href="./index.php#display-screens-heading" class="submenu-title">
+            <a href="./index.php#display-screens-section" class="submenu-title">
               <ion-icon name="tv-outline" class="submenu-icon"></ion-icon>
               <span>Display Screens</span>
             </a>
           </li>
           <li class="submenu-category">
-            <a href="./index.php#processors-heading" class="submenu-title">
+            <a href="./index.php#processors-section" class="submenu-title">
               <ion-icon name="flash-outline" class="submenu-icon"></ion-icon>
               <span>Processors</span>
             </a>
           </li>
           <li class="submenu-category">
-            <a href="./index.php#graphics-cards-heading" class="submenu-title">
+            <a href="./index.php#graphics-cards-section" class="submenu-title">
               <ion-icon name="extension-puzzle-outline" class="submenu-icon"></ion-icon>
               <span>Graphics Cards</span>
             </a>
           </li>
           <li class="submenu-category">
-            <a href="./index.php#keyboards-heading" class="submenu-title">
+            <a href="./index.php#keyboards-section" class="submenu-title">
               <ion-icon name="keypad-outline" class="submenu-icon"></ion-icon>
               <span>Keyboards</span>
             </a>
