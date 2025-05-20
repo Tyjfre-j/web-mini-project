@@ -237,7 +237,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   margin-top: 0;
 }
@@ -250,7 +250,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  line-clamp: 3;
   -webkit-box-orient: vertical;
   line-height: 1.4;
 }
@@ -365,17 +365,6 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: var(--header-offset, 120px);
-}
-
-/* Removing highlight effects as requested */
-.product-section-title:target,
-h2:target {
-  /* No visual effects */
-}
-
-/* JavaScript controlled highlighting - removing all effects */
-.highlight-target {
-  /* No visual effects */
 }
 
 /* Removing animation */

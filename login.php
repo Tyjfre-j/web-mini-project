@@ -1,7 +1,9 @@
-<?php  session_start();
- include_once 'includes/config.php';
+<?php
+ob_start(); // Start output buffering to prevent "headers already sent" errors
+session_start();
+include_once 'includes/config.php';
 //  all functions
-require_once 'functions/functions.php';
+require_once 'includes/functions.php';
 
 // Debug mode
 $debug = false;
@@ -65,61 +67,226 @@ if(isset($_GET['redirect']) && !empty($_GET['redirect'])) {
       integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
       crossorigin="anonymous"
     />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <title>Login - PeakGear</title>
     <style>
+      :root {
+        --primary-color: #3a86ff;
+        --primary-dark: #2667cc;
+        --secondary-color: #8338ec;
+        --accent-color: #ff006e;
+        --success-color: #38b000;
+        --text-dark: #333333;
+        --text-light: #f8f9fa;
+        --gray-light: #f8f9fa;
+        --gray-medium: #e9ecef;
+        --gray-dark: #6c757d;
+      }
+    
       * {
         box-sizing: border-box;
         margin: 0;
         padding: 0;
       }
+      
       body {
         display: flex;
         flex-direction: column;
-        height: 100vh;
+        min-height: 100vh;
         justify-content: center;
         align-items: center;
-        background-color: #f8f9fa;
+        background: linear-gradient(135deg, var(--gray-light), var(--gray-medium));
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        position: relative;
+        overflow-x: hidden;
       }
+      
+      body::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -10%;
+        width: 120%;
+        height: 80%;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        transform: rotate(-6deg);
+        z-index: -1;
+        border-radius: 0 0 50% 50% / 0 0 100% 100%;
+      }
+      
       .login-container {
         width: 100%;
-        max-width: 420px;
-        padding: 30px;
-        border-radius: 10px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        max-width: 450px;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         background-color: white;
+        position: relative;
+        overflow: hidden;
+        margin: 20px;
       }
+      
       .logo-box {
         padding: 10px;
         display: flex;
         justify-content: center;
         flex-direction: column;
         align-items: center;
-        margin-bottom: 20px;
+        margin-bottom: 25px;
       }
+      
       .form-title {
         text-align: center;
-        margin-bottom: 20px;
-        color: #333;
+        margin: 15px 0;
+        color: var(--text-dark);
+        font-size: 1.8rem;
+        font-weight: 600;
       }
+      
+      .divider {
+        height: 2px;
+        background: linear-gradient(to right, transparent, var(--primary-color), transparent);
+        margin: 10px auto 25px;
+        width: 60%;
+      }
+      
       .error-message {
-        color: #dc3545;
-        background-color: #f8d7da;
-        border: 1px solid #f5c6cb;
-        border-radius: 5px;
-        padding: 10px;
-        margin-bottom: 15px;
+        color: white;
+        background-color: var(--accent-color);
+        border-radius: 8px;
+        padding: 12px 15px;
+        margin-bottom: 20px;
         text-align: center;
+        font-weight: 500;
+        box-shadow: 0 4px 12px rgba(255, 0, 110, 0.2);
       }
+      
+      .form-label {
+        color: var(--text-dark);
+        font-weight: 500;
+        margin-bottom: 8px;
+      }
+      
+      .form-control {
+        padding: 12px 15px;
+        border: 1px solid var(--gray-medium);
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+      }
+      
+      .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(58, 134, 255, 0.2);
+      }
+      
+      .input-group {
+        position: relative;
+        margin-bottom: 1.5rem;
+      }
+      
+      .input-icon {
+        position: absolute;
+        top: 50%;
+        left: 15px;
+        transform: translateY(-50%);
+        color: var(--gray-dark);
+      }
+      
+      .input-with-icon {
+        padding-left: 45px;
+      }
+      
       .btn-container {
         display: flex;
         justify-content: space-between;
-        margin-top: 20px;
+        margin-top: 25px;
+        gap: 15px;
       }
-      .signup-link {
-        display: inline-block;
-        margin-top: 15px;
+      
+      .btn-primary {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(58, 134, 255, 0.3);
+        flex: 1;
+      }
+      
+      .btn-primary:hover {
+        background: linear-gradient(135deg, var(--primary-dark), var(--secondary-color));
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(58, 134, 255, 0.35);
+      }
+      
+      .btn-outline-secondary {
+        background: transparent;
+        border: 2px solid var(--gray-medium);
+        color: var(--text-dark);
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        flex: 1;
+      }
+      
+      .btn-outline-secondary:hover {
+        background-color: var(--gray-light);
+        border-color: var(--gray-dark);
+        transform: translateY(-2px);
+      }
+      
+      .form-check-input {
+        width: 18px;
+        height: 18px;
+        margin-right: 8px;
+        border: 1px solid var(--gray-medium);
+      }
+      
+      .form-check-input:checked {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+      }
+      
+      .form-check-label {
+        font-size: 0.95rem;
+        color: var(--gray-dark);
+      }
+      
+      .return-home {
+        display: block;
+        margin-top: 20px;
         text-align: center;
-        width: 100%;
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: all 0.2s ease;
+      }
+      
+      .return-home:hover {
+        color: var(--secondary-color);
+        text-decoration: underline;
+      }
+      
+      @media (max-width: 576px) {
+        .login-container {
+          padding: 30px 20px;
+        }
+        
+        .btn-container {
+          flex-direction: column;
+        }
+        
+        .btn-primary, .btn-outline-secondary {
+          width: 100%;
+        }
       }
     </style>
   </head>
@@ -129,12 +296,9 @@ if(isset($_GET['redirect']) && !empty($_GET['redirect'])) {
      ?>
      <div class="login-container">
         <div class="logo-box">
-          <img
-            src="admin/upload/<?php echo $_SESSION['web-img']; ?>"
-            alt="logo"
-            width="200px"
-          />
-          <h3 class="form-title">User Login</h3>
+          <h1 style="font-size: 2.6rem; font-weight: 800; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px;">PeakGear</h1>
+          <h3 class="form-title">Welcome Back</h3>
+          <div class="divider"></div>
         </div>
         
         <?php
@@ -190,24 +354,24 @@ if(isset($_GET['redirect']) && !empty($_GET['redirect'])) {
         ?>
         
         <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-          <div class="mb-3">
-            <label for="inputEmail" class="form-label">Email address</label>
+          <div class="mb-3 input-group">
+            <i class="fas fa-envelope input-icon"></i>
             <input
               id="inputEmail"
               name="email"
               type="email"
-              class="form-control"
+              class="form-control input-with-icon"
               placeholder="Enter your email"
               value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>"
             />
           </div>
-          <div class="mb-3">
-            <label for="inputPassword" class="form-label">Password</label>
+          <div class="mb-3 input-group">
+            <i class="fas fa-lock input-icon"></i>
             <input
               id="inputPassword"
               name="pwd"
               type="password"
-              class="form-control"
+              class="form-control input-with-icon"
               placeholder="Enter your password"
             />
           </div>
@@ -223,33 +387,35 @@ if(isset($_GET['redirect']) && !empty($_GET['redirect'])) {
           
           <div class="btn-container">
             <button type="submit" name="login" class="btn btn-primary">
-                Sign in
+                Sign In
             </button>
             <a href="./signup.php" class="btn btn-outline-secondary">
                 Create Account
             </a>
           </div>
         </form>
+        
+        <a href="index.php" class="return-home">Return to Homepage</a>
       </div>
     <?php } else { ?>
       <div class="login-container">
         <div class="logo-box">
-          <img
-            src="admin/upload/<?php echo $_SESSION['web-img']; ?>"
-            alt="logo"
-            width="200px"
-          />
-          <h3 class="form-title">You're already logged in</h3>
+          <h1 style="font-size: 2.6rem; font-weight: 800; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px;">PeakGear</h1>
+          <h3 class="form-title">You're logged in</h3>
+          <div class="divider"></div>
         </div>
         <div class="btn-container">
           <a href="profile.php?id=<?php echo $_SESSION['id']; ?>" class="btn btn-primary">
             Go to Profile
           </a>
-          <a href="logout.php" class="btn btn-outline-danger">
+          <a href="logout.php" class="btn btn-outline-secondary">
             Logout
           </a>
         </div>
+        
+        <a href="index.php" class="return-home">Return to Homepage</a>
       </div>
     <?php } ?>
   </body>
 </html>
+<?php ob_end_flush(); // End output buffering and send content to browser ?>

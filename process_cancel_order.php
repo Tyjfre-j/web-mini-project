@@ -1,6 +1,7 @@
 <?php
 session_start();
 include('./includes/dbconnection.php');
+require_once('./includes/functions.php'); // This will include db_procedures.php
 
 // Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
@@ -46,30 +47,21 @@ try {
     $conn->beginTransaction();
     
     try {
-        // Update order status to cancelled - this will trigger the after_order_status_update trigger
-        // which will restore stock and log to canceled_orders_history automatically
-        $updateStmt = $conn->prepare("UPDATE orders SET order_status = 'cancelled' WHERE order_id = :order_id");
-        $updateStmt->bindParam(':order_id', $order_id);
-        $updateStmt->execute();
+        // Use the cancelOrder function from db_procedures.php
+        if (cancelOrder($order_id, $reason)) {
+            $conn->commit();
+            $_SESSION['success_message'] = "Order #" . $order_id . " has been cancelled successfully";
+        } else {
+            throw new Exception("Failed to cancel order");
+        }
         
-        // Add reason to canceled_orders_history
-        $updateReasonStmt = $conn->prepare(
-            "UPDATE canceled_orders_history SET reason = :reason WHERE order_id = :order_id ORDER BY history_id DESC LIMIT 1"
-        );
-        $updateReasonStmt->bindParam(':reason', $reason);
-        $updateReasonStmt->bindParam(':order_id', $order_id);
-        $updateReasonStmt->execute();
-        
-        $conn->commit();
-        
-        $_SESSION['success_message'] = "Order #" . $order_id . " has been cancelled successfully";
         header('Location: orders.php');
         exit();
-    } catch (PDOException $e) {
+    } catch (Exception $e) {
         $conn->rollBack();
         throw $e;
     }
-} catch (PDOException $e) {
+} catch (Exception $e) {
     $_SESSION['error_message'] = "Error cancelling order: " . $e->getMessage();
     header('Location: orders.php');
     exit();

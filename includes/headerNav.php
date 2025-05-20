@@ -37,9 +37,6 @@
 	<!-- font awesome code -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 	
-	<!-- main style -->
-	<!-- <link rel="stylesheet" href="./css/style.php"> -->
-	
 	<!--
 		- custom css link
 	-->
@@ -47,10 +44,6 @@
 	<link rel="stylesheet" type="text/css" href="./css/style-prefix.css?<?php echo time(); ?>" />
 	<!-- <link rel="stylesheet" href="./css/style-prefix.css" /> -->
 	<link rel="stylesheet" type="text/css" href="./css/product-display.css?<?php echo time(); ?>" />
-	<link rel="stylesheet" type="text/css" href="./css/view-details.css?<?php echo time(); ?>" />
-	<link rel="stylesheet" type="text/css" href="./css/cart-card-design.css?<?php echo time(); ?>" />
-	<link rel="stylesheet" type="text/css" href="./css/aboutus.css?<?php echo time(); ?>" />
-	<link rel="stylesheet" type="text/css" href="./css/contact.css?<?php echo time(); ?>" />
 	<link rel="stylesheet" type="text/css" href="./css/pagination.css?<?php echo time(); ?>" />
 	
 	<!-- Additional header styles -->

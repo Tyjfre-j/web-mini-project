@@ -77,22 +77,11 @@
       </li>
 
       <li class="menu-category">
-        <a href="contact.php?id=<?php echo (isset($_SESSION['customer_name'])) ? $_SESSION['id']: 'unknown';?>" class="menu-title">
+        <a href="#footer" class="menu-title">
           <ion-icon name="call-outline" class="menu-icon"></ion-icon>
           <span>Contact</span>
         </a>
       </li>
-
-      <!-- Profile Link Setup -->
-      <?php if(isset($_SESSION['id'])) { ?>
-        <!-- if logged in -->
-        <li class="menu-category">
-          <a href="profile.php?id=<?php echo (isset($_SESSION['customer_name'])) ? $_SESSION['id']: 'unknown';?>" class="menu-title highlight-menu">
-            <ion-icon name="person-outline" class="menu-icon"></ion-icon>
-            <span>Profile</span>
-          </a>
-        </li>
-      <?php } ?>
 
       <!-- Visit Admin Panel After Login -->
      <?php if(isset($_SESSION['logged-in'])) { ?>

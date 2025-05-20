@@ -386,12 +386,12 @@
         
         try {
             include('./includes/dbconnection.php');
+            include_once('./includes/functions.php'); // This will include db_procedures.php
             
-            // Use the GetCustomerOrderHistory stored procedure
-            $stmt = $conn->prepare("CALL GetCustomerOrderHistory(:customer_id)");
-            $stmt->bindParam(':customer_id', $customer_id);
-            $stmt->execute();
-            $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            // Use the getCustomerOrderHistory function
+            $orders = getCustomerOrderHistory($customer_id);
+            
+            // Even if there's an issue, getCustomerOrderHistory now returns an empty array instead of false
             
             // For pagination we'll handle the results client-side
             // since stored procedures can't be easily combined with LIMIT/OFFSET

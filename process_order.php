@@ -1,6 +1,7 @@
 <?php
 session_start();
 include('./includes/dbconnection.php');
+require_once('./includes/functions.php'); // This will include db_procedures.php
 
 // Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
@@ -31,21 +32,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Begin transaction
         $conn->beginTransaction();
         
-        // Call the FinalizeOrder stored procedure
-        $stmt = $conn->prepare("CALL FinalizeOrder(:customer_id, :shipping_address, :billing_address, :payment_method, :order_notes, @new_order_id)");
-        $stmt->bindParam(':customer_id', $customer_id);
-        $stmt->bindParam(':shipping_address', $shipping_address);
-        $stmt->bindParam(':billing_address', $billing_address);
-        $stmt->bindParam(':payment_method', $payment_method);
-        $stmt->bindParam(':order_notes', $order_notes);
-        $stmt->execute();
+        // Use the finalizeOrder function from db_procedures.php
+        $order_id = finalizeOrder($customer_id, $shipping_address, $billing_address, $payment_method, $order_notes);
         
-        // Get the new order ID
-        $stmt = $conn->query("SELECT @new_order_id as order_id");
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        $order_id = $result['order_id'];
+        if (!$order_id) {
+            throw new Exception("Failed to create order");
+        }
         
-        // Insert order items (will trigger stock update automatically through trigger)
+        // Insert order items and handle total amount
         $total_amount = 0;
         
         foreach ($_SESSION['mycart'] as $item) {
@@ -58,19 +52,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $total_amount += $subtotal;
             
             try {
-                $stmt = $conn->prepare("INSERT INTO order_items (order_id, product_id, product_type, product_name, quantity, price, subtotal) 
-                                      VALUES (:order_id, :product_id, :product_type, :product_name, :quantity, :price, :subtotal)");
+                // Use the addOrderItem function from db_procedures.php
+                $success = addOrderItem($order_id, $product_id, $product_type, $product_name, $quantity, $price);
                 
-                $stmt->bindParam(':order_id', $order_id);
-                $stmt->bindParam(':product_id', $product_id);
-                $stmt->bindParam(':product_type', $product_type);
-                $stmt->bindParam(':product_name', $product_name);
-                $stmt->bindParam(':quantity', $quantity);
-                $stmt->bindParam(':price', $price);
-                $stmt->bindParam(':subtotal', $subtotal);
-                
-                $stmt->execute();
-            } catch (PDOException $e) {
+                if (!$success) {
+                    throw new Exception("Failed to add item to order");
+                }
+            } catch (Exception $e) {
                 // If error occurs (like insufficient stock from trigger)
                 $conn->rollBack();
                 $_SESSION['error_message'] = "Error processing your order: " . $e->getMessage();
@@ -98,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header('Location: order_confirmation.php?order_id=' . $order_id);
         exit();
         
-    } catch (PDOException $e) {
+    } catch (Exception $e) {
         // Rollback transaction on error
         $conn->rollBack();
         $_SESSION['error_message'] = "Error processing your order: " . $e->getMessage();

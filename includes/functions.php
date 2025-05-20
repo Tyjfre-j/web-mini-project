@@ -1,5 +1,6 @@
 <?php
     require_once './includes/config.php';
+    require_once './includes/db_procedures.php';
 
     // get product types
     function getProductTypes(){
